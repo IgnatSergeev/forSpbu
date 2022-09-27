@@ -8,6 +8,7 @@ int recursiveFibonacci(int fibonacciIndex) {
     }
     return recursiveFibonacci(fibonacciIndex - 1) + recursiveFibonacci(fibonacciIndex - 2);
 }
+
 int iterativeFibonacci(int fibonacciIndex) {
     if (fibonacciIndex < 0) {
         return 1;
@@ -25,7 +26,7 @@ int iterativeFibonacci(int fibonacciIndex) {
     return arrayOf3Fibonacci[2];
 }
 
-bool tester() {
+bool test() {
     bool typicalTest = (recursiveFibonacci(12) == 233) && (iterativeFibonacci(12) == 233);
     bool incorrectInputTest = (recursiveFibonacci(-5) == 1) && (iterativeFibonacci(-5) == 1);
 
@@ -33,10 +34,10 @@ bool tester() {
 }
 
 int main() {
-    if (!tester()) {
+    if (!test()) {
         printf("Tests failed");
 
-        return 0;
+        return -1;
     } else {
         printf("Tests passed\n");
     }
@@ -58,7 +59,7 @@ int main() {
         numberOfOperationsByRecursion = (int)pow(2, indexOfFibonacciNumberWeWantToCompare);
         numberOfOperationsByIterativeAlgorithm = indexOfFibonacciNumberWeWantToCompare;
     }
-    printf("Here is the index starting from which iterative algorithm is facter:\n%d", indexOfFibonacciNumberWeWantToCompare);
+    printf("Here is the index starting from which iterative algorithm is faster:\n%d", indexOfFibonacciNumberWeWantToCompare);
 
     return 0;
 }
