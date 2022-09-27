@@ -42,19 +42,20 @@ void halfQsort(int array[], int lowBorder, int highBorder, int reference) {
     int firstIndex = lowBorder;
     int secondIndex = highBorder - 1;
     while (firstIndex <= secondIndex){
-        while (array[firstIndex] < reference) {
-            ++firstIndex;
+        if (array[firstIndex] >= reference) {
+            while (firstIndex <= secondIndex) {
+                if (array[secondIndex] <= reference) {
+                    int temp = array[firstIndex];
+                    array[firstIndex] = array[secondIndex];
+                    array[secondIndex] = temp;
+                    --secondIndex;
+                    break;
+                }
+                --secondIndex;
+            }
         }
-        while (array[secondIndex] > reference) {
-            --secondIndex;
-        }
-        if (firstIndex <= secondIndex) {
-            int temp = array[firstIndex];
-            array[firstIndex] = array[secondIndex];
-            array[secondIndex] = temp;
-            ++firstIndex;
-            --secondIndex;
-        }
+        ++firstIndex;
+
     }
 }
 
@@ -75,14 +76,8 @@ void qSort(int array[], int lowBorder, int highBorder, int arraySize) {
         }
     }
 
-    if (lowBorder < indOfElementToSplitBy) {
-        qSort(array, lowBorder, indOfElementToSplitBy, arraySize);
-    }
-
-    if (indOfElementToSplitBy + 1 < highBorder) {
-        qSort(array, indOfElementToSplitBy + 1, highBorder, arraySize);
-    }
-
+    qSort(array, lowBorder, indOfElementToSplitBy, arraySize);
+    qSort(array, indOfElementToSplitBy + 1, highBorder, arraySize);
 }
 
 bool test() {
