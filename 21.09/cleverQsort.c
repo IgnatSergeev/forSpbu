@@ -55,7 +55,6 @@ void halfQsort(int array[], int lowBorder, int highBorder, int reference) {
             }
         }
         ++firstIndex;
-
     }
 }
 
