@@ -58,7 +58,7 @@ void halfQsort(int array[], int lowBound, int highBound) {
     }
 }
 
-void qSort(int array[], int lowBorder, int highBorder, int arraySize) {
+void qSort(int array[], int lowBorder, int highBorder) {
     if (highBorder - lowBorder < 10) {
         insertSort(array, lowBorder, highBorder);
         return;
@@ -89,13 +89,13 @@ void qSort(int array[], int lowBorder, int highBorder, int arraySize) {
         }
     }
 
-    qSort(array, lowBorder, indOfElementToSplitBy, arraySize);
-    qSort(array, indOfElementToSplitBy + 1, highBorder, arraySize);
+    qSort(array, lowBorder, indOfElementToSplitBy);
+    qSort(array, indOfElementToSplitBy + 1, highBorder);
 }
 
 bool test() {
     int forQSortSmallArray[4] = {5, 4, 3, 2};
-    qSort(forQSortSmallArray, 0, 4, 4);
+    qSort(forQSortSmallArray, 0, 4);
 
     bool typicalTest = true;
     int sortedSmallArray[4] = {2, 3, 4, 5};
@@ -107,7 +107,7 @@ bool test() {
     }
 
     int forQSortBigArray[15] = {5, 4, 3, 2, 8 , 28, 16, 1, 10, 9, 9, 9, 9, 7, 22};
-    qSort(forQSortBigArray, 0, 15, 15);
+    qSort(forQSortBigArray, 0, 15);
 
     int sortedBigArray[15] = {1, 2, 3, 4, 5, 7, 8, 9, 9, 9, 9, 10, 16, 22, 28};
     const int bigArraySize = 15;
@@ -151,7 +151,7 @@ int main() {
         array[i] = element;
     }
 
-    qSort(array, 0, arraySize, arraySize);
+    qSort(array, 0, arraySize);
     printf("Here is the result of the quick sort:\n");
     for (int i = 0; i < (arraySize - 1); i++) {
         printf("%d, ", array[i]);
