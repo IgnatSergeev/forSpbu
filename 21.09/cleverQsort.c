@@ -38,23 +38,23 @@ void insertSort(int inputArray[], int lowBorder, int highBorder) {
     }
 }
 
-void halfQsort(int array[], int lowBorder, int highBorder, int reference) {
-    int firstIndex = lowBorder;
-    int secondIndex = highBorder - 1;
-    while (firstIndex <= secondIndex){
-        if (array[firstIndex] >= reference) {
-            while (firstIndex <= secondIndex) {
-                if (array[secondIndex] <= reference) {
-                    int temp = array[firstIndex];
-                    array[firstIndex] = array[secondIndex];
-                    array[secondIndex] = temp;
-                    --secondIndex;
-                    break;
-                }
-                --secondIndex;
-            }
+void halfQsort(int array[], int lowBound, int highBound) {
+    int firstIndex = lowBound;
+    int secondIndex = highBound - 1;
+    while ((firstIndex < secondIndex) && (firstIndex + 1 < highBound) && (secondIndex - 1 >= lowBound)){
+        if (array[firstIndex] >= array[firstIndex + 1]) {
+            int temp = array[firstIndex];
+            array[firstIndex] = array[firstIndex + 1];
+            array[firstIndex + 1] = temp;
+
+            ++firstIndex;
+        } else {
+            int temp = array[firstIndex + 1];
+            array[firstIndex + 1] = array[secondIndex];
+            array[secondIndex] = temp;
+
+            --secondIndex;
         }
-        ++firstIndex;
     }
 }
 
@@ -66,8 +66,22 @@ void qSort(int array[], int lowBorder, int highBorder, int arraySize) {
 
     int middleIndex = (lowBorder + highBorder)/2;
     int elementToSplitBy = median(array[lowBorder], array[highBorder - 1], array[middleIndex]);
-    halfQsort(array, lowBorder, highBorder, elementToSplitBy);
     int indOfElementToSplitBy = 0;
+    if (elementToSplitBy == array[lowBorder]) {
+        indOfElementToSplitBy = lowBorder;
+    }
+    if (elementToSplitBy == array[highBorder - 1]) {
+        indOfElementToSplitBy = highBorder - 1;
+    }
+    if (elementToSplitBy == array[middleIndex]) {
+        indOfElementToSplitBy = middleIndex;
+    }
+
+    int temp = array[indOfElementToSplitBy];
+    array[indOfElementToSplitBy] = array[lowBorder];
+    array[lowBorder] = temp;
+
+    halfQsort(array, lowBorder, highBorder);
     for (int i = lowBorder; i < highBorder; i++) {
         if (array[i] == elementToSplitBy) {
             indOfElementToSplitBy = i;
