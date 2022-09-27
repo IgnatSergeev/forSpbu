@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
+#include <time.h>
 
 int recursiveFibonacci(int fibonacciIndex) {
     if (fibonacciIndex <= 1) {
@@ -33,6 +34,20 @@ bool test() {
     return typicalTest && incorrectInputTest;
 }
 
+void timeTest() {
+    int startRecursiveFibonacciTime = clock();
+    recursiveFibonacci();
+    int endRecursiveFibonacciTime = clock();
+    int recursiveFibonacciTime  = endRecursiveFibonacciTime - startRecursiveFibonacciTime;
+
+    int startIterativeFibonacciTime = clock();
+    iterativeFibonacci();
+    int endIterativeFibonacciTime = clock();
+    int iterativeFibonacciTime  = endIterativeFibonacciTime - startIterativeFibonacciTime;
+
+    printf("Recursive fibonacci time: %d\nIterative fibonacci time: %d",recursiveFibonacciTime, iterativeFibonacciTime);
+}
+
 int main() {
     if (!test()) {
         printf("Tests failed");
@@ -50,16 +65,7 @@ int main() {
     printf("Here is the result of the recursive algorithm:\n%d\n", recursiveFibonacci(inputIndex));
     printf("Here is the result of the iterative algorithm:\n%d\n", iterativeFibonacci(inputIndex));
 
-    int numberOfOperationsByRecursion = 0;
-    int numberOfOperationsByIterativeAlgorithm = 0;
-    int indexOfFibonacciNumberWeWantToCompare = 0;
-    while (numberOfOperationsByRecursion <= numberOfOperationsByIterativeAlgorithm) {
-        indexOfFibonacciNumberWeWantToCompare += 1;
-
-        numberOfOperationsByRecursion = (int)pow(2, indexOfFibonacciNumberWeWantToCompare);
-        numberOfOperationsByIterativeAlgorithm = indexOfFibonacciNumberWeWantToCompare;
-    }
-    printf("Here is the index starting from which iterative algorithm is faster:\n%d", indexOfFibonacciNumberWeWantToCompare);
+    timeTest();
 
     return 0;
 }
