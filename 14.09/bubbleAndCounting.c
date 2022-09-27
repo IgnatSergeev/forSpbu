@@ -128,7 +128,6 @@ int main() {
         return -1;
     }
 
-    printf("%s", "Now enter the array elements\n");
     int *forBubbleSortArray = (int*)malloc(arraySize * sizeof(int));
     if (forBubbleSortArray == NULL) {
         printf("Error with allocation");
@@ -142,6 +141,8 @@ int main() {
 
         return -1;
     }
+
+    printf("%s", "Now enter the array elements\n");
     for (int i = 0; i < arraySize; i++) {
         int element = 0;
         scanf("%d", &element);

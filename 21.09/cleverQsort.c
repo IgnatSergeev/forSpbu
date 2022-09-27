@@ -1,4 +1,155 @@
-//
-// Created by Ignat_main on 27.09.2022.
-//
+#include <stdio.h>
+#include <stdbool.h>
+#include <malloc.h>
+#include <time.h>
 
+int median(int first, int second, int third) {
+    if (second < first) {
+        int temp = second;
+        second = first;
+        first = temp;
+    }
+
+    if (third < first) {
+        int temp = third;
+        third = first;
+        first = temp;
+    }
+
+    if (third < second) {
+        int temp = third;
+        third = second;
+        second = temp;
+    }
+
+    return second;
+}
+
+void insertSort(int inputArray[], int lowBorder, int highBorder) {
+    for (int i = lowBorder; i < highBorder; i++) {
+        int currentPosOfElement = i;
+        while ((currentPosOfElement > lowBorder) && (inputArray[currentPosOfElement - 1] > inputArray[currentPosOfElement])) {
+            int temp = inputArray[currentPosOfElement];
+            inputArray[currentPosOfElement] = inputArray[currentPosOfElement - 1];
+            inputArray[currentPosOfElement - 1] = temp;
+
+            --currentPosOfElement;
+        }
+    }
+}
+
+void halfQsort(int array[], int lowBorder, int highBorder, int reference) {
+    int firstIndex = lowBorder;
+    int secondIndex = highBorder - 1;
+    while (firstIndex <= secondIndex){
+        while (array[firstIndex] < reference) {
+            ++firstIndex;
+        }
+        while (array[secondIndex] > reference) {
+            --secondIndex;
+        }
+        if (firstIndex <= secondIndex) {
+            int temp = array[firstIndex];
+            array[firstIndex] = array[secondIndex];
+            array[secondIndex] = temp;
+            ++firstIndex;
+            --secondIndex;
+        }
+    }
+}
+
+void qSort(int array[], int lowBorder, int highBorder, int arraySize) {
+    if (highBorder - lowBorder < 10) {
+        insertSort(array, lowBorder, highBorder);
+        return;
+    }
+
+    int middleIndex = (lowBorder + highBorder)/2;
+    int elementToSplitBy = median(array[lowBorder], array[highBorder - 1], array[middleIndex]);
+    halfQsort(array, lowBorder, highBorder, elementToSplitBy);
+    int indOfElementToSplitBy = 0;
+    for (int i = lowBorder; i < highBorder; i++) {
+        if (array[i] == elementToSplitBy) {
+            indOfElementToSplitBy = i;
+            break;
+        }
+    }
+
+    if (lowBorder < indOfElementToSplitBy) {
+        qSort(array, lowBorder, indOfElementToSplitBy, arraySize);
+    }
+
+    if (indOfElementToSplitBy + 1 < highBorder) {
+        qSort(array, indOfElementToSplitBy + 1, highBorder, arraySize);
+    }
+
+}
+
+bool test() {
+    int forQSortSmallArray[4] = {5, 4, 3, 2};
+    qSort(forQSortSmallArray, 0, 4, 4);
+
+    bool typicalTest = true;
+    int sortedSmallArray[4] = {2, 3, 4, 5};
+    const int smallArraySize = 4;
+    for (int i = 0; i < smallArraySize; i++) {
+        if (forQSortSmallArray[i] != sortedSmallArray[i]) {
+            typicalTest = false;
+        }
+    }
+
+    int forQSortBigArray[15] = {5, 4, 3, 2, 8 , 28, 16, 1, 10, 9, 9, 9, 9, 7, 22};
+    qSort(forQSortBigArray, 0, 15, 15);
+
+    int sortedBigArray[15] = {1, 2, 3, 4, 5, 7, 8, 9, 9, 9, 9, 10, 16, 22, 28};
+    const int bigArraySize = 15;
+    for (int i = 0; i < bigArraySize; i++) {
+        if (forQSortBigArray[i] != sortedBigArray[i]) {
+            typicalTest = false;
+        }
+    }
+
+    return typicalTest;
+}
+
+int main() {
+    if (!test()) {
+        printf("Tests failed");
+
+        return -1;
+    } else {
+        printf("Tests passed\n");
+    }
+
+    int arraySize = 0;
+    printf("%s", "Enter the array size\n");
+    scanf("%d", &arraySize);
+    if (arraySize <= 0) {
+        printf("Something wrong");
+        return -1;
+    }
+
+    int *array = (int*)malloc(arraySize * sizeof(int));
+    if (array == NULL) {
+        printf("Error with allocation");
+
+        return -1;
+    }
+
+    printf("%s", "Now enter the array elements\n");
+    for (int i = 0; i < arraySize; i++) {
+        int element = 0;
+        scanf("%d", &element);
+        array[i] = element;
+    }
+
+    qSort(array, 0, arraySize, arraySize);
+    printf("Here is the result of the quick sort:\n");
+    for (int i = 0; i < (arraySize - 1); i++) {
+        printf("%d, ", array[i]);
+    }
+    printf("%d\n", array[arraySize - 1]);
+
+    free(array);
+    return 0;
+}
