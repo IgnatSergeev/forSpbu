@@ -1,5 +1,6 @@
 #include "customQSort.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <malloc.h>
 
 int mostFrequentElement(const int sortedArray[], int arraySize) {
@@ -52,6 +53,7 @@ int main() {
 
         array[i] = element;
     }
+    fclose(file);
 
     qSort(array, 0, arraySize);
     int mostFrequentElem = mostFrequentElement(array, arraySize);
