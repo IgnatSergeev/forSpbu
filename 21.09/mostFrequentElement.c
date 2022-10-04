@@ -94,18 +94,11 @@ void qSort(int array[], int lowBorder, int highBorder) {
 }
 
 int mostFrequentElement(const int sortedArray[], int arraySize) {
-    int mostFrequentElem = 0;
-    int maxNumberOfElements = 0;
-    bool isCurrentElementDefined = false;
-    int currentElement = 0;
-    int currentNumberOfElements = 0;
-    for (int i = 0; i < arraySize; i++) {
-        if (!isCurrentElementDefined) {
-            currentElement = sortedArray[i];
-            currentNumberOfElements = 1;
-            isCurrentElementDefined = true;
-        }
-
+    int mostFrequentElem = sortedArray[0];
+    int maxNumberOfElements = 1;
+    int currentElement = sortedArray[0];
+    int currentNumberOfElements = 1;
+    for (int i = 1; i < arraySize; i++) {
         if (sortedArray[i] == currentElement) {
             ++currentNumberOfElements;
         } else {
@@ -113,6 +106,9 @@ int mostFrequentElement(const int sortedArray[], int arraySize) {
                 maxNumberOfElements = currentNumberOfElements;
                 mostFrequentElem = currentElement;
             }
+
+            currentNumberOfElements = 1;
+            currentElement = sortedArray[i];
         }
      }
 
@@ -132,6 +128,9 @@ bool test() {
         }
     }
 
+    if (mostFrequentElement(sortedBigArray, 15) != 9) {
+        typicalTest = false;
+    }
     return typicalTest;
 }
 
@@ -168,6 +167,8 @@ int main() {
     }
 
     qSort(array, 0, arraySize);
+    int mostFrequentElem = mostFrequentElement(array, arraySize);
+    printf("Here is the most frequent element of the array: %d", mostFrequentElem);
 
     free(array);
     return 0;
