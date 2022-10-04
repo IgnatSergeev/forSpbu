@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
+#include <stdbool.h>
 
 int mostFrequentElement(const int sortedArray[], int arraySize) {
     int mostFrequentElem = sortedArray[0];
@@ -25,7 +26,27 @@ int mostFrequentElement(const int sortedArray[], int arraySize) {
     return mostFrequentElem;
 }
 
+bool test() {
+    bool typicalTest = true;
+
+    int sortedBigArray[15] = {1, 2, 3, 4, 5, 7, 8, 9, 9, 9, 9, 10, 16, 22, 28};
+    const int bigArraySize = 15;
+    if (mostFrequentElement(sortedBigArray, bigArraySize) != 9) {
+        typicalTest = false;
+    }
+
+    return typicalTest;
+}
+
 int main() {
+    if (!test()) {
+        printf("Тесты провалены");
+
+        return -1;
+    } else {
+        printf("Тесты пройдены\n");
+    }
+
     printf("Введите в файле сначала длину массива, а потом его элементы");
     FILE *file = fopen("../28.09/modulesAndFiles/input.txt", "r");
     if (file == NULL) {
