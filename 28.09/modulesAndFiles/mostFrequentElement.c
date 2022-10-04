@@ -26,7 +26,8 @@ int mostFrequentElement(const int sortedArray[], int arraySize) {
 }
 
 int main() {
-    FILE *file = fopen("input.txt", "r");
+    printf("Введите в файле сначала длину массива, а потом его элементы");
+    FILE *file = fopen("../28.09/modulesAndFiles/input.txt", "r");
     if (file == NULL) {
         printf("Файл не найден\n");
 
@@ -34,8 +35,13 @@ int main() {
     }
     int arraySize = 0;
     int readBytes = fscanf(file, "%d", &arraySize);
-    if (readBytes <= 0) {
+    if (readBytes < 0) {
         printf("Возникла ошибка при чтении\n");
+
+        return -1;
+    }
+    if (arraySize <= 0) {
+        printf("Размер массива должен быть положительным");
 
         return -1;
     }
@@ -44,7 +50,7 @@ int main() {
     for (int i = 0; i < arraySize; i++) {
         int element = 0;
         readBytes = fscanf(file, "%d", &element);
-        if (readBytes <= 0) {
+        if (readBytes < 0) {
             printf("Возникла ошибка при чтении\n");
 
             free(array);
