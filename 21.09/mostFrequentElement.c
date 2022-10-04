@@ -93,6 +93,32 @@ void qSort(int array[], int lowBorder, int highBorder) {
     qSort(array, indOfElementToSplitBy + 1, highBorder);
 }
 
+int mostFrequentElement(const int sortedArray[], int arraySize) {
+    int mostFrequentElem = 0;
+    int maxNumberOfElements = 0;
+    bool isCurrentElementDefined = false;
+    int currentElement = 0;
+    int currentNumberOfElements = 0;
+    for (int i = 0; i < arraySize; i++) {
+        if (!isCurrentElementDefined) {
+            currentElement = sortedArray[i];
+            currentNumberOfElements = 1;
+            isCurrentElementDefined = true;
+        }
+
+        if (sortedArray[i] == currentElement) {
+            ++currentNumberOfElements;
+        } else {
+            if (currentNumberOfElements > maxNumberOfElements) {
+                maxNumberOfElements = currentNumberOfElements;
+                mostFrequentElem = currentElement;
+            }
+        }
+     }
+
+    return mostFrequentElem;
+}
+
 bool test() {
     bool typicalTest = true;
     int forQSortBigArray[15] = {5, 4, 3, 2, 8 , 28, 16, 1, 10, 9, 9, 9, 9, 7, 22};
