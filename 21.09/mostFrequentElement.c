@@ -93,9 +93,56 @@ void qSort(int array[], int lowBorder, int highBorder) {
     qSort(array, indOfElementToSplitBy + 1, highBorder);
 }
 
+bool test() {
+    bool typicalTest = true;
+    int forQSortBigArray[15] = {5, 4, 3, 2, 8 , 28, 16, 1, 10, 9, 9, 9, 9, 7, 22};
+    qSort(forQSortBigArray, 0, 15);
+
+    int sortedBigArray[15] = {1, 2, 3, 4, 5, 7, 8, 9, 9, 9, 9, 10, 16, 22, 28};
+    const int bigArraySize = 15;
+    for (int i = 0; i < bigArraySize; i++) {
+        if (forQSortBigArray[i] != sortedBigArray[i]) {
+            typicalTest = false;
+        }
+    }
+
+    return typicalTest;
+}
+
 int main() {
+    if (!test()) {
+        printf("Tests failed");
 
+        return -1;
+    } else {
+        printf("Tests passed\n");
+    }
 
+    int arraySize = 0;
+    printf("%s", "Enter the array size\n");
+    scanf("%d", &arraySize);
+    if (arraySize <= 0) {
+        printf("Something wrong");
 
+        return -1;
+    }
+
+    int *array = (int*)malloc(arraySize * sizeof(int));
+    if (array == NULL) {
+        printf("Error with allocation");
+
+        return -1;
+    }
+
+    printf("%s", "Enter the array elements\n");
+    for (int i = 0; i < arraySize; i++) {
+        int element = 0;
+        scanf("%d", &element);
+        array[i] = element;
+    }
+
+    qSort(array, 0, arraySize);
+
+    free(array);
     return 0;
 }
