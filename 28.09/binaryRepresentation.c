@@ -6,7 +6,7 @@
 
 void representTheNumberInBinary(int number, int numberBinaryRepresentation[]) {
     if (number < 0) {
-        number = (int)pow(2,RegistrySize) + number;
+        number = (int)pow(2, RegistrySize) + number;
     }
 
     for (int i = 0; i < RegistrySize; i++) {
