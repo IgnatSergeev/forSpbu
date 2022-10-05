@@ -48,7 +48,7 @@ int main() {
     scanf("%d", &arraySize);
     if (arraySize <= 0) {
         printf("Длина массива должна быть положительна");
-        
+
         return -1;
     }
 
