@@ -72,7 +72,7 @@ int main() {
     printf("Вот комментарии из файла:\n");
     char line[lineSize] = {0};
     while (!feof(file)) {
-        if (fgets((char *) &line, lineSize, file) == NULL) {
+        if (fgets((char*)&line, lineSize, file) == NULL) {
             printf("Возникла ошибка при чтении\n");
 
             return -1;
