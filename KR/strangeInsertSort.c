@@ -6,7 +6,7 @@
 void insertSort(int inputArray[], int lowBorder, int highBorder) {
     for (int i = lowBorder; i < highBorder; i+=2) {
         int currentPosOfElement = i;
-        while ((currentPosOfElement > lowBorder) && (inputArray[currentPosOfElement - 2] > inputArray[currentPosOfElement])) {
+        while (((currentPosOfElement - 2) >= lowBorder) && (inputArray[currentPosOfElement - 2] > inputArray[currentPosOfElement])) {
             int temp = inputArray[currentPosOfElement];
             inputArray[currentPosOfElement] = inputArray[currentPosOfElement - 2];
             inputArray[currentPosOfElement - 2] = temp;
