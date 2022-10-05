@@ -1,11 +1,51 @@
+#define lineSize 100
 #include <stdio.h>
 #include <stdbool.h>
 #include <locale.h>
 #include <malloc.h>
 
+void printCommentInCommentLine(const char line[], char commentInLine[]) {
+    int curIndexInCommentLine = 0;
+    int curIndexInInputLine = 0;
+    while (curIndexInInputLine < lineSize && line[curIndexInInputLine] != '\0' && line[curIndexInInputLine] != ';') {
+        ++curIndexInInputLine;
+    }
+    if (curIndexInInputLine < lineSize && line[curIndexInInputLine] != '\0') {
+        for (int i = curIndexInInputLine; i < lineSize; i++) {
+            if (line[i] == '\0') {
+                break;
+            }
+
+            commentInLine[curIndexInCommentLine] = line[i];
+            ++curIndexInCommentLine;
+        }
+    }
+}
+
 bool test() {
     bool typicalTest = true;
+    char line[lineSize] = "adcd;232a";
+    char commentInLine[lineSize] = {0};
+    char correctCommentInLine[lineSize] = ";232a";
+    printCommentInCommentLine(line, commentInLine);
 
+    for (int i = 0; i < lineSize; i++) {
+        if (commentInLine[i] == '\0') {
+            if (correctCommentInLine[i] != '\0') {
+                typicalTest = false;
+            }
+            break;
+        }
+        if (correctCommentInLine[i] == '\0') {
+            typicalTest = false;
+            break;
+        }
+
+        if (correctCommentInLine[i] != commentInLine[i]) {
+            typicalTest = false;
+            break;
+        }
+    }
 
     return typicalTest;
 }
@@ -29,8 +69,7 @@ int main() {
         return -1;
     }
 
-    const int lineSize = 100;
-    char line[100] = {0};
+    char line[lineSize] = {0};
     while (!feof(file)) {
         if (fgets((char *) &line, 100, file) == NULL) {
             printf("Возникла ошибка при чтении\n");
@@ -38,18 +77,14 @@ int main() {
             return -1;
         }
 
-        int curIndex = 0;
-        while (curIndex < lineSize && line[curIndex] != '\0' && line[curIndex] != ';') {
-            ++curIndex;
-        }
-        if (curIndex < lineSize && line[curIndex] != '\0') {
-            for (int i = curIndex; i < lineSize; i++) {
-                if (line[i] == '\0') {
-                    break;
-                }
-
-                printf("%c", line[i]);
+        char commentInLine[lineSize] = {0};
+        printCommentInCommentLine(line, commentInLine);
+        for (int i = 0; i < lineSize; i++) {
+            if (commentInLine[i] == '\0') {
+                break;
             }
+
+            printf("%c", commentInLine[i]);
         }
     }
 }
