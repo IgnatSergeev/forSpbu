@@ -39,16 +39,16 @@ int main() {
 
     int curIndex = 1;
     int curFibNumber = iterativeFibonacci(curIndex);
-    int numberOfEvenFibNumbers = 0;
+    int sumOfEvenFibNumbers = 0;
     while (curFibNumber <= 1000000) {
         if (curFibNumber % 2 == 0) {
-            ++numberOfEvenFibNumbers;
+            sumOfEvenFibNumbers += curFibNumber;
         }
         ++curIndex;
         curFibNumber = iterativeFibonacci(curIndex);
     }
 
-    printf("Количество чётных чисел фибоначи = %d", numberOfEvenFibNumbers);
+    printf("Количество чётных чисел фибоначи = %d", sumOfEvenFibNumbers);
 
     return 0;
 }
