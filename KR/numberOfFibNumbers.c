@@ -48,7 +48,7 @@ int main() {
         curFibNumber = iterativeFibonacci(curIndex);
     }
 
-    printf("Количество чётных чисел фибоначи = %d", sumOfEvenFibNumbers);
+    printf("Сумма чётных чисел фибоначи = %d", sumOfEvenFibNumbers);
 
     return 0;
 }
