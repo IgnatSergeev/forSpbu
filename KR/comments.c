@@ -69,6 +69,7 @@ int main() {
         return -1;
     }
 
+    printf("Вот комментарии из файла:\n");
     char line[lineSize] = {0};
     while (!feof(file)) {
         if (fgets((char *) &line, lineSize, file) == NULL) {
