@@ -71,7 +71,7 @@ int main() {
 
     char line[lineSize] = {0};
     while (!feof(file)) {
-        if (fgets((char *) &line, 100, file) == NULL) {
+        if (fgets((char *) &line, lineSize, file) == NULL) {
             printf("Возникла ошибка при чтении\n");
 
             return -1;
