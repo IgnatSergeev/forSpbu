@@ -1,7 +1,6 @@
 #include "customStack.h"
 #include <stdio.h>
 #include <malloc.h>
-#include <stdbool.h>
 
 int push(Node **head, int value) {
     Node *temp = malloc(sizeof(Node));
