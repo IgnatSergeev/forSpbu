@@ -17,8 +17,35 @@ void printPhoneBook(struct Contact phoneBook[], int phoneBookSize) {
     }
 }
 
-void addContact(struct Contact phoneBook[], int phoneBookSize, char newContactsName[], char newContactsPhoneNumber[]) {
+void addContact(struct Contact phoneBook[], int phoneBookSizeIncludingContactsAddedInCurrentRun, char newContactsName[], char newContactsPhoneNumber[]) {
+    struct Contact newContact = {newContactsName, newContactsPhoneNumber};
+    phoneBook[phoneBookSizeIncludingContactsAddedInCurrentRun] = newContact;
+}
 
+char *searchByTheName(struct Contact phoneBook[], int phoneBookSizeIncludingContactsAddedInCurrentRun, char contactsName[]) {
+    char *contactsPhoneNumber = NULL;
+
+    for (int i = 0; i < phoneBookSizeIncludingContactsAddedInCurrentRun; i++) {
+        char *currentContactsName = phoneBook[i].name;
+        if (currentContactsName == contactsName) {
+            contactsPhoneNumber = phoneBook[i].phoneNumber;
+            break;
+        }
+    }
+    return contactsPhoneNumber;
+}
+
+char *searchByThePhoneNumber(struct Contact phoneBook[], int phoneBookSizeIncludingContactsAddedInCurrentRun, char contactsPhoneNumber[]) {
+    char *contactsName = NULL;
+
+    for (int i = 0; i < phoneBookSizeIncludingContactsAddedInCurrentRun; i++) {
+        char *currentContactsPhoneNumber = phoneBook[i].phoneNumber;
+        if (currentContactsPhoneNumber == contactsPhoneNumber) {
+            contactsName = phoneBook[i].name;
+            break;
+        }
+    }
+    return contactsName;
 }
 
 bool isDigit(char symbol) {
@@ -94,46 +121,63 @@ int main() {
                 break;
             case 1:
                 if (numberOfAddedContacts + phoneBookSize >= 100) {
-                    printf("Количество хранимых контактов максимально, добавить новый невозможно");
+                    printf("Количество хранимых контактов максимально, добавить новый невозможно\n");
                     break;
                 }
 
                 printf("Введите имя (длиной не боллее %d символов), а на следующей строке - "
                        "номер телефона в формате: +7 и %d цифр\n", lineMaxSize - phoneNumberMaxSize - 1,
                        phoneNumberMaxSize - 3);
+
                 scanf("%s", inputName);
                 scanf("%s", inputPhoneNumber);
                 for (int i = 0; i < lineMaxSize - phoneNumberMaxSize; i++) {
                     if (inputName[i] == ' ') {
-                        printf("В имени не должны содержаться пробелы");
+                        printf("В имени не должны содержаться пробелы\n");
                         continueCondition = true;
                         break;
                     }
                 }
                 if (inputPhoneNumber[0] !='+' || inputPhoneNumber[1] != '7') {
-                    printf("Не правильный формат телефона");
+                    printf("Не правильный формат телефона\n");
                     continueCondition = true;
                     break;
                 }
                 for (int i = 2; i < phoneNumberMaxSize; i++) {
-                    if (!isDigit(inputPhoneNumber)) {
-                        printf("Не правильный формат телефона");
+                    if (!isDigit(inputPhoneNumber[i])) {
+                        printf("Не правильный формат телефона\n");
                         continueCondition = true;
                         break;
                     }
                 }
 
-                addContact(phoneBook, phoneBookSize, inputName, inputPhoneNumber);
+                addContact(phoneBook, phoneBookSize + numberOfAddedContacts, inputName, inputPhoneNumber);
                 ++numberOfAddedContacts;
                 break;
             case 2:
                 printPhoneBook(phoneBook, phoneBookSize);
                 break;
             case 3:
-
+                printf("Введите имя (длиной не боллее %d символов), номер которого вы хотите найти в книге\n",
+                       lineMaxSize - phoneNumberMaxSize - 1);
+                scanf("%s", inputName);
+                char *phoneNumber = searchByTheName(phoneBook, phoneBookSize + numberOfAddedContacts, inputName);
+                if (phoneNumber == NULL) {
+                    printf("Конакт с таким именем не найден\n");
+                    break;
+                }
+                printf("%Вот номер телефона искомого контакта%s\n", phoneNumber);
                 break;
             case 4:
-
+                printf("Введите номер телефона контакта в формате: +7 и %d цифр, имя которого вы хотите найти в книге\n",
+                       lineMaxSize - phoneNumberMaxSize - 1);
+                scanf("%s", inputPhoneNumber);
+                char *name = searchByThePhoneNumber(phoneBook, phoneBookSize + numberOfAddedContacts, inputPhoneNumber);
+                if (name == NULL) {
+                    printf("Конакт с таким номером телефона не найден\n");
+                    break;
+                }
+                printf("Вот имя искомого контакта%s\n", name);
                 break;
             case 5:
 
