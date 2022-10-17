@@ -133,19 +133,13 @@ int main() {
 
                 scanf("%s", inputName);
                 scanf("%s", inputPhoneNumber);
-                for (int i = 0; i < lineMaxSize - phoneNumberMaxSize; i++) {
-                    if (inputName[i] == ' ') {
-                        printf("В имени не должны содержаться пробелы\n");
-                        continueCondition = true;
-                        break;
-                    }
-                }
+
                 if (inputPhoneNumber[0] !='+' || inputPhoneNumber[1] != '7') {
                     printf("Не правильный формат телефона\n");
                     continueCondition = true;
                     break;
                 }
-                for (int i = 2; i < phoneNumberMaxSize; i++) {
+                for (int i = 2; i < phoneNumberMaxSize - 1; i++) {
                     if (!isDigit(inputPhoneNumber[i])) {
                         printf("Не правильный формат телефона\n");
                         continueCondition = true;
@@ -182,7 +176,7 @@ int main() {
                 printf("Вот имя искомого контакта%s\n", name);
                 break;
             case 5:
-                file = fopen("../28.09/phoneBook.txt", "r");
+                file = fopen("../28.09/phoneBook.txt", "w");
                 if (file == NULL) {
                     printf("Файл не найден");
 
