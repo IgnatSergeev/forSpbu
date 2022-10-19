@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <malloc.h>
 
-typedef struct Node{
+typedef struct Stack{
     int value;
     struct Node* next;
-} Node;
+} Stack;
 
 int push(Stack *head, int value) {
     Node *temp = malloc(sizeof(Node));
