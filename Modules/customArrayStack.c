@@ -46,6 +46,7 @@ void deleteStack(Stack *stack) {
         int errorCode = 0;
         pop(stack, &errorCode);
     }
+    free(stack);
 }
 
 int top(Stack *stack) {
@@ -54,5 +55,6 @@ int top(Stack *stack) {
 
 Stack* createStack() {
     Stack *stack = malloc(sizeof(Stack));
+    stack->stackPosition = -1;
     return stack;
 }
