@@ -2,26 +2,30 @@
 #include <stdio.h>
 #include <malloc.h>
 
-typedef struct Stack{
+typedef struct Node{
     int value;
     struct Node* next;
-} Stack;
+} Node;
 
-int push(Stack *head, int value) {
+struct Stack {
+    Node* head;
+};
+
+int push(Stack *stack, int value) {
     Node *temp = malloc(sizeof(Node));
     if (temp == NULL) {
         printf("Problems with memory allocation");
         return -1;
     }
     temp->value = value;
-    temp->next = *head;
+    temp->next = stack->head;
 
-    *head = temp;
+    stack->head = temp;
     return 0;
 }
 
-int pop(Stack *head, int *errorCode) {
-    if (*head == NULL) {
+int pop(Stack *stack, int *errorCode) {
+    if (stack == NULL) {
         if (errorCode != NULL) {
             *errorCode = -1;
         }
@@ -32,31 +36,32 @@ int pop(Stack *head, int *errorCode) {
         *errorCode = 0;
     }
 
-    int value = (*head)->value;
+    int value = stack->head->value;
 
-    Node *next = (*head)->next;
-    free(*head);
-    *head = next;
+    Node *next = stack->head->next;
+    free(stack->head);
+    stack->head = next;
 
     return value;
 }
 
-bool isEmpty(Stack head) {
-    return head == NULL;
+bool isEmpty(Stack *stack) {
+    return stack->head == NULL;
 }
 
-void deleteStack(Stack *head) {
-    while (!isEmpty(*head)) {
+void deleteStack(Stack *stack) {
+    while (!isEmpty(stack)) {
         int errorCode = 0;
-        pop(head, &errorCode);
+        pop(stack, &errorCode);
     }
+    free(stack);
 }
 
-int top(Stack head) {
-    return head->value;
+int top(Stack *stack) {
+    return stack->head->value;
 }
 
-Stack createStack() {
-    Stack stack = malloc(sizeof(Node));
+Stack *createStack() {
+    Stack *stack = malloc(sizeof(Stack));
     return stack;
 }
