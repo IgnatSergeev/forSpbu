@@ -2,7 +2,12 @@
 #include <stdio.h>
 #include <malloc.h>
 
-int push(Node **head, int value) {
+typedef struct Node{
+    int value;
+    struct Node* next;
+} Node;
+
+int push(Stack *head, int value) {
     Node *temp = malloc(sizeof(Node));
     if (temp == NULL) {
         printf("Problems with memory allocation");
@@ -15,7 +20,7 @@ int push(Node **head, int value) {
     return 0;
 }
 
-int pop(Node **head, int *errorCode) {
+int pop(Stack *head, int *errorCode) {
     if (*head == NULL) {
         if (errorCode != NULL) {
             *errorCode = -1;
@@ -36,43 +41,22 @@ int pop(Node **head, int *errorCode) {
     return value;
 }
 
-bool isEmpty(Node *head) {
+bool isEmpty(Stack head) {
     return head == NULL;
 }
 
-void clear(Node **head) {
+void deleteStack(Stack *head) {
     while (!isEmpty(*head)) {
         int errorCode = 0;
         pop(head, &errorCode);
     }
 }
 
-int main() {
-    Node *head = NULL;
-    int errorCode = 0;
+int top(Stack head) {
+    return head->value;
+}
 
-    if (push(&head, 100) != 0) {
-        printf("Problems with memory allocation");
-        return -1;
-    }
-
-    printf("%d\n", head->value);
-    if (push(&head, 200) != 0) {
-        printf("Problems with memory allocation");
-        return -1;
-    }
-    printf("%d\n", head->value);
-
-    int value = pop(&head, &errorCode);
-    if (errorCode != 0) {
-        printf("Trying to remove null element");
-        return -1;
-    }
-
-    printf("%d, %d\n", head->value, value);
-
-    printf("%d\n", isEmpty(head));
-    clear(&head);
-
-    printf("%d\n", isEmpty(head));
+Stack createStack() {
+    Stack stack = malloc(sizeof(Node));
+    return stack;
 }

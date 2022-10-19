@@ -1,15 +1,19 @@
 #pragma once
 #include <stdbool.h>
 
-typedef struct Node{
-    int value;
-    struct Node* next;
-} Node;
+//Элемент стека
+struct Node;
 
-int push(Node **head, int element);
+typedef struct Node* Stack;
 
-int pop(Node **head, int *errorCode);
+int push(Stack *head, int element);
 
-bool isEmpty(Node *head);
+int pop(Stack *head, int *errorCode);
 
-void clear(Node **head);
+bool isEmpty(Stack head);
+
+Stack createStack();
+
+void deleteStack(Stack *head);
+
+int top(Stack head);
