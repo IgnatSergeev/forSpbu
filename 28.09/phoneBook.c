@@ -100,7 +100,6 @@ int main() {
     fclose(file);
 
     int phoneBookSize = phoneBookIndex;
-    printPhoneBook(phoneBook, phoneBookSize);
     int numberOfAddedContacts = 0;
 
     while (true) {
@@ -178,17 +177,19 @@ int main() {
             case 5:
                 file = fopen("../28.09/phoneBook.txt", "w");
                 if (file == NULL) {
-                    printf("Файл не найден");
+                    printf("Файл не найден\n");
 
                     return -1;
                 }
 
                 for (int i = phoneBookSize; i < phoneBookSize + numberOfAddedContacts; i++) {
-                    fprintf(file, "%s %s", phoneBook[i].name, phoneBook[i].phoneNumber);
+                    fprintf(file, "%s %s\n", phoneBook[i].name, phoneBook[i].phoneNumber);
+                    printf("%s %s\n", phoneBook[i].name, phoneBook[i].phoneNumber);
                 }
+                fclose(file);
                 break;
             default:
-                printf("Неизвестный ввод - повторите попытку");
+                printf("Неизвестный ввод - повторите попытку\n");
                 continueCondition = true;
                 break;
         }
