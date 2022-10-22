@@ -63,5 +63,6 @@ Type top(Stack *stack) {
 
 Stack *createStack() {
     Stack *stack = malloc(sizeof(Stack));
+    stack->head = NULL;
     return stack;
 }
