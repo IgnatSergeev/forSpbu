@@ -153,7 +153,7 @@ int main() {
     }
 
     int errorCode = 0;
-    Expression *expression = {parseStringIntoExpression(arithmeticExpression, &errorCode);
+    Expression *expression = parseStringIntoExpression(arithmeticExpression, &errorCode);
     if (errorCode) {
         printf("Произошла ошибка при парсинге выражения\n");
         return -1;
