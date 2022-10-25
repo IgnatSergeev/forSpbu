@@ -25,7 +25,7 @@ int push(Stack *stack, Type value) {
 }
 
 Type pop(Stack *stack, int *errorCode) {
-    if (stack == NULL) {
+    if (stack == NULL || isEmpty(stack)) {
         if (errorCode != NULL) {
             *errorCode = -1;
         }
@@ -63,5 +63,6 @@ Type top(Stack *stack) {
 
 Stack *createStack() {
     Stack *stack = malloc(sizeof(Stack));
+    stack->head = NULL;
     return stack;
 }
