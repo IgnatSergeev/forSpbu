@@ -1,6 +1,6 @@
 #pragma once
 #include <stdbool.h>
-#include "../12.10/typeDef.h"
+#include "typeDef.h"
 
 typedef struct Stack Stack;
 
