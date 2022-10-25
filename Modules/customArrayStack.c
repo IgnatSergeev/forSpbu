@@ -3,11 +3,11 @@
 #include <malloc.h>
 
 struct Stack{
-    int collection[100];
+    Type collection[100];
     int stackPosition;
 };
 
-int push(Stack *stack, int value) {
+int push(Stack *stack, Type value) {
     if (stack->stackPosition + 1 >= 100) {
         return -1;
     }
@@ -18,19 +18,19 @@ int push(Stack *stack, int value) {
     return 0;
 }
 
-int pop(Stack *stack, int *errorCode) {
+Type pop(Stack *stack, int *errorCode) {
     if (stack->stackPosition == -1) {
         if (errorCode != NULL) {
             *errorCode = -1;
         }
 
-        return 0;
+        return (Type)0;
     }
     if (errorCode != NULL) {
         *errorCode = 0;
     }
 
-    int value = stack->collection[stack->stackPosition];
+    Type value = stack->collection[stack->stackPosition];
 
     stack->stackPosition -= 1;
 
@@ -49,7 +49,7 @@ void deleteStack(Stack *stack) {
     free(stack);
 }
 
-int top(Stack *stack) {
+Type top(Stack *stack) {
     return stack->collection[stack->stackPosition];
 }
 
