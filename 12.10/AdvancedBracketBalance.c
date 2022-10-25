@@ -21,7 +21,7 @@ bool isBracketSequenceCorrect(const char bracketSequence[], int *errorCode) {
             }
             case ')': {
                 char lastBracket = pop(stack, errorCode);
-                if (errorCode) {
+                if (*errorCode) {
                     deleteStack(stack);
                     return false;
                 }
@@ -33,7 +33,7 @@ bool isBracketSequenceCorrect(const char bracketSequence[], int *errorCode) {
             }
             case '}': {
                 char lastBracket = pop(stack, errorCode);
-                if (errorCode) {
+                if (*errorCode) {
                     deleteStack(stack);
                     return false;
                 }
@@ -45,7 +45,7 @@ bool isBracketSequenceCorrect(const char bracketSequence[], int *errorCode) {
             }
             case ']': {
                 char lastBracket = pop(stack, errorCode);
-                if (errorCode) {
+                if (*errorCode) {
                     deleteStack(stack);
                     return false;
                 }

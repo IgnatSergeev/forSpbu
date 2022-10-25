@@ -3,4 +3,4 @@ project(forSpbu C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(forSpbu Modules/customStack.c 12.10/AdvancedBracketBalance.c 12.10/typeDef.h)
+add_executable(forSpbu Modules/customStack.c 12.10/AdvancedBracketBalance.c)

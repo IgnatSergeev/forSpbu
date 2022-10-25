@@ -25,7 +25,7 @@ int push(Stack *stack, Type value) {
 }
 
 Type pop(Stack *stack, int *errorCode) {
-    if (stack == NULL || isEmpty(stack)) {
+    if (isEmpty(stack)) {
         if (errorCode != NULL) {
             *errorCode = -1;
         }
