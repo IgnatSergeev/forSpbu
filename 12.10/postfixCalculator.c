@@ -96,7 +96,17 @@ int evaluateExpression(const char expression[], int expressionSize, int *errorCo
 }
 
 bool test() {
-    return true;
+    bool testResult = true;
+
+    int errorCode = 0;
+    if (evaluateExpression("9 6 - 1 2 + *", 13, &errorCode) != 9) {
+        testResult = false;
+    }
+    if (errorCode) {
+        printf("Возникла ошибка в вычислении результата");
+        return false;
+    }
+    return testResult;
 }
 
 int main() {
@@ -120,16 +130,16 @@ int main() {
         ++arithmeticExpressionIndex;
     }
     if (arithmeticExpressionIndex >= maxLineSize) {
-        printf("%s%d%s", "Введённое выражение длиннее " , maxLineSize," символов");
+        printf("%s%d%s", "Введённое выражение длиннее ", maxLineSize, " символов\n");
         return -1;
     }
 
     int errorCode = 0;
     int resultOfExpressionEvaluation = evaluateExpression(arithmeticExpression, arithmeticExpressionIndex, &errorCode);
     if (errorCode) {
-        printf("Возникла ошибка в вычислении ошибки");
+        printf("Возникла ошибка в вычислении результата\n");
         return -1;
     }
-    printf("Результат вычисления выражения = %d", resultOfExpressionEvaluation);
+    printf("Результат вычисления выражения = %d\n", resultOfExpressionEvaluation);
     return 0;
 }
