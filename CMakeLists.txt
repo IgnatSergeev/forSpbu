@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.20.2)
 project(forSpbu C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(forSpbu Modules/temp.c Modules/customStack.c)
+add_executable(forSpbu Modules/customStack.c 12.10/AdvancedBracketBalance.c)
