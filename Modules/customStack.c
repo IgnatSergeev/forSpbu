@@ -3,7 +3,7 @@
 #include <malloc.h>
 
 typedef struct Node{
-    int value;
+    Type value;
     struct Node* next;
 } Node;
 
@@ -11,7 +11,7 @@ struct Stack {
     Node* head;
 };
 
-int push(Stack *stack, int value) {
+int push(Stack *stack, Type value) {
     Node *temp = malloc(sizeof(Node));
     if (temp == NULL) {
         printf("Problems with memory allocation");
@@ -24,19 +24,19 @@ int push(Stack *stack, int value) {
     return 0;
 }
 
-int pop(Stack *stack, int *errorCode) {
-    if (stack == NULL || isEmpty(stack)) {
+Type pop(Stack *stack, int *errorCode) {
+    if (isEmpty(stack)) {
         if (errorCode != NULL) {
             *errorCode = -1;
         }
 
-        return 0;
+        return (Type)0;
     }
     if (errorCode != NULL) {
         *errorCode = 0;
     }
 
-    int value = stack->head->value;
+    Type value = stack->head->value;
 
     Node *next = stack->head->next;
     free(stack->head);
@@ -57,7 +57,7 @@ void deleteStack(Stack *stack) {
     free(stack);
 }
 
-int top(Stack *stack) {
+Type top(Stack *stack) {
     return stack->head->value;
 }
 
