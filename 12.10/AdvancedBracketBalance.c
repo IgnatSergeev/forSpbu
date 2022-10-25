@@ -71,7 +71,10 @@ bool test() {
     bool testResult = true;
 
     int errorCode = 0;
-    if (!isBracketSequenceCorrect("()", &errorCode)) {
+    if (!isBracketSequenceCorrect("{()}", &errorCode)) {
+        testResult = false;
+    }
+    if (!isBracketSequenceCorrect("{(})", &errorCode)) {
         testResult = false;
     }
     if (errorCode) {
