@@ -4,7 +4,8 @@
 
 #define maxLineSize 100
 
-bool isBracketSequenceCorrect(char bracketSequence[], int *errorCode) {
+bool isBracketSequenceCorrect(const char bracketSequence[], int *errorCode) {
+    *errorCode = 0;
     Stack *stack = createStack();
     bool bracketSequenceCorrect = true;
     for (int i = 0; i < maxLineSize; i++) {
@@ -14,18 +15,63 @@ bool isBracketSequenceCorrect(char bracketSequence[], int *errorCode) {
 
         char currentBracket = bracketSequence[i];
         switch (currentBracket) {
-            case '(': {
-
+            case '(': case '{': case '[': {
+                push(stack, currentBracket);
+                break;
+            }
+            case ')': {
+                char lastBracket = pop(stack, errorCode);
+                if (errorCode) {
+                    deleteStack(stack);
+                    return false;
+                }
+                if (lastBracket != '(') {
+                    deleteStack(stack);
+                    return false;
+                }
+                break;
+            }
+            case '}': {
+                char lastBracket = pop(stack, errorCode);
+                if (errorCode) {
+                    deleteStack(stack);
+                    return false;
+                }
+                if (lastBracket != '{') {
+                    deleteStack(stack);
+                    return false;
+                }
+                break;
+            }
+            case ']': {
+                char lastBracket = pop(stack, errorCode);
+                if (errorCode) {
+                    deleteStack(stack);
+                    return false;
+                }
+                if (lastBracket != '[') {
+                    deleteStack(stack);
+                    return false;
+                }
+                break;
+            }
+            default: {
+                printf("Неизвестный символ в скобочной записи");
+                deleteStack(stack);
+                return false;
             }
         }
     }
+    bracketSequenceCorrect = isEmpty(stack);
+    deleteStack(stack);
+    return bracketSequenceCorrect;
 }
 
 bool test() {
     bool testResult = true;
 
     int errorCode = 0;
-    if (evaluateExpression("9 6 - 1 2 + *", 13, &errorCode) != 9) {
+    if (!isBracketSequenceCorrect("()", &errorCode)) {
         testResult = false;
     }
     if (errorCode) {
@@ -51,7 +97,7 @@ int main() {
     int errorCode = 0;
     bool isInputBracketSequenceCorrect = isBracketSequenceCorrect(inputBracketSequences, &errorCode);
     if (errorCode) {
-        printf("Возникла ошибка в вычислении результата\n");
+        printf("Возникла ошибка в определении корректности записи\n");
         return -1;
     }
     if (isInputBracketSequenceCorrect) {
