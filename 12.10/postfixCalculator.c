@@ -41,8 +41,7 @@ int evaluateExpression(const char expression[], int expressionSize, int *errorCo
         }
 
         switch (expression[currentIndex]) {
-            case '+':
-            {
+            case '+': {
                 push(stack, firstArgument + secondArgument);
                 if (*errorCode) {
                     deleteStack(stack);
@@ -50,8 +49,7 @@ int evaluateExpression(const char expression[], int expressionSize, int *errorCo
                 }
                 break;
             }
-            case '-':
-            {
+            case '-': {
                 push(stack, firstArgument - secondArgument);
                 if (*errorCode) {
                     deleteStack(stack);
@@ -59,8 +57,7 @@ int evaluateExpression(const char expression[], int expressionSize, int *errorCo
                 }
                 break;
             }
-            case '*':
-            {
+            case '*': {
                 push(stack, firstArgument * secondArgument);
                 if (*errorCode) {
                     deleteStack(stack);
@@ -68,8 +65,7 @@ int evaluateExpression(const char expression[], int expressionSize, int *errorCo
                 }
                 break;
             }
-            case '/':
-            {
+            case '/': {
                 push(stack, firstArgument / secondArgument);
                 if (*errorCode) {
                     deleteStack(stack);
@@ -77,8 +73,7 @@ int evaluateExpression(const char expression[], int expressionSize, int *errorCo
                 }
                 break;
             }
-            default:
-            {
+            default: {
                 *errorCode = 1;
                 printf("Неизвестная операция");
                 return 0;
