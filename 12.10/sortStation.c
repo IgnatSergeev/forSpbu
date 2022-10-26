@@ -45,6 +45,7 @@ char *parseInfixStringIntoPostfixString(const char *string, int *errorCode) {
             if (indexInOutputExpression + 1 >= maxLineSize) {
                 printf("При преобразовании максимальное количество элементов в выражении превышено\n");
                 *errorCode = 1;
+                deleteStack(stack);
                 return NULL;
             }
             outputExpressionInPrefixForm[indexInOutputExpression] = string[i];
@@ -57,11 +58,13 @@ char *parseInfixStringIntoPostfixString(const char *string, int *errorCode) {
                 char secondOperator = pop(stack, errorCode);
                 if (*errorCode) {
                     printf("Попаю пустой стэк, вероятно не правильная арифметическая запись\n");
+                    deleteStack(stack);
                     return NULL;
                 }
                 if (indexInOutputExpression + 1 >= maxLineSize) {
                     printf("При преобразовании максимальное количество элементов в выражении превышено\n");
                     *errorCode = 1;
+                    deleteStack(stack);
                     return  NULL;
                 }
                 outputExpressionInPrefixForm[indexInOutputExpression] = secondOperator;
@@ -81,11 +84,13 @@ char *parseInfixStringIntoPostfixString(const char *string, int *errorCode) {
                 char topValue = pop(stack, errorCode);
                 if (*errorCode) {
                     printf("Попаю пустой стэк, вероятно не правильная арифметическая запись(проблема со скобками)\n");
+                    deleteStack(stack);
                     return NULL;
                 }
                 if (indexInOutputExpression + 1 >= maxLineSize) {
                     printf("При преобразовании максимальное количество элементов в выражении превышено\n");
                     *errorCode = 1;
+                    deleteStack(stack);
                     return  NULL;
                 }
                 outputExpressionInPrefixForm[indexInOutputExpression] = topValue;
@@ -95,32 +100,38 @@ char *parseInfixStringIntoPostfixString(const char *string, int *errorCode) {
             pop(stack, errorCode);
             if (*errorCode) {
                 printf("Попаю пустой стэк, вероятно не правильная арифметическая запись\n");
+                deleteStack(stack);
                 return NULL;
             }
         }
         *errorCode = 1;
         printf("Неизвестный символ в выражении\n");
+        deleteStack(stack);
         return NULL;
     }
     while (!isEmpty(stack)) {
         char topValue = pop(stack, errorCode);
         if (*errorCode) {
             printf("Попаю пустой стэк, вероятно не правильная арифметическая запись\n");
+            deleteStack(stack);
             return NULL;
         }
         if (topValue == '(') {
             *errorCode = 1;
             printf("Попаю пустой стэк, вероятно не правильная арифметическая запись(проблема со скобками)\n");
+            deleteStack(stack);
             return NULL;
         }
         if (indexInOutputExpression + 1 >= maxLineSize) {
             printf("При преобразовании максимальное количество элементов в выражении превышено\n");
             *errorCode = 1;
+            deleteStack(stack);
             return  NULL;
         }
         outputExpressionInPrefixForm[indexInOutputExpression] = topValue;
         outputExpressionInPrefixForm[++indexInOutputExpression] = ' ';
         ++indexInOutputExpression;
     }
+    deleteStack(stack);
     return outputExpressionInPrefixForm;
 }
