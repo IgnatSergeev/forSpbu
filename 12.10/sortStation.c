@@ -151,13 +151,27 @@ bool test() {
 }
 
 int main() {
-    char infixExpression[] = "1+3*2/3";
+    if (!test()) {
+        printf("Тесты провалены\n");
+
+        return -1;
+    } else {
+        printf("Тесты пройдены\n");
+    }
+
+    printf("Введите выражение в инфиксной форме, состоящее из цифр и знаков +,"
+           " -, *, / и содержащее не более %d символов\n", maxLineSize);
+    char infixExpression[maxLineSize + 1] = {0};
+    scanf("%s", infixExpression);
+
     int errorCode = 0;
     char *postfixExpression = parseInfixStringIntoPostfixString(infixExpression, &errorCode);
-    printf("%s", postfixExpression);
+    printf("Введённое выражение, переведённое в постфиксную форму: %s\n", postfixExpression);
     if (errorCode) {
-        printf("Ошибка при парсинге выражения");
+        printf("Ошибка при парсинге выражения\n");
         return -1;
     }
+
     free(postfixExpression);
+    return 0;
 }
