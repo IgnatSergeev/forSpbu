@@ -48,7 +48,7 @@ int main() {
         printf("Размер массива должен быть положительным");
         return -1;
     }
-    Pair *arrayOfSumsOfDigits = calloc(numOfArrayElements, sizeof(int));
+    Pair *arrayOfSumsOfDigits = calloc(numOfArrayElements, sizeof(Pair));
     if (arrayOfSumsOfDigits == NULL) {
         printf("Проблемы с аллокацией памяти\n");
         return -1;
@@ -88,5 +88,7 @@ int main() {
             printf("%d ", arrayOfSumsOfDigits[i].value);
         }
     }
+
+    free(arrayOfSumsOfDigits);
     return 0;
 }
