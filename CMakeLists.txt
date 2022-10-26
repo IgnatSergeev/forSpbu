@@ -3,4 +3,4 @@ project(forSpbu C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(forSpbu  KR2/Task_2.c)
+add_executable(forSpbu KR2/Task_3.c)
