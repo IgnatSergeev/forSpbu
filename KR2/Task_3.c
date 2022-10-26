@@ -8,7 +8,38 @@
 
 bool test() {
     bool testResult = true;
+    FILE *file = fopen("../KR2/testFileForTask3.txt", "r");
+    if (file == NULL) {
+        printf("Файл не найден\n");
+        return false;
+    }
+    int arrayWithNumbersOfApearences[NUM_OF_ASCII_CODES] = {0};
 
+    while (!feof(file)) {
+        char letter = 0;
+        fscanf(file, "%c", &letter);
+        ++arrayWithNumbersOfApearences[(int)letter];
+    }
+    fclose(file);
+
+    for (int i = 0; i < NUM_OF_ASCII_CODES; i++) {
+        if (i == 10 && arrayWithNumbersOfApearences[i] != 1) {
+            testResult = false;
+            break;
+        }
+        if (i == 97 && arrayWithNumbersOfApearences[i] != 2) {
+            testResult = false;
+            break;
+        }
+        if (i == 0 && arrayWithNumbersOfApearences[i] != 1) {
+            testResult = false;
+            break;
+        }
+        if (arrayWithNumbersOfApearences[i] != 0) {
+            testResult = false;
+            break;
+        }
+    }
     return testResult;
 }
 
