@@ -102,5 +102,25 @@ char *parseInfixStringIntoPostfixString(const char *string, int *errorCode) {
         printf("Неизвестный символ в выражении\n");
         return NULL;
     }
+    while (!isEmpty(stack)) {
+        char topValue = pop(stack, errorCode);
+        if (*errorCode) {
+            printf("Попаю пустой стэк, вероятно не правильная арифметическая запись\n");
+            return NULL;
+        }
+        if (topValue == '(') {
+            *errorCode = 1;
+            printf("Попаю пустой стэк, вероятно не правильная арифметическая запись(проблема со скобками)\n");
+            return NULL;
+        }
+        if (indexInOutputExpression + 1 >= maxLineSize) {
+            printf("При преобразовании максимальное количество элементов в выражении превышено\n");
+            *errorCode = 1;
+            return  NULL;
+        }
+        outputExpressionInPrefixForm[indexInOutputExpression] = topValue;
+        outputExpressionInPrefixForm[++indexInOutputExpression] = ' ';
+        ++indexInOutputExpression;
+    }
     return outputExpressionInPrefixForm;
 }
