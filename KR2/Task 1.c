@@ -3,7 +3,7 @@
 #include <locale.h>
 #include <malloc.h>
 
-#define maxLineSize 100
+#define MAX_LINE_SIZE 100
 
 typedef struct Pair{
     int sumOfDigits;
@@ -41,7 +41,7 @@ int main() {
         printf("Тесты пройдены\n");
     }
 
-    printf("Введите количество элементов массива,а затем сами элементы(по длине каждый из них не должен превышать %d символов)\n", maxLineSize);
+    printf("Введите количество элементов массива,а затем сами элементы(по длине каждый из них не должен превышать %d символов)\n", MAX_LINE_SIZE);
     int numOfArrayElements = 0;
     scanf("%d", &numOfArrayElements);
     if (numOfArrayElements <= 0) {
@@ -54,12 +54,12 @@ int main() {
         return -1;
     }
     for (int i = 0; i < numOfArrayElements; i++) {
-        char number[maxLineSize] = {0};
+        char number[MAX_LINE_SIZE] = {0};
         scanf("%s", number);
         int value = 0;
         int sumOfDigits = 0;
         bool isNegative = false;
-        for (int j = 0; j < maxLineSize; j++) {
+        for (int j = 0; j < MAX_LINE_SIZE; j++) {
             if (number[j] == '\0') {
                 break;
             }
