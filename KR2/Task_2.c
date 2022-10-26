@@ -35,6 +35,11 @@ void monkeySort(int array[], int arraySize) {
 
 bool test() {
     bool testResult = true;
+    int array[] = {2, 1};
+    randomlySwapTwoElements(array, 2);
+    if (array[0] != 1 || array[1] != 2 || !isSorted(array, 2)) {
+        testResult = false;
+    }
 
     return testResult;
 }
