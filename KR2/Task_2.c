@@ -76,5 +76,7 @@ int main() {
     srand((unsigned)(time(NULL)));
     monkeySort(array, numOfArrayElements);
     printf("Массив отсортирован\n");
+
+    free(array);
     return 0;
 }
