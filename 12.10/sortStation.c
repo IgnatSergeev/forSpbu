@@ -12,6 +12,23 @@ bool isDigit(char element) {
     return false;
 }
 
+bool isOperator(char element) {
+    if (element == '+' || element == '-' || element == '*' || element == '/') {
+        return true;
+    }
+    return false;
+}
+
+bool isPriorityOfSecondOperatorHigherOrEqual(char firstOperator, char secondOperator) {
+    if (secondOperator == '*' || secondOperator == '/') {
+        return true;
+    }
+    if (firstOperator == '+' || firstOperator == '-') {
+        return true;
+    }
+    return false;
+}
+
 char *parseInfixStringIntoPostfixString(const char *string, int *errorCode) {
     Stack *stack = createStack();
     char *outputExpressionInPrefixForm = calloc(maxLineSize + 1, sizeof(char));
@@ -35,6 +52,55 @@ char *parseInfixStringIntoPostfixString(const char *string, int *errorCode) {
             ++indexInOutputExpression;
             continue;
         }
+        if (isOperator(string[i])) {
+            while (!isEmpty(stack) && isOperator(top(stack)) && isPriorityOfSecondOperatorHigherOrEqual(string[i], top(stack))) {
+                char secondOperator = pop(stack, errorCode);
+                if (*errorCode) {
+                    printf("Попаю пустой стэк, вероятно не правильная арифметическая запись\n");
+                    return NULL;
+                }
+                if (indexInOutputExpression + 1 >= maxLineSize) {
+                    printf("При преобразовании максимальное количество элементов в выражении превышено\n");
+                    *errorCode = 1;
+                    return  NULL;
+                }
+                outputExpressionInPrefixForm[indexInOutputExpression] = secondOperator;
+                outputExpressionInPrefixForm[++indexInOutputExpression] = ' ';
+                ++indexInOutputExpression;
+            }
+            push(stack, string[i]);
+            continue;
+        }
+        if (string[i] == '(') {
+            push(stack, string[i]);
+            continue;
+        }
+        if (string[i] == ')') {
+            //Добавить в топ проверку на пустоту стэка
+            while (top(stack) != '(') {
+                char topValue = pop(stack, errorCode);
+                if (*errorCode) {
+                    printf("Попаю пустой стэк, вероятно не правильная арифметическая запись(проблема со скобками)\n");
+                    return NULL;
+                }
+                if (indexInOutputExpression + 1 >= maxLineSize) {
+                    printf("При преобразовании максимальное количество элементов в выражении превышено\n");
+                    *errorCode = 1;
+                    return  NULL;
+                }
+                outputExpressionInPrefixForm[indexInOutputExpression] = topValue;
+                outputExpressionInPrefixForm[++indexInOutputExpression] = ' ';
+                ++indexInOutputExpression;
+            }
+            pop(stack, errorCode);
+            if (*errorCode) {
+                printf("Попаю пустой стэк, вероятно не правильная арифметическая запись\n");
+                return NULL;
+            }
+        }
+        *errorCode = 1;
+        printf("Неизвестный символ в выражении\n");
+        return NULL;
     }
     return outputExpressionInPrefixForm;
 }
