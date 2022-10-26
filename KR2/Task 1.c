@@ -44,6 +44,10 @@ int main() {
     printf("Введите количество элементов массива,а затем сами элементы(по длине каждый из них не должен превышать %d символов)\n", maxLineSize);
     int numOfArrayElements = 0;
     scanf("%d", &numOfArrayElements);
+    if (numOfArrayElements <= 0) {
+        printf("Размер массива должен быть положительным");
+        return -1;
+    }
     Pair *arrayOfSumsOfDigits = calloc(numOfArrayElements, sizeof(int));
     if (arrayOfSumsOfDigits == NULL) {
         printf("Проблемы с аллокацией памяти\n");
