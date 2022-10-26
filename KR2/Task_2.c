@@ -4,8 +4,6 @@
 #include <malloc.h>
 #include <time.h>
 
-#define max_Line_Size 100
-
 void randomlySwapTwoElements(int array[], int arraySize) {
     int firstRandomIndex = rand() % arraySize;
     int secondRandomIndex = rand() % arraySize;
