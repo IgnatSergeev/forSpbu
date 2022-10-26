@@ -34,7 +34,7 @@ int main() {
     setlocale(LC_ALL, "");
 
     if (!test()) {
-        printf("Тесты провалены");
+        printf("Тесты провалены\n");
 
         return -1;
     } else {
@@ -46,7 +46,7 @@ int main() {
     scanf("%d", &numOfArrayElements);
     Pair *arrayOfSumsOfDigits = calloc(numOfArrayElements, sizeof(int));
     if (arrayOfSumsOfDigits == NULL) {
-        printf("Проблемы с аллокацией памяти");
+        printf("Проблемы с аллокацией памяти\n");
         return -1;
     }
     for (int i = 0; i < numOfArrayElements; i++) {
