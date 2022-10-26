@@ -1,6 +1,7 @@
 #include "../Modules/customStack.h"
 #include <stdio.h>
 #include <malloc.h>
+#include <string.h>
 
 #define maxLineSize 100
 
@@ -29,7 +30,7 @@ bool isPriorityOfSecondOperatorHigherOrEqual(char firstOperator, char secondOper
     return false;
 }
 
-char *parseInfixStringIntoPostfixString(const char *string, int *errorCode) {
+char *parseInfixStringIntoPostfixString(char *string, int *errorCode) {
     Stack *stack = createStack();
     char *outputExpressionInPrefixForm = calloc(maxLineSize + 1, sizeof(char));
     int indexInOutputExpression = 0;
@@ -103,6 +104,7 @@ char *parseInfixStringIntoPostfixString(const char *string, int *errorCode) {
                 deleteStack(stack);
                 return NULL;
             }
+            continue;
         }
         *errorCode = 1;
         printf("Неизвестный символ в выражении\n");
@@ -134,4 +136,28 @@ char *parseInfixStringIntoPostfixString(const char *string, int *errorCode) {
     }
     deleteStack(stack);
     return outputExpressionInPrefixForm;
+}
+
+bool test() {
+    bool testResult = true;
+    char infixExpression[] = "1+3*2/3";
+    int errorCode = 0;
+    char *postfixExpression = parseInfixStringIntoPostfixString(infixExpression, &errorCode);
+    if (!strcmp(postfixExpression, "1 3 2 * 3 / +")) {
+        testResult = false;
+    }
+    free(postfixExpression);
+    return testResult;
+}
+
+int main() {
+    char infixExpression[] = "1+3*2/3";
+    int errorCode = 0;
+    char *postfixExpression = parseInfixStringIntoPostfixString(infixExpression, &errorCode);
+    printf("%s", postfixExpression);
+    if (errorCode) {
+        printf("Ошибка при парсинге выражения");
+        return -1;
+    }
+    free(postfixExpression);
 }
