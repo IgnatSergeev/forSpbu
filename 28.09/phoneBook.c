@@ -1,47 +1,80 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <malloc.h>
 
 #define lineMaxSize 100
 #define phoneBookMaxSize 100
 #define phoneNumberMaxSize 13
 
 struct Contact {
-    char *name;
-    char *phoneNumber;
+    char name[lineMaxSize - phoneNumberMaxSize];
+    char phoneNumber[phoneNumberMaxSize];
 } Contact;
 
-void printPhoneBook(struct Contact phoneBook[], int phoneBookSize) {
+void printPhoneBook(struct Contact *phoneBook[], int phoneBookSize) {
     for (int i = 0; i < phoneBookSize; i++) {
-        struct Contact currentContact = phoneBook[i];
-        printf("%s %s", currentContact.name, currentContact.phoneNumber);
+        struct Contact *currentContact = phoneBook[i];
+        printf("%s %s\n", currentContact->name, currentContact->phoneNumber);
     }
 }
 
-void addContact(struct Contact phoneBook[], int phoneBookSizeIncludingContactsAddedInCurrentRun, char newContactsName[], char newContactsPhoneNumber[]) {
-    struct Contact newContact = {newContactsName, newContactsPhoneNumber};
+void addContact(struct Contact *phoneBook[], int phoneBookSizeIncludingContactsAddedInCurrentRun, char newContactsName[], char newContactsPhoneNumber[]) {
+    struct Contact *newContact = calloc(1, sizeof(Contact));
+    for (int i = 0; i < lineMaxSize; i++) {
+        if (newContactsName[i] == '\0') {
+            break;
+        }
+        newContact->name[i] = newContactsName[i];
+    }
+    for (int i = 0; i < lineMaxSize; i++) {
+        if (newContactsPhoneNumber[i] == '\0') {
+            break;
+        }
+        newContact->phoneNumber[i] = newContactsPhoneNumber[i];
+    }
     phoneBook[phoneBookSizeIncludingContactsAddedInCurrentRun] = newContact;
 }
 
-char *searchByTheName(struct Contact phoneBook[], int phoneBookSizeIncludingContactsAddedInCurrentRun, char contactsName[]) {
+bool isStringsEqual(const char string1[], const char string2[]) {
+    bool isEqual = true;
+    for (int i = 0; i < lineMaxSize; i++) {
+        if (string1[i] == '\0') {
+            isEqual = string2[i] == '\0';
+            break;
+        }
+        if (string2[i] == '\0') {
+            isEqual = string1[i] == '\0';
+            break;
+        }
+        if (string1[i] != string2[i]) {
+            isEqual = false;
+            break;
+        }
+    }
+
+    return isEqual;
+}
+
+char *searchByTheName(struct Contact *phoneBook[], int phoneBookSizeIncludingContactsAddedInCurrentRun, char contactsName[]) {
     char *contactsPhoneNumber = NULL;
 
     for (int i = 0; i < phoneBookSizeIncludingContactsAddedInCurrentRun; i++) {
-        char *currentContactsName = phoneBook[i].name;
-        if (currentContactsName == contactsName) {
-            contactsPhoneNumber = phoneBook[i].phoneNumber;
+        char *currentContactsName = phoneBook[i]->name;
+        if (isStringsEqual(currentContactsName, contactsName)) {
+            contactsPhoneNumber = phoneBook[i]->phoneNumber;
             break;
         }
     }
     return contactsPhoneNumber;
 }
 
-char *searchByThePhoneNumber(struct Contact phoneBook[], int phoneBookSizeIncludingContactsAddedInCurrentRun, char contactsPhoneNumber[]) {
+char *searchByThePhoneNumber(struct Contact *phoneBook[], int phoneBookSizeIncludingContactsAddedInCurrentRun, char contactsPhoneNumber[]) {
     char *contactsName = NULL;
 
     for (int i = 0; i < phoneBookSizeIncludingContactsAddedInCurrentRun; i++) {
-        char *currentContactsPhoneNumber = phoneBook[i].phoneNumber;
-        if (currentContactsPhoneNumber == contactsPhoneNumber) {
-            contactsName = phoneBook[i].name;
+        char *currentContactsPhoneNumber = phoneBook[i]->phoneNumber;
+        if (isStringsEqual(currentContactsPhoneNumber, contactsPhoneNumber)) {
+            contactsName = phoneBook[i]->name;
             break;
         }
     }
@@ -79,21 +112,26 @@ int main() {
     }
 
     char word[lineMaxSize] = {0};
-    struct Contact phoneBook[phoneBookMaxSize] = {0};
+    struct Contact *phoneBook[phoneBookMaxSize] = {0};
 
     int phoneBookIndex = 0;
     while (fscanf(file, "%s", word) == 1) {
-        char currentName[lineMaxSize] = {0};
+        struct Contact *currentContact = calloc(1, sizeof(Contact));
         for (int i = 0; i < lineMaxSize; i++) {
             if (word[i] == '\0') {
                 break;
             }
-            currentName[i] = word[i];
+            currentContact->name[i] = word[i];
         }
         char currentPhoneNumber[phoneNumberMaxSize] = {0};
         fscanf(file, "%s", currentPhoneNumber);
+        for (int i = 0; i < lineMaxSize; i++) {
+            if (currentPhoneNumber[i] == '\0') {
+                break;
+            }
+            currentContact->phoneNumber[i] = currentPhoneNumber[i];
+        }
 
-        struct Contact currentContact = {currentName, currentPhoneNumber};
         phoneBook[phoneBookIndex] = currentContact;
         ++phoneBookIndex;
     }
@@ -101,6 +139,8 @@ int main() {
 
     int phoneBookSize = phoneBookIndex;
     int numberOfAddedContacts = 0;
+    char inputName[lineMaxSize - phoneNumberMaxSize] = {0};
+    char inputPhoneNumber[phoneNumberMaxSize] = {0};
 
     while (true) {
         int userInput = 0;
@@ -113,8 +153,6 @@ int main() {
         scanf("%d", &userInput);
         bool endCondition = false;
         bool continueCondition = false;
-        char inputName[lineMaxSize - phoneNumberMaxSize] = {0};
-        char inputPhoneNumber[phoneNumberMaxSize] = {0};
 
         switch (userInput) {
             case 0:
@@ -150,7 +188,7 @@ int main() {
                 ++numberOfAddedContacts;
                 break;
             case 2:
-                printPhoneBook(phoneBook, phoneBookSize);
+                printPhoneBook(phoneBook, phoneBookSize + numberOfAddedContacts);
                 break;
             case 3:
                 printf("Введите имя (длиной не боллее %d символов), номер которого вы хотите найти в книге\n",
@@ -161,21 +199,21 @@ int main() {
                     printf("Конакт с таким именем не найден\n");
                     break;
                 }
-                printf("%Вот номер телефона искомого контакта%s\n", phoneNumber);
+                printf("Вот номер телефона искомого контакта - %s\n", phoneNumber);
                 break;
             case 4:
                 printf("Введите номер телефона контакта в формате: +7 и %d цифр, имя которого вы хотите найти в книге\n",
-                       lineMaxSize - phoneNumberMaxSize - 1);
+                       phoneNumberMaxSize - 3);
                 scanf("%s", inputPhoneNumber);
                 char *name = searchByThePhoneNumber(phoneBook, phoneBookSize + numberOfAddedContacts, inputPhoneNumber);
                 if (name == NULL) {
                     printf("Конакт с таким номером телефона не найден\n");
                     break;
                 }
-                printf("Вот имя искомого контакта%s\n", name);
+                printf("Вот имя искомого контакта - %s\n", name);
                 break;
             case 5:
-                file = fopen("../28.09/phoneBook.txt", "w");
+                file = fopen("../28.09/phoneBook.txt", "a");
                 if (file == NULL) {
                     printf("Файл не найден\n");
 
@@ -183,9 +221,9 @@ int main() {
                 }
 
                 for (int i = phoneBookSize; i < phoneBookSize + numberOfAddedContacts; i++) {
-                    fprintf(file, "%s %s\n", phoneBook[i].name, phoneBook[i].phoneNumber);
-                    printf("%s %s\n", phoneBook[i].name, phoneBook[i].phoneNumber);
+                    fprintf(file, "%s %s\n", phoneBook[i]->name, phoneBook[i]->phoneNumber);
                 }
+
                 fclose(file);
                 break;
             default:
@@ -200,4 +238,9 @@ int main() {
             break;
         }
     }
+
+    for (int i = 0; i < phoneBookSize + numberOfAddedContacts; i++) {
+        free(phoneBook[i]);
+    }
+    return 0;
 }
