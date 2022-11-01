@@ -1,4 +1,5 @@
 #include "loopedList.h"
+#include <stdio.h>
 
 typedef struct Node {
     int realPosition;
@@ -23,9 +24,9 @@ LoopedList *createLoopedList() {
     return loopedList;
 }
 
-void clearSortedList(LoopedList *loopedList) {
+void clearLoopedList(LoopedList *loopedList) {
     while (!isLoopedListEmpty(loopedList)) {
-        deleteNode(loopedList, 0);
+        deleteNode(loopedList, 1);
     }
     free(loopedList);
 }
@@ -37,15 +38,16 @@ int insertNode(LoopedList *loopedList) {
     }
     loopedList->size += 1;
     if (isLoopedListEmpty(loopedList)) {
-        newNode->realPosition = 0;
-        newNode->startPosition = 0;
+        newNode->realPosition = 1;
+        newNode->startPosition = 1;
         newNode->next = newNode;
         loopedList->head = newNode;
         return 0;
     }
 
-    Node *lastNode = loopedList->head;
-    while (lastNode->next != NULL) {
+    Node *headNode = loopedList->head;
+    Node *lastNode = headNode;
+    while (lastNode->next != headNode) {
         lastNode = lastNode->next;
     }
     newNode->realPosition = lastNode->realPosition + 1;
@@ -61,13 +63,17 @@ int deleteNode(LoopedList *loopedList, int realPositionToDelete) {
     }
     Node *headNode = loopedList->head;
 
-    if (headNode->realPosition == realPositionToDelete) {
-        if (loopedList->size == 1) {
-            free(headNode);
-            loopedList->head = NULL;
-            loopedList->size = 0;
-            return 0;
+    if (loopedList->size == 1) {
+        if (headNode->realPosition != realPositionToDelete) {
+            return -1;
         }
+        free(headNode);
+        loopedList->head = NULL;
+        loopedList->size = 0;
+        return 0;
+    }
+
+    if (headNode->realPosition == realPositionToDelete) {
         Node *iteratorNode = headNode;
         while (iteratorNode->next != headNode) {
             iteratorNode = iteratorNode->next;
@@ -75,14 +81,18 @@ int deleteNode(LoopedList *loopedList, int realPositionToDelete) {
         }
         Node *lastNode = iteratorNode;
         lastNode->next = headNode->next;
+        loopedList->head = headNode->next;
         free(headNode);
         loopedList->size -= 1;
         return 0;
     }
 
     Node *iteratorNode = headNode;
-    while (iteratorNode->next->realPosition != realPositionToDelete) {
+    while (iteratorNode->next != headNode && iteratorNode->next->realPosition != realPositionToDelete) {
         iteratorNode = iteratorNode->next;
+    }
+    if (iteratorNode->next == headNode) {
+        return -1;
     }
     Node *nodeToDelete = iteratorNode->next;
     iteratorNode->next = nodeToDelete->next;
@@ -93,4 +103,22 @@ int deleteNode(LoopedList *loopedList, int realPositionToDelete) {
     }
     loopedList->size -= 1;
     return 0;
+}
+
+void printLoopedList(LoopedList *loopedList) {
+    if (!isLoopedListEmpty(loopedList)) {
+        Node *headNode = loopedList->head;
+        Node *iteratorNode = headNode;
+
+        while(iteratorNode->next != headNode)
+        {
+            printf("%d ", iteratorNode->startPosition);
+            iteratorNode = iteratorNode->next;
+        }
+        printf("%d\n", iteratorNode->startPosition);
+    }
+}
+
+int loopedListSize(LoopedList *loopedList) {
+    return loopedList->size;
 }
