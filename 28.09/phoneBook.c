@@ -91,7 +91,36 @@ bool isDigit(char symbol) {
 
 bool test() {
     bool testResult = true;
-
+    struct Contact *testPhoneBook[phoneBookMaxSize] = {0};
+    addContact(testPhoneBook, 0, "name", "+79999999999");
+    if (!isStringsEqual("string", "string")) {
+        testResult = false;
+        return testResult;
+    }
+    if (isStringsEqual("string1", "string")) {
+        testResult = false;
+        return testResult;
+    }
+    if (!isDigit('1')) {
+        testResult = false;
+        return testResult;
+    }
+    if (isDigit('a')) {
+        testResult = false;
+        return testResult;
+    }
+    if (!isStringsEqual(testPhoneBook[0]->name, "name") || !isStringsEqual(testPhoneBook[0]->phoneNumber, "+79999999999")) {
+        testResult = false;
+        return testResult;
+    }
+    if (!isStringsEqual(searchByTheName(testPhoneBook, 1, "name"), "+79999999999")) {
+        testResult = false;
+        return testResult;
+    }
+    if (!isStringsEqual(searchByThePhoneNumber(testPhoneBook, 1, "+79999999999"), "name")) {
+        testResult = false;
+        return testResult;
+    }
     return testResult;
 }
 
