@@ -11,14 +11,16 @@ struct SortedList {
 };
 
 void printSortedList(SortedList *sortedList) {
-    Node *temp = sortedList->head;
+    if (!isSortedListEmpty(sortedList)) {
+        Node *temp = sortedList->head;
 
-    while(temp->next != NULL)
-    {
-        printf("%d ", temp->value);
-        temp = temp->next;
+        while(temp->next != NULL)
+        {
+            printf("%d ", temp->value);
+            temp = temp->next;
+        }
+        printf("%d\n", temp->value);
     }
-    printf("%d\n", temp->value);
 }
 
 int insertNode(SortedList *sortedList, int value) {
@@ -31,6 +33,13 @@ int insertNode(SortedList *sortedList, int value) {
     if (isSortedListEmpty(sortedList)) {
         newNode->value = value;
         newNode->next = NULL;
+        sortedList->head = newNode;
+        return 0;
+    }
+
+    if (currentNode->value >= value) {
+        newNode->value = value;
+        newNode->next = currentNode;
         sortedList->head = newNode;
         return 0;
     }
@@ -62,6 +71,13 @@ int deleteNode(SortedList *sortedList, int value) {
         return -1;
     }
     Node *currentNode = sortedList->head;
+
+    if (currentNode->value == value) {
+        sortedList->head = currentNode->next;
+        free(currentNode);
+        return 0;
+    }
+
     while (currentNode->next != NULL && currentNode->next->value != value) {
         currentNode = currentNode->next;
     }

@@ -29,19 +29,20 @@ int main() {
         switch (userInput) {
             case 0: {
                 endCondition = true;
+                break;
             } case 1: {
                 printf("Введите значение элемента, который хотите добавить в сортированный список\n");
                 int inputValue = 0;
-                scanf("%d", inputValue);
-                if (!insertNode(sortedList, inputValue)) {
+                scanf("%d", &inputValue);
+                if (insertNode(sortedList, inputValue)) {
                     printf("Возникла ошибка\n");
                 }
                 break;
             } case 2: {
                 printf("Введите значение элемента, который хотите удалить из сортированного списка\n");
                 int inputValue = 0;
-                scanf("%d", inputValue);
-                if (!deleteNode(sortedList, inputValue)) {
+                scanf("%d", &inputValue);
+                if (deleteNode(sortedList, inputValue)) {
                     printf("Возникла ошибка\n");
                 }
                 break;
