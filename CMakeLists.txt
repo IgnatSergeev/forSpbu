@@ -3,4 +3,4 @@ project(forSpbu C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(forSpbu 19.10/sortList/sortedList.c 19.10/sortList/sortedList.h)
+add_executable(forSpbu 19.10/sortList/sortedList.c 19.10/sortList/sortedListTask.c)

@@ -10,7 +10,7 @@ struct SortedList {
     Node *head;
 };
 
-void print(SortedList *sortedList) {
+void printSortedList(SortedList *sortedList) {
     Node *temp = sortedList->head;
 
     while(temp->next != NULL)
@@ -18,8 +18,7 @@ void print(SortedList *sortedList) {
         printf("%d ", temp->value);
         temp = temp->next;
     }
-    printf("%d", temp->value);
-    printf("\n");
+    printf("%d\n", temp->value);
 }
 
 int insertNode(SortedList *sortedList, int value) {
@@ -29,7 +28,7 @@ int insertNode(SortedList *sortedList, int value) {
         return -1;
     }
 
-    if (isEmpty(sortedList)) {
+    if (isSortedListEmpty(sortedList)) {
         newNode->value = value;
         newNode->next = NULL;
         sortedList->head = newNode;
@@ -46,7 +45,7 @@ int insertNode(SortedList *sortedList, int value) {
 }
 
 int popHead(SortedList *sortedList) {
-    if (isEmpty(sortedList)) {
+    if (isSortedListEmpty(sortedList)) {
         return -1;
     }
 
@@ -59,7 +58,7 @@ int popHead(SortedList *sortedList) {
 }
 
 int deleteNode(SortedList *sortedList, int value) {
-    if (isEmpty(sortedList)) {
+    if (isSortedListEmpty(sortedList)) {
         return -1;
     }
     Node *currentNode = sortedList->head;
@@ -78,18 +77,18 @@ int deleteNode(SortedList *sortedList, int value) {
     return 0;
 }
 
-bool isEmpty(SortedList *sortedList) {
+bool isSortedListEmpty(SortedList *sortedList) {
     return sortedList->head == NULL;
 }
 
-void clear(SortedList *sortedList) {
-    while (!isEmpty(sortedList)) {
+void clearSortedList(SortedList *sortedList) {
+    while (!isSortedListEmpty(sortedList)) {
         popHead(sortedList);
     }
     free(sortedList);
 }
 
-SortedList *create() {
+SortedList *createSortedList() {
     SortedList *sortedList = malloc(sizeof(SortedList));
     sortedList->head = NULL;
 

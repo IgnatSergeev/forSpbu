@@ -5,14 +5,14 @@
 
 typedef struct SortedList SortedList;
 
-SortedList *create();
+SortedList *createSortedList();
 
 int insertNode(SortedList *sortedList, int value);
 
-void print(SortedList *sortedList);
+void printSortedList(SortedList *sortedList);
 
 int deleteNode(SortedList *sortedList, int value);
 
-void clear(SortedList *sortedList);
+void clearSortedList(SortedList *sortedList);
 
-bool isEmpty(SortedList *sortedList);
+bool isSortedListEmpty(SortedList *sortedList);
