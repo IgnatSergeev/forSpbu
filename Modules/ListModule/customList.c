@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 typedef struct Node {
-    int value;
+    Type value;
     struct Node *next;
 } Node;
 
@@ -10,16 +10,16 @@ struct List {
     Node *head;
 };
 
-void print(List *list) {
+/*void print(List *list) {
     Node *temp = list->head;
     while (temp->next != NULL) {
         printf("%d ", temp->value);
         temp = temp->next;
     }
     printf("%d\n", temp->value);
-}
+}*/
 
-int insertNode(List *list, int value, int index) {
+int insertNode(List *list, Type value, int index) {
     if (index < 0) {
         return -1;
     }
@@ -93,10 +93,10 @@ int deleteNode(List* list, int index) {
     return 0;
 }
 
-int findNode(List *list, int index, int *errorCode) {
+Type findNode(List *list, int index, int *errorCode) {
     if (isEmpty(list) || index < 0) {
         *errorCode = -1;
-        return 0;
+        return (Type)0;
     }
     Node *iteratorNode = list->head;
 
@@ -104,7 +104,7 @@ int findNode(List *list, int index, int *errorCode) {
         iteratorNode = iteratorNode->next;
         if (iteratorNode == NULL) {
             *errorCode = -1;
-            return 0;
+            return (Type)0;
         }
     }
 
@@ -123,7 +123,7 @@ void clear(List *list) {
     free(list);
 }
 
-int changeNode(List *list, int index, int value) {
+int changeNode(List *list, int index, Type value) {
     if (index < 0) {
         return -1;
     }
