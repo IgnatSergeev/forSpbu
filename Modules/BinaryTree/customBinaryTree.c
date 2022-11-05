@@ -14,79 +14,63 @@ struct BinaryTree {
     Node *root;
 };
 
-int addNode(BinaryTree *tree, int value) {
-    if (isEmpty(tree)) {
-        Node *root = malloc(sizeof(Node));
-        root->left = NULL;
-        root->right = NULL;
-        root->value = value;
-        tree->root = root;
-        return 0;
-    }
+enum Direction {
+    right,
+    left
+};
 
-    Node *currentRoot = tree->root;
-    if (currentRoot->value == value) {
-        return -1;
-    }
-
-    BinaryTree *newTree = create();
-    if (newTree == NULL) {
-        return -1;
-    }
-
-    if (currentRoot->value < value) {
-        newTree->root = currentRoot->right;
-        if (addNode(newTree, value)) {
-            free(newTree);
-            return -1;
+Node *addNode(Node *node, int value, int *errorCode) {
+    *errorCode = 0;
+    if (node == NULL) {
+        Node *newNode = malloc(sizeof(Node));
+        if (newNode == NULL) {
+            *errorCode = 1;
+            return node;
         }
-        currentRoot->right = newTree->root;
-        free(newTree);
-        return 0;
-    } else {
-        newTree->root = currentRoot->left;
-        if (addNode(newTree, value)) {
-            free(newTree);
-            return -1;
-        }
-        currentRoot->left = newTree->root;
-        free(newTree);
-        return 0;
+        newNode->left = NULL;
+        newNode->right = NULL;
+        newNode->value = value;
+        return newNode;
     }
+    if (node->value == value) {
+        return node;
+    }
+    if (node->value < value) {
+        node->right = addNode(node->right, value, errorCode);
+        return node;
+
+    }
+    node->left = addNode(node->left, value, errorCode);
+    return node;
+}
+
+int addValue(BinaryTree *tree, int value) {
+    int errorCode = 0;
+    tree->root = addNode(tree->root, value, &errorCode);
+    return errorCode;
 }
 
 bool isEmpty(BinaryTree *tree) {
     return tree->root == NULL;
 }
 
-int findNode(BinaryTree *tree, int value, int *errorCode) {
-    if (isEmpty(tree)) {
+int findNodeValue(Node *node, int value, int *errorCode) {
+    *errorCode = 0;
+    if (node == NULL) {
         *errorCode = 1;
         return 0;
     }
+    if (node->value == value) {
+        return node->value;
+    }
+    if (node->value < value) {
+        return findNodeValue(node->right, value, errorCode);
+    }
+    return findNodeValue(node->left, value, errorCode);
+}
 
-    Node *currentRoot = tree->root;
-    if (currentRoot->value == value) {
-        return value;
-    }
-
-    BinaryTree *newTree = create();
-    if (newTree == NULL) {
-        *errorCode = 1;
-        return 0;
-    }
-
-    if (currentRoot->value < value) {
-        newTree->root = currentRoot->right;
-    } else {
-        newTree->root = currentRoot->left;
-    }
-    int returnValue = findNode(newTree, value, errorCode);
-    free(newTree);
-    if (*errorCode) {
-        return 0;
-    }
-    return returnValue;
+int findValue(BinaryTree *tree, int value, int *errorCode) {
+    return findNodeValue(tree->root, value, errorCode);
 }
 
 BinaryTree *create() {
@@ -114,4 +98,60 @@ void clear(BinaryTree *tree) {
     }
     clearNode(tree->root);
     free(tree);
+}
+
+Node *findAndCutOutBiggestNodeInLeftSonTree(Node *parent, enum Direction dir, Node *node) {
+    if (node->right == NULL) {
+        if (dir == right) {
+            parent->right = node->left;
+        } else {
+            parent->left = node->left;
+        }
+        return node;
+    }
+    return findAndCutOutBiggestNodeInLeftSonTree(node, right, node->right);
+}
+
+Node *deleteRoot(Node *root) {
+    if (root->left == NULL) {
+        Node *newRoot = root->right;
+        free(root);
+        return newRoot;
+    }
+    Node *newRoot = findAndCutOutBiggestNodeInLeftSonTree(root, left, root->left);
+    newRoot->right = root->right;
+    newRoot->left = root->left;
+    free(root);
+    return newRoot;
+}
+
+void deleteNodeValue(Node *parent, enum Direction dir, Node *node, int value) {
+    if (node == NULL) {
+        return;
+    }
+    if (node->value == value) {
+        Node *newNode = deleteRoot(node);
+        if (dir == right) {
+            parent->right = newNode;
+        } else {
+            parent->left = newNode;
+        }
+        return;
+    }
+    if (node->value < value) {
+        deleteNodeValue(node, right, node->right, value);
+    }
+    deleteNodeValue(node, left, node->left, value);
+}
+
+void deleteValue(BinaryTree *tree, int value) {
+    if (isEmpty(tree)) {
+        return;
+    }
+    if (tree->root->value == value) {
+        Node *newRoot = deleteRoot(tree->root);
+        tree->root = newRoot;
+        return;
+    }
+    deleteNodeValue(NULL, right, tree->root, value);
 }

@@ -7,12 +7,12 @@ typedef struct BinaryTree BinaryTree;
 
 BinaryTree *create();
 
-int addNode(BinaryTree *tree, int value);
+int addValue(BinaryTree *tree, int value);
 
-int findNode(BinaryTree *tree, int value, int *errorCode);
+int findValue(BinaryTree *tree, int value, int *errorCode);
 
 void clear(BinaryTree *tree);
 
-int deleteNode(BinaryTree *tree, int value);
+void deleteValue(BinaryTree *tree, int value);
 
 bool isEmpty(BinaryTree *tree);
