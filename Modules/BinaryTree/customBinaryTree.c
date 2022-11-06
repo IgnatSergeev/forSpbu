@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 typedef struct Node {
-    int value;
+    Type value;
     struct Node* left;
     struct Node* right;
 } Node;
@@ -19,7 +19,7 @@ enum Direction {
     left
 };
 
-Node *addNode(Node *node, int value, int *errorCode) {
+Node *addNode(Node *node, Type value, int *errorCode) {
     *errorCode = 0;
     if (node == NULL) {
         Node *newNode = malloc(sizeof(Node));
@@ -44,7 +44,7 @@ Node *addNode(Node *node, int value, int *errorCode) {
     return node;
 }
 
-int addValue(BinaryTree *tree, int value) {
+int addValue(BinaryTree *tree, Type value) {
     int errorCode = 0;
     tree->root = addNode(tree->root, value, &errorCode);
     return errorCode;
@@ -54,11 +54,11 @@ bool isEmpty(BinaryTree *tree) {
     return tree->root == NULL;
 }
 
-int findNodeValue(Node *node, int value, int *errorCode) {
+Type findNodeValue(Node *node, Type value, int *errorCode) {
     *errorCode = 0;
     if (node == NULL) {
         *errorCode = 1;
-        return 0;
+        return (Type)0;//всё что угодно можно возвращать
     }
     if (node->value == value) {
         return node->value;
@@ -69,7 +69,7 @@ int findNodeValue(Node *node, int value, int *errorCode) {
     return findNodeValue(node->left, value, errorCode);
 }
 
-int findValue(BinaryTree *tree, int value, int *errorCode) {
+Type findValue(BinaryTree *tree, Type value, int *errorCode) {
     return findNodeValue(tree->root, value, errorCode);
 }
 
@@ -125,7 +125,7 @@ Node *deleteRoot(Node *root) {
     return newRoot;
 }
 
-void deleteNodeValue(Node *parent, enum Direction dir, Node *node, int value) {
+void deleteNodeValue(Node *parent, enum Direction dir, Node *node, Type value) {
     if (node == NULL) {
         return;
     }
@@ -144,7 +144,7 @@ void deleteNodeValue(Node *parent, enum Direction dir, Node *node, int value) {
     deleteNodeValue(node, left, node->left, value);
 }
 
-void deleteValue(BinaryTree *tree, int value) {
+void deleteValue(BinaryTree *tree, Type value) {
     if (isEmpty(tree)) {
         return;
     }

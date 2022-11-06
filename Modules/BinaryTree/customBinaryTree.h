@@ -2,17 +2,22 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include "../typeDef.h"
 
 typedef struct BinaryTree BinaryTree;
 
 BinaryTree *create();
 
-int addValue(BinaryTree *tree, int value);
+bool compare(Type value1, Type value2);
 
-int findValue(BinaryTree *tree, int value, int *errorCode);
+Type whatIfEqual(Type value1, Type value2);
+
+int addValue(BinaryTree *tree, Type value);
+
+Type findValue(BinaryTree *tree, Type value, int *errorCode);
 
 void clear(BinaryTree *tree);
 
-void deleteValue(BinaryTree *tree, int value);
+void deleteValue(BinaryTree *tree, Type value);
 
 bool isEmpty(BinaryTree *tree);
