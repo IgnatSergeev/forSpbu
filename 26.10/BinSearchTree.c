@@ -49,7 +49,7 @@ int main() {
                 break;
             } case 1: {
                 printf("Введите ключ и значение элемента, который хотите добавить в словарь\n");
-                char *inputValue = 0;
+                char inputValue[MAX_LINE_SIZE] = {0};
                 int inputKey = 0;
                 scanf("%d", &inputKey);
                 scanf("%s", inputValue);
