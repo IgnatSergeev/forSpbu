@@ -8,16 +8,15 @@ typedef struct BinaryTree BinaryTree;
 
 BinaryTree *create();
 
-bool compare(Type value1, Type value2);
+//compare: should return 0 if equal, 1 if first is grater than second and -1 if first is less than second
+//whatIfEqualWhenAdding: first value - is old value; second value - is new value
+int addValue(BinaryTree *tree, Type value, int (*compare)(Type, Type), Type (*whatIfEqualInAdding)(Type, Type));
 
-Type whatIfEqual(Type value1, Type value2);
-
-int addValue(BinaryTree *tree, Type value);
-
-Type findValue(BinaryTree *tree, Type value, int *errorCode);
+//whatIfEqualInSearching: first value - is old value; second value - is new value
+Type findValue(BinaryTree *tree, Type value, int *errorCode, Type zeroValue, int (*compare)(Type, Type), Type (*whatIfEqualInSearching)(Type, Type));
 
 void clear(BinaryTree *tree);
 
-void deleteValue(BinaryTree *tree, Type value);
+int deleteValue(BinaryTree *tree, Type value, int (*compare)(Type, Type));
 
 bool isEmpty(BinaryTree *tree);

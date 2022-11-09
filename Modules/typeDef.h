@@ -1,3 +1,6 @@
 #pragma once
 
-typedef char Type;
+typedef struct Type {
+    int key;
+    int value;
+} Type;

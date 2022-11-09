@@ -19,7 +19,7 @@ enum Direction {
     left
 };
 
-Node *addNode(Node *node, Type value, int *errorCode) {
+Node *addNode(Node *node, Type value, int *errorCode, int (*compare)(Type, Type), Type (*whatIfEqualInAdding)(Type, Type)) {
     *errorCode = 0;
     if (node == NULL) {
         Node *newNode = malloc(sizeof(Node));
@@ -32,21 +32,29 @@ Node *addNode(Node *node, Type value, int *errorCode) {
         newNode->value = value;
         return newNode;
     }
-    if (node->value == value) {
+
+    int compareResult = (*compare)(node->value, value);
+    if (compareResult > 1 || compareResult < -1) {
+        *errorCode = 1;//случай когда функция compare неправильна
         return node;
     }
-    if (node->value < value) {
-        node->right = addNode(node->right, value, errorCode);
+
+    if (!compareResult) {
+        node->value = (*whatIfEqualInAdding)(node->value, value);
+        return node;
+    }
+    if (compareResult == -1) {
+        node->right = addNode(node->right, value, errorCode, compare, whatIfEqualInAdding);
         return node;
 
     }
-    node->left = addNode(node->left, value, errorCode);
+    node->left = addNode(node->left, value, errorCode, compare, whatIfEqualInAdding);
     return node;
 }
 
-int addValue(BinaryTree *tree, Type value) {
+int addValue(BinaryTree *tree, Type value, int (*compare)(Type, Type), Type (*whatIfEqualInAdding)(Type, Type)) {
     int errorCode = 0;
-    tree->root = addNode(tree->root, value, &errorCode);
+    tree->root = addNode(tree->root, value, &errorCode, compare, whatIfEqualInAdding);
     return errorCode;
 }
 
@@ -54,23 +62,30 @@ bool isEmpty(BinaryTree *tree) {
     return tree->root == NULL;
 }
 
-Type findNodeValue(Node *node, Type value, int *errorCode) {
+Type findNodeValue(Node *node, Type value, int *errorCode, Type zeroValue, int (*compare)(Type, Type), Type (*whatIfEqualInSearching)(Type, Type)) {
     *errorCode = 0;
     if (node == NULL) {
-        *errorCode = 1;
-        return (Type)0;//всё что угодно можно возвращать
+        *errorCode = 1;//случай когда нода не найдена нужно не 0
+        return zeroValue;
     }
-    if (node->value == value) {
-        return node->value;
+
+    int compareResult = (*compare)(node->value, value);
+    if (compareResult > 1 || compareResult < -1) {
+        *errorCode = 1;//случай когда функция compare неправильна
+        return zeroValue;
     }
-    if (node->value < value) {
-        return findNodeValue(node->right, value, errorCode);
+
+    if (!compareResult) {
+        return whatIfEqualInSearching(node->value, value);
     }
-    return findNodeValue(node->left, value, errorCode);
+    if (compareResult == -1) {
+        return findNodeValue(node->right, value, errorCode, zeroValue, compare, whatIfEqualInSearching);
+    }
+    return findNodeValue(node->left, value, errorCode, zeroValue, compare, whatIfEqualInSearching);
 }
 
-Type findValue(BinaryTree *tree, Type value, int *errorCode) {
-    return findNodeValue(tree->root, value, errorCode);
+Type findValue(BinaryTree *tree, Type value, int *errorCode, Type zeroValue, int (*compare)(Type, Type), Type (*whatIfEqualInSearching)(Type, Type)) {
+    return findNodeValue(tree->root, value, errorCode, zeroValue, compare, whatIfEqualInSearching);
 }
 
 BinaryTree *create() {
@@ -125,33 +140,45 @@ Node *deleteRoot(Node *root) {
     return newRoot;
 }
 
-void deleteNodeValue(Node *parent, enum Direction dir, Node *node, Type value) {
+int deleteNodeValue(Node *parent, enum Direction dir, Node *node, Type value, int (*compare)(Type, Type)) {
     if (node == NULL) {
-        return;
+        return 0;//-1 это случай когда такой ноды нет в дереве
     }
-    if (node->value == value) {
+
+    int compareResult = (*compare)(node->value, value);
+    if (compareResult > 1 || compareResult < -1) {
+        return -1;//случай когда функция compare неправильна
+    }
+
+    if (!compareResult) {
         Node *newNode = deleteRoot(node);
         if (dir == right) {
             parent->right = newNode;
         } else {
             parent->left = newNode;
         }
-        return;
+        return 0;
     }
-    if (node->value < value) {
-        deleteNodeValue(node, right, node->right, value);
+    if (compareResult == -1) {
+        return deleteNodeValue(node, right, node->right, value, compare);
     }
-    deleteNodeValue(node, left, node->left, value);
+    return deleteNodeValue(node, left, node->left, value, compare);
 }
 
-void deleteValue(BinaryTree *tree, Type value) {
+int deleteValue(BinaryTree *tree, Type value, int (*compare)(Type, Type)) {
     if (isEmpty(tree)) {
-        return;
+        return 0;
     }
-    if (tree->root->value == value) {
+
+    int compareResult = (*compare)(tree->root->value, value);
+    if (compareResult > 1 || compareResult < -1) {
+        return -1;//случай когда функция compare неправильна
+    }
+
+    if (!compareResult) {
         Node *newRoot = deleteRoot(tree->root);
         tree->root = newRoot;
-        return;
+        return 0;
     }
-    deleteNodeValue(NULL, right, tree->root, value);
+    return deleteNodeValue(NULL, right, tree->root, value, compare);
 }
