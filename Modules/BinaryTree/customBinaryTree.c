@@ -87,6 +87,31 @@ Type findValue(BinaryTree *tree, Type value, int *errorCode, Type zeroValue, int
     return findNodeValue(tree->root, value, errorCode, zeroValue, compare, whatIfEqualInSearching);
 }
 
+bool isTheNodeIsValue(Node *node, Type value, int *errorCode, int (*compare)(Type, Type)) {
+    *errorCode = 0;
+    if (node == NULL) {        //случай когда нода не найдена
+        return false;
+    }
+
+    int compareResult = (*compare)(node->value, value);
+    if (compareResult > 1 || compareResult < -1) {
+        *errorCode = 1;//случай когда функция compare неправильна
+        return false;
+    }
+
+    if (!compareResult) {
+        return true;
+    }
+    if (compareResult == -1) {
+        return isTheNodeIsValue(node->right, value, errorCode, compare);
+    }
+    return isTheNodeIsValue(node->left, value, errorCode, compare);
+}
+
+bool isTheValueInTree(BinaryTree *tree, Type value, int *errorCode, int (*compare)(Type, Type)) {
+    return isTheNodeIsValue(tree->root, value, errorCode, compare);
+}
+
 BinaryTree *create() {
     BinaryTree *binaryTree = malloc(sizeof(BinaryTree));
     if (binaryTree == NULL) {

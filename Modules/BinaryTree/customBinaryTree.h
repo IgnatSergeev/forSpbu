@@ -15,6 +15,8 @@ int addValue(BinaryTree *tree, Type value, int (*compare)(Type, Type), Type (*wh
 //whatIfEqualInSearching: first value - is old value; second value - is new value
 Type findValue(BinaryTree *tree, Type value, int *errorCode, Type zeroValue, int (*compare)(Type, Type), Type (*whatIfEqualInSearching)(Type, Type));
 
+bool isTheValueInTree(BinaryTree *tree, Type value, int *errorCode, int (*compare)(Type, Type));
+
 void clear(BinaryTree *tree);
 
 int deleteValue(BinaryTree *tree, Type value, int (*compare)(Type, Type));

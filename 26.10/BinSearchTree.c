@@ -70,13 +70,34 @@ int main() {
                     printf("Произошла ошибка\n");
                     break;
                 }
-
+                printf("Значение элемента по ключу = %s", returnValue.value);
                 break;
             } case 3: {
-                printSortedList(sortedList);
+                printf("Введите ключ, наличие которого в словаре вы хотите проверить\n");
+                int inputKey = 0;
+                scanf("%d", &inputKey);
+                Type element = {inputKey, NULL};
+                int errorCode = 0;
+                bool returnValue = isTheValueInTree(binaryTree, element, &errorCode, &compare);
+                if (errorCode) {
+                    printf("Произошла ошибка\n");
+                    break;
+                }
+                if (returnValue) {
+                    printf("Такой ключ присутствует\n");
+                } else {
+                    printf("Такого ключа нет\n");
+                }
                 break;
             } case 4: {
-
+                printf("Введите ключ элемента, который хотите удалить из словаря\n");
+                int inputKey = 0;
+                scanf("%d", &inputKey);
+                Type element = {inputKey, NULL};
+                int errorCode = deleteValue(binaryTree, element, &compare);
+                if (errorCode) {
+                    printf("Произошла ошибка\n");
+                }
                 break;
             } default: {
                 printf("Неизвестный ввод - повторите попытку\n");
@@ -88,6 +109,6 @@ int main() {
         }
     }
 
-    clearSortedList(sortedList);
+    clear(binaryTree);
     return 0;
 }
