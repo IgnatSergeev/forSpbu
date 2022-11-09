@@ -25,8 +25,8 @@ int readFromFileWithCheckingOnDuplicates(FILE *file, char *output) {
 bool test() {
     bool testResult = true;
     FILE *testFile = fopen("../KR3/test.txt", "r");
-    char output[MAX_FILE_SIZE] = {0};
-    int errorCode = readFromFileWithCheckingOnDuplicates(testFile, output);
+    char testOutput[MAX_FILE_SIZE] = {0};
+    int errorCode = readFromFileWithCheckingOnDuplicates(testFile, testOutput);
     if (errorCode) {
         printf("Ошибка с нахождением файла с тестом");
         return false;
@@ -35,12 +35,12 @@ bool test() {
     int correctOutputSize = 6;
 
     for (int i = 0; i < correctOutputSize; i++) {
-        if (output[i] != correctOutput[i]) {
+        if (testOutput[i] != correctOutput[i]) {
             testResult = false;
             break;
         }
     }
-    if (output[correctOutputSize] != '\0') {
+    if (testOutput[correctOutputSize] != '\0') {
         testResult = false;
     }
     return testResult;
