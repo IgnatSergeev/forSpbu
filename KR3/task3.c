@@ -31,16 +31,16 @@ bool test() {
         printf("Ошибка с нахождением файла с тестом");
         return false;
     }
-    char correctOutput[] = "acdefg";
-    int correctOutputSize = 6;
+    char correctTestOutput[] = "acdefg";
+    int correctTestOutputSize = 6;
 
-    for (int i = 0; i < correctOutputSize; i++) {
-        if (testOutput[i] != correctOutput[i]) {
+    for (int i = 0; i < correctTestOutputSize; i++) {
+        if (testOutput[i] != correctTestOutput[i]) {
             testResult = false;
             break;
         }
     }
-    if (testOutput[correctOutputSize] != '\0') {
+    if (testOutput[correctTestOutputSize] != '\0') {
         testResult = false;
     }
     return testResult;
