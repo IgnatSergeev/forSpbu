@@ -64,8 +64,7 @@ bool isEmpty(BinaryTree *tree) {
 
 Type findNodeValue(Node *node, Type value, int *errorCode, Type zeroValue, int (*compare)(Type, Type), Type (*whatIfEqualInSearching)(Type, Type)) {
     *errorCode = 0;
-    if (node == NULL) {
-        *errorCode = 1;//случай когда нода не найдена нужно не 0
+    if (node == NULL) {        //случай когда нода не найдена
         return zeroValue;
     }
 
@@ -142,7 +141,7 @@ Node *deleteRoot(Node *root) {
 
 int deleteNodeValue(Node *parent, enum Direction dir, Node *node, Type value, int (*compare)(Type, Type)) {
     if (node == NULL) {
-        return 0;//-1 это случай когда такой ноды нет в дереве
+        return 0;//это случай когда такой ноды нет в дереве
     }
 
     int compareResult = (*compare)(node->value, value);
