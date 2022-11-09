@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include <locale.h>
-#include <malloc.h>
 
 #define MAX_FILE_SIZE 1000
 
