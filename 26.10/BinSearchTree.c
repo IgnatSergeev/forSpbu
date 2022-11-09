@@ -31,11 +31,63 @@ int main() {
         printf("Тесты пройдены\n");
     }
 
-    printf("0 - Добавить значение по заданному ключу в словарь. Если такой ключ уже есть, значение заменяется на новое.\n"
-           "1 - Получить значение по заданному ключу из словаря. Если такого ключа нет, возвращается NULL.\n"
-           "2 - Проверить наличие заданного ключа в словаре.\n"
-           "3 - Удалить заданный ключ и связанное с ним значение из словаря. Если такого ключа нет, функция ничего не делает.\n");
+    BinaryTree *binaryTree = create();
+    Type zeroValue = {0, NULL};
 
+    while (true) {
+        int userInput = 0;
+        printf("0 - Выйти из программы.\n"
+                "1 - Добавить значение по заданному ключу в словарь. Если такой ключ уже есть, значение заменяется на новое.\n"
+               "2 - Получить значение по заданному ключу из словаря. Если такого ключа нет, возвращается NULL.\n"
+               "3 - Проверить наличие заданного ключа в словаре.\n"
+               "4 - Удалить заданный ключ и связанное с ним значение из словаря. Если такого ключа нет, функция ничего не делает.\n");
+        scanf("%d", &userInput);
+        bool endCondition = false;
+        switch (userInput) {
+            case 0: {
+                endCondition = true;
+                break;
+            } case 1: {
+                printf("Введите ключ и значение элемента, который хотите добавить в словарь\n");
+                char *inputValue = 0;
+                int inputKey = 0;
+                scanf("%d", &inputKey);
+                scanf("%s", inputValue);
+                Type element = {inputKey, inputValue};
+                int errorCode = addValue(binaryTree, element, &compare, &whatIfEqualWhenAdding);
+                if (errorCode) {
+                    printf("Возникла ошибка\n");
+                }
+                break;
+            } case 2: {
+                printf("Введите ключ элемента, значение которого хотите найти в словаре\n");
+                int inputKey = 0;
+                scanf("%d", &inputKey);
+                Type element = {inputKey, NULL};
+                int errorCode = 0;
+                Type returnValue = findValue(binaryTree, element, &errorCode, zeroValue, &compare, &whatIfEqualWhenSearching);
+                if (errorCode) {
+                    printf("Произошла ошибка\n");
+                    break;
+                }
 
+                break;
+            } case 3: {
+                printSortedList(sortedList);
+                break;
+            } case 4: {
+
+                break;
+            } default: {
+                printf("Неизвестный ввод - повторите попытку\n");
+            }
+        }
+
+        if (endCondition) {
+            break;
+        }
+    }
+
+    clearSortedList(sortedList);
     return 0;
 }
