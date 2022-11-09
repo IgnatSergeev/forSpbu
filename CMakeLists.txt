@@ -3,4 +3,4 @@ project(forSpbu C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(forSpbu Modules/temp.c Modules/customStack.c)
+add_executable(forSpbu Modules/temp.c Modules/customStack.c 19.10/mergeSortList.c)
