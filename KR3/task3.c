@@ -22,10 +22,10 @@ int readFromFileWithCheckingOnDuplicates(FILE *file, char *output) {
     return 0;
 }
 
-bool test() {
+bool test(void) {
     bool testResult = true;
     FILE *testFile = fopen("../KR3/test.txt", "r");
-    char testOutput[MAX_FILE_SIZE] = {0};
+    char testOutput[MAX_FILE_SIZE] = {'\0'};
     int errorCode = readFromFileWithCheckingOnDuplicates(testFile, testOutput);
     if (errorCode) {
         printf("Ошибка с нахождением файла с тестом");
@@ -58,7 +58,7 @@ int main(void) {
     printf("Введите в файл input.txt нужный текст, в котором хотите заменить последовательности повторяющихся"
            " символов одним символом\n");
     FILE *inputFile = fopen("../KR3/input.txt", "r");
-    char output[MAX_FILE_SIZE] = {0};
+    char output[MAX_FILE_SIZE] = {'\0'};
     int errorCode = readFromFileWithCheckingOnDuplicates(inputFile, output);
     if (errorCode) {
         printf("Ошибка с нахождением файла\n");
