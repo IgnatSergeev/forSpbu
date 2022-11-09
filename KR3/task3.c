@@ -8,13 +8,13 @@ int readFromFileWithCheckingOnDuplicates(FILE *file, char *output) {
         return 1;
     }
     int outputIndex = 0;
+    char previousChar = 0;
     char currentChar = 0;
-    char nextChar = 0;
     while (!feof(file)) {
-        currentChar = nextChar;
-        nextChar = (char)fgetc(file);
-        if (currentChar != nextChar && nextChar != -1) {
-            output[outputIndex] = nextChar;
+        previousChar = currentChar;
+        currentChar = (char)fgetc(file);
+        if (previousChar != currentChar && currentChar != -1) {
+            output[outputIndex] = currentChar;
             ++outputIndex;
         }
     }
@@ -46,7 +46,7 @@ bool test() {
     return testResult;
 }
 
-int main() {
+int main(void) {
     if (!test()) {
         printf("Тесты провалены");
 
@@ -55,7 +55,8 @@ int main() {
         printf("Тесты пройдены\n");
     }
 
-    printf("Введите в файл input.txt строку\n");
+    printf("Введите в файл input.txt нужный текст, в котором хотите заменить последовательности повторяющихся"
+           " символов одним символом\n");
     FILE *inputFile = fopen("../KR3/input.txt", "r");
     char output[MAX_FILE_SIZE] = {0};
     int errorCode = readFromFileWithCheckingOnDuplicates(inputFile, output);
@@ -63,6 +64,6 @@ int main() {
         printf("Ошибка с нахождением файла\n");
         return -1;
     }
-    printf("%s", output);
+    printf("Вот получившийся текст после замены:\n%s", output);
     return 0;
 }
