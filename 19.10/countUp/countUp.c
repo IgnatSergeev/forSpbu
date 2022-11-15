@@ -24,11 +24,12 @@ bool test() {
 
     calculateSurvivorIndex(testLoopedList, testNumberOfWarriors, testIndexOfFirstDyingWarrior);
     if (loopedListSize(testLoopedList) != 1 || top(testLoopedList, &errorCode) != 5) {
-        if (errorCode) {
-            testResult = false;
-        }
         testResult = false;
     }
+    if (errorCode) {
+        testResult = false;
+    }
+
     return testResult;
 }
 
