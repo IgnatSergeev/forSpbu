@@ -145,7 +145,7 @@ int changeNode(List *list, int index, Type value) {
     return 0;
 }
 
-Node *mergeNodeSort(Node *begin, Node *end, int startIndex, int endIndex) {
+Node *mergeNodeSort(Node *begin, Node *end, int startIndex, int endIndex, int (*compare)(Type, Type)) {
     if (begin == end) {
         return begin;
     }
@@ -214,7 +214,7 @@ Node *mergeNodeSort(Node *begin, Node *end, int startIndex, int endIndex) {
     return startNode;
 }
 
-int mergeSort(List *list) {
+int mergeSort(List *list, int (*compare)(Type, Type)) {
     if (isEmpty(list)) {
         return -1;
     }
@@ -229,7 +229,7 @@ int mergeSort(List *list) {
         endNode = endNode->next;
     }
 
-    list->head = mergeNodeSort(beginNode, endNode, 0, currentIndex);
+    list->head = mergeNodeSort(beginNode, endNode, 0, currentIndex, compare);
 
     return 0;
 }
