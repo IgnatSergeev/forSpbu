@@ -3,7 +3,18 @@
 
 bool test() {
     bool testResult = true;
+    SortedList *testSortList = createSortedList();
+    if (insertNode(testSortList, 2)) {
+        testResult = false;
+    }
+    if (!deleteNode(testSortList, 1)) {
+        testResult = false;
+    }
+    if (deleteNode(testSortList, 2)) {
+        testResult = false;
+    }
 
+    clearSortedList(testSortList);
     return testResult;
 }
 
