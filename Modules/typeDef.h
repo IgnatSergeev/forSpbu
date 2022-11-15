@@ -1,3 +1,3 @@
 #pragma once
 
-typedef char Type;
+typedef int Type;
