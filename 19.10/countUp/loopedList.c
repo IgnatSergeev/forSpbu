@@ -122,3 +122,11 @@ void printLoopedList(LoopedList *loopedList) {
 int loopedListSize(LoopedList *loopedList) {
     return loopedList->size;
 }
+
+int top(LoopedList *loopedList, int *errorCode) {
+    if (loopedList->head == NULL) {
+        *errorCode = 1;
+        return 0;
+    }
+    return loopedList->head->startPosition;
+}

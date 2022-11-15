@@ -1,9 +1,34 @@
 #include "loopedList.h"
 #include <stdio.h>
 
+void calculateSurvivorIndex(LoopedList *loopedList, int numberOfWarriors, int indexOfFirstDyingWarrior) {
+    int currentWarriorToStartCountingFrom = 0;
+
+    for (int i = 0; i < numberOfWarriors; i++) {
+        insertNode(loopedList);
+    }
+
+    while (loopedListSize(loopedList) > 1) {
+        int indexToDelete = (currentWarriorToStartCountingFrom + indexOfFirstDyingWarrior - 1) % loopedListSize(loopedList) + 1;
+        deleteNode(loopedList, indexToDelete);
+        currentWarriorToStartCountingFrom = (indexToDelete - 1) % loopedListSize(loopedList);
+    }
+}
+
 bool test() {
     bool testResult = true;
+    LoopedList *testLoopedList = createLoopedList();
+    int testNumberOfWarriors = 10;
+    int testIndexOfFirstDyingWarrior = 2;
+    int errorCode = 0;
 
+    calculateSurvivorIndex(testLoopedList, testNumberOfWarriors, testIndexOfFirstDyingWarrior);
+    if (loopedListSize(testLoopedList) != 1 || top(testLoopedList, &errorCode) != 5) {
+        if (errorCode) {
+            testResult = false;
+        }
+        testResult = false;
+    }
     return testResult;
 }
 
@@ -22,17 +47,9 @@ int main() {
     int indexOfFirstDyingWarrior = 0;
     scanf("%d", &numberOfWarriors);
     scanf("%d", &indexOfFirstDyingWarrior);
-    int currentWarriorToStartCountingFrom = 0;
 
-    for (int i = 0; i < numberOfWarriors; i++) {
-        insertNode(loopedList);
-    }
+    calculateSurvivorIndex(loopedList, numberOfWarriors, indexOfFirstDyingWarrior);
 
-    while (loopedListSize(loopedList) > 1) {
-        int indexToDelete = (currentWarriorToStartCountingFrom + indexOfFirstDyingWarrior - 1) % loopedListSize(loopedList) + 1;
-        deleteNode(loopedList, indexToDelete);
-        currentWarriorToStartCountingFrom = (indexToDelete - 1) % loopedListSize(loopedList);
-    }
     printf("Индекс выжившего война(при индексировании от 1) = ");
     printLoopedList(loopedList);
     clearLoopedList(loopedList);

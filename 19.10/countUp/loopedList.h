@@ -18,3 +18,5 @@ void clearLoopedList(LoopedList *loopedList);
 bool isLoopedListEmpty(LoopedList *loopedList);
 
 int loopedListSize(LoopedList *loopedList);
+
+int top(LoopedList *loopedList, int *errorCode);
