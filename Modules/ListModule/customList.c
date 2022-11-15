@@ -145,3 +145,92 @@ int changeNode(List *list, int index, Type value) {
     return 0;
 }
 
+Node *mergeNodeSort(Node *begin, Node *end, int startIndex, int endIndex) {
+    if (begin == end) {
+        return begin;
+    }
+
+    int middleIndex = (startIndex + endIndex)/2;
+    int currentIndex = startIndex;
+    Node *leftMiddleNode = begin;
+    while (currentIndex < middleIndex) {
+        ++currentIndex;
+        leftMiddleNode = leftMiddleNode->next;
+    }
+
+    Node *nodeAfterEnd = end->next;
+    end->next = NULL;
+    Node *nodeAfterLeftMiddleNode = leftMiddleNode->next;
+    leftMiddleNode->next = NULL;
+    Node *firstPartBegin = mergeNodeSort(begin, leftMiddleNode, startIndex, currentIndex);
+    Node *secondPartBegin = mergeNodeSort(nodeAfterLeftMiddleNode, end, currentIndex + 1, endIndex);
+
+    int firstPartIndex = startIndex;
+    Node *firstPartNode = firstPartBegin;
+    int secondPartIndex = currentIndex + 1;
+    Node *secondPartNode = secondPartBegin;
+
+    Node *startNode = NULL;
+    if (firstPartNode->value > secondPartNode->value) {
+        startNode = secondPartNode;
+        secondPartNode = secondPartNode->next;
+        ++secondPartIndex;
+    } else {
+        startNode = firstPartNode;
+        firstPartNode = firstPartNode->next;
+        ++firstPartIndex;
+    }
+
+    Node *lastNode = startNode;
+    while (firstPartIndex != (currentIndex + 1) || secondPartIndex != (endIndex + 1)) {
+        if (firstPartIndex == (currentIndex + 1)) {
+            lastNode->next = secondPartNode;
+            secondPartNode = secondPartNode->next;
+            ++secondPartIndex;
+            lastNode = lastNode->next;
+            continue;
+        }
+        if (secondPartIndex == (endIndex + 1)) {
+            lastNode->next = firstPartNode;
+            firstPartNode = firstPartNode->next;
+            ++firstPartIndex;
+            lastNode = lastNode->next;
+            continue;
+        }
+
+        if (secondPartNode->value < firstPartNode->value) {
+            lastNode->next = secondPartNode;
+            secondPartNode = secondPartNode->next;
+            ++secondPartIndex;
+            lastNode = lastNode->next;
+        } else {
+            lastNode->next = firstPartNode;
+            firstPartNode = firstPartNode->next;
+            ++firstPartIndex;
+            lastNode = lastNode->next;
+        }
+    }
+    lastNode->next = nodeAfterEnd;
+    return startNode;
+}
+
+int mergeSort(List *list) {
+    if (isEmpty(list)) {
+        return -1;
+    }
+    if (list->head->next == NULL) {
+        return 0;
+    }
+    Node *beginNode = list->head;
+    Node *endNode = list->head;
+    int currentIndex = 0;
+    while (endNode->next != NULL) {
+        ++currentIndex;
+        endNode = endNode->next;
+    }
+
+    list->head = mergeNodeSort(beginNode, endNode, 0, currentIndex);
+
+    return 0;
+}
+
