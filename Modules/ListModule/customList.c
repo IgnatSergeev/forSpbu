@@ -10,14 +10,13 @@ struct List {
     Node *head;
 };
 
-/*void print(List *list) {
+void print(List *list, void (*print)(Type)) {
     Node *temp = list->head;
-    while (temp->next != NULL) {
-        printf("%d ", temp->value);
+    while (temp != NULL) {
+        (*print)(temp->value);
         temp = temp->next;
     }
-    printf("%d\n", temp->value);
-}*/
+}
 
 int insertNode(List *list, Type value, int index) {
     if (index < 0) {
@@ -93,10 +92,10 @@ int deleteNode(List* list, int index) {
     return 0;
 }
 
-Type findNode(List *list, int index, int *errorCode) {
+Type findNode(List *list, int index, Type zeroValue, int *errorCode) {
     if (isEmpty(list) || index < 0) {
         *errorCode = -1;
-        return (Type)0;
+        return zeroValue;
     }
     Node *iteratorNode = list->head;
 
@@ -104,7 +103,7 @@ Type findNode(List *list, int index, int *errorCode) {
         iteratorNode = iteratorNode->next;
         if (iteratorNode == NULL) {
             *errorCode = -1;
-            return (Type)0;
+            return zeroValue;
         }
     }
 
@@ -162,8 +161,8 @@ Node *mergeNodeSort(Node *begin, Node *end, int startIndex, int endIndex, int (*
     end->next = NULL;
     Node *nodeAfterLeftMiddleNode = leftMiddleNode->next;
     leftMiddleNode->next = NULL;
-    Node *firstPartBegin = mergeNodeSort(begin, leftMiddleNode, startIndex, currentIndex);
-    Node *secondPartBegin = mergeNodeSort(nodeAfterLeftMiddleNode, end, currentIndex + 1, endIndex);
+    Node *firstPartBegin = mergeNodeSort(begin, leftMiddleNode, startIndex, currentIndex, compare);
+    Node *secondPartBegin = mergeNodeSort(nodeAfterLeftMiddleNode, end, currentIndex + 1, endIndex, compare);
 
     int firstPartIndex = startIndex;
     Node *firstPartNode = firstPartBegin;
@@ -171,7 +170,7 @@ Node *mergeNodeSort(Node *begin, Node *end, int startIndex, int endIndex, int (*
     Node *secondPartNode = secondPartBegin;
 
     Node *startNode = NULL;
-    if (firstPartNode->value > secondPartNode->value) {
+    if ((*compare)(firstPartNode->value, secondPartNode->value) == 1) {
         startNode = secondPartNode;
         secondPartNode = secondPartNode->next;
         ++secondPartIndex;
@@ -198,7 +197,7 @@ Node *mergeNodeSort(Node *begin, Node *end, int startIndex, int endIndex, int (*
             continue;
         }
 
-        if (secondPartNode->value < firstPartNode->value) {
+        if ((*compare)(firstPartNode->value, secondPartNode->value) == -1) {
             lastNode->next = secondPartNode;
             secondPartNode = secondPartNode->next;
             ++secondPartIndex;
