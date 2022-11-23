@@ -5,6 +5,10 @@
 bool checkSymmetry(List *list, int listSize, int *errorCode) {
     *errorCode = 0;
     Stack *stack = createStack();
+    if (stack == NULL) {
+        *errorCode = 1;
+        return false;
+    }
 
     int listIndex = 0;
     if (listSize % 2 == 0) {
@@ -84,7 +88,7 @@ bool checkSymmetry(List *list, int listSize, int *errorCode) {
     return true;
 }
 
-bool test() {
+bool test(void) {
     bool testResult = true;
     List *list = create();
     if (list == NULL) {
@@ -132,7 +136,7 @@ bool test() {
     return testResult;
 }
 
-int main() {
+int main(void) {
     if (!test()) {
         printf("Тесты провалены\n");
         return -1;

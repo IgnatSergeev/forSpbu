@@ -87,7 +87,7 @@ Type findValue(BinaryTree *tree, Type value, int *errorCode, Type zeroValue, int
     return findNodeValue(tree->root, value, errorCode, zeroValue, compare, whatIfEqualInSearching);
 }
 
-BinaryTree *create() {
+BinaryTree *create(void) {
     BinaryTree *binaryTree = malloc(sizeof(BinaryTree));
     if (binaryTree == NULL) {
         return NULL;

@@ -57,7 +57,7 @@ int insertNode(List *list, Type value, int index) {
     return 0;
 }
 
-List *create() {
+List *create(void) {
     List *list = malloc(sizeof(List));
     if (list == NULL) {
         return list;

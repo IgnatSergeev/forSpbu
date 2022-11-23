@@ -61,8 +61,11 @@ Type top(Stack *stack) {
     return stack->head->value;
 }
 
-Stack *createStack() {
+Stack *createStack(void) {
     Stack *stack = malloc(sizeof(Stack));
+    if (stack == NULL) {
+        return stack;
+    }
     stack->head = NULL;
     return stack;
 }

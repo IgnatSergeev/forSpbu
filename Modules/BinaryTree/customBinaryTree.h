@@ -7,7 +7,7 @@
 typedef struct BinaryTree BinaryTree;
 
 //creates an empty binary tree
-BinaryTree *create();
+BinaryTree *create(void);
 
 //compare: should return 0 if equal, 1 if first is grater than second and -1 if first is less than second
 //whatIfEqualWhenAdding: first value - is old value; second value - is new value
@@ -28,4 +28,5 @@ int deleteValue(BinaryTree *tree, Type value, int (*compare)(Type, Type));
 //checks id the tree is empty
 bool isEmpty(BinaryTree *tree);
 
+//traverses the tree in a symmetrical order
 void treeTraversal(BinaryTree *binaryTree, Type array[]);

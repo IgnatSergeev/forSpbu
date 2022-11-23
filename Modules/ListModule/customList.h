@@ -7,7 +7,7 @@
 typedef struct List List;
 
 //creates an empty list
-List *create();
+List *create(void);
 
 //inserts the node which has that index(indexes starts from 0)
 int insertNode(List *list, Type value, int index);

@@ -25,7 +25,7 @@ int sortWithBinaryTree(int array[], int arraySize) {
     return 0;
 }
 
-bool test() {
+bool test(void) {
     bool testResult = true;
     int testArray[] = {1, 3, 4, 3, 2};
 
@@ -44,7 +44,7 @@ bool test() {
     return testResult;
 }
 
-int main() {
+int main(void) {
     if (!test()) {
         printf("Тесты провалены\n");
         return -1;
