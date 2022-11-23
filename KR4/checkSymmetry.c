@@ -9,12 +9,12 @@ bool checkSymmetry(List *list, int listSize, int *errorCode) {
     int listIndex = 0;
     if (listSize % 2 == 0) {
         while (listIndex < listSize / 2) {
-            int currentNum = findNode(list, listIndex, errorCode);
+            int currentNumber = findNode(list, listIndex, errorCode);
             if (*errorCode) {
                 deleteStack(stack);
                 return false;
             }
-            *errorCode = push(stack, currentNum);
+            *errorCode = push(stack, currentNumber);
             if (*errorCode) {
                 deleteStack(stack);
                 return false;
@@ -22,7 +22,7 @@ bool checkSymmetry(List *list, int listSize, int *errorCode) {
             ++listIndex;
         }
         while (listIndex < listSize) {
-            int currentNum = findNode(list, listIndex, errorCode);
+            int currentNumber = findNode(list, listIndex, errorCode);
             if (*errorCode) {
                 deleteStack(stack);
                 return false;
@@ -34,7 +34,7 @@ bool checkSymmetry(List *list, int listSize, int *errorCode) {
                 deleteStack(stack);
                 return false;
             }
-            if (popResult != currentNum) {
+            if (popResult != currentNumber) {
                 deleteStack(stack);
                 return false;
             }
@@ -46,12 +46,12 @@ bool checkSymmetry(List *list, int listSize, int *errorCode) {
     }
 
     while (listIndex < (listSize - 1) / 2) {
-        int currentNum = findNode(list, listIndex, errorCode);
+        int currentNumber = findNode(list, listIndex, errorCode);
         if (*errorCode) {
             deleteStack(stack);
             return false;
         }
-        *errorCode = push(stack, currentNum);
+        *errorCode = push(stack, currentNumber);
         if (*errorCode) {
             deleteStack(stack);
             return false;
@@ -61,7 +61,7 @@ bool checkSymmetry(List *list, int listSize, int *errorCode) {
 
     ++listIndex;
     while (listIndex < listSize) {
-        int currentNum = findNode(list, listIndex, errorCode);
+        int currentNumber = findNode(list, listIndex, errorCode);
         if (*errorCode) {
             deleteStack(stack);
             return false;
@@ -73,7 +73,7 @@ bool checkSymmetry(List *list, int listSize, int *errorCode) {
             deleteStack(stack);
             return false;
         }
-        if (popResult != currentNum) {
+        if (popResult != currentNumber) {
             deleteStack(stack);
             return false;
         }
@@ -154,10 +154,10 @@ int main() {
         clear(list);
         return -1;
     }
-    int currentNum = 0;
+    int currentNumber = 0;
     int listIndex = 0;
-    while (fscanf(file, "%d", &currentNum) != -1) {
-        insertNode(list, currentNum, listIndex);
+    while (fscanf(file, "%d", &currentNumber) != -1) {
+        insertNode(list, currentNumber, listIndex);
         ++listIndex;
     }
     fclose(file);
