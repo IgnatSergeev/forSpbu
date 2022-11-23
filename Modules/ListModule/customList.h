@@ -22,7 +22,7 @@ int deleteNode(List *list, int index);
 int changeNode(List *list, int index, Type value);
 
 //checks if the list is empty
-bool isEmpty(List *list);
+bool isListEmpty(List *list);
 
 //clears the list
 void clear(List *list);

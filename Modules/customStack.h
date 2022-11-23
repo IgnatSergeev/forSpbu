@@ -8,7 +8,7 @@ int push(Stack *stack, Type element);
 
 Type pop(Stack *stack, int *errorCode);
 
-bool isEmpty(Stack *stack);
+bool isStackEmpty(Stack *stack);
 
 Stack* createStack(void);
 

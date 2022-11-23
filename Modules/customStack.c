@@ -25,7 +25,7 @@ int push(Stack *stack, Type value) {
 }
 
 Type pop(Stack *stack, int *errorCode) {
-    if (isEmpty(stack)) {
+    if (isStackEmpty(stack)) {
         if (errorCode != NULL) {
             *errorCode = -1;
         }
@@ -45,12 +45,12 @@ Type pop(Stack *stack, int *errorCode) {
     return value;
 }
 
-bool isEmpty(Stack *stack) {
+bool isStackEmpty(Stack *stack) {
     return stack->head == NULL;
 }
 
 void deleteStack(Stack *stack) {
-    while (!isEmpty(stack)) {
+    while (!isStackEmpty(stack)) {
         int errorCode = 0;
         pop(stack, &errorCode);
     }

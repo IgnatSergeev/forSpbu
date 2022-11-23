@@ -33,7 +33,7 @@ int insertNode(List *list, Type value, int index) {
         list->head = newNode;
         return 0;
     }
-    if (isEmpty(list)) {
+    if (isListEmpty(list)) {
         return -1;
     }
 
@@ -59,13 +59,16 @@ int insertNode(List *list, Type value, int index) {
 
 List *create() {
     List *list = malloc(sizeof(List));
+    if (list == NULL) {
+        return list;
+    }
     list->head = NULL;
 
     return list;
 }
 
 int deleteNode(List* list, int index) {
-    if (isEmpty(list)) {
+    if (isListEmpty(list)) {
         return -1;
     }
     if (index < 0) {
@@ -94,7 +97,7 @@ int deleteNode(List* list, int index) {
 }
 
 Type findNode(List *list, int index, int *errorCode) {
-    if (isEmpty(list) || index < 0) {
+    if (isListEmpty(list) || index < 0) {
         *errorCode = -1;
         return (Type)0;
     }
@@ -112,12 +115,12 @@ Type findNode(List *list, int index, int *errorCode) {
     return iteratorNode->value;
 }
 
-bool isEmpty(List *list) {
+bool isListEmpty(List *list) {
     return list->head == NULL;
 }
 
 void clear(List *list) {
-    while (!isEmpty(list)) {
+    while (!isListEmpty(list)) {
         deleteNode(list, 0);
     }
     free(list);
@@ -127,7 +130,7 @@ int changeNode(List *list, int index, Type value) {
     if (index < 0) {
         return -1;
     }
-    if (isEmpty(list)) {
+    if (isListEmpty(list)) {
         return -1;
     }
 
