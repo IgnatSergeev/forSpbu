@@ -181,3 +181,19 @@ int deleteValue(BinaryTree *tree, Type value, int (*compare)(Type, Type)) {
     }
     return deleteNodeValue(NULL, right, tree->root, value, compare);
 }
+
+void nodeTreeTraversal(Node *node, Type array[], int *currentArrayIndex) {
+    if (node == NULL) {
+        return;
+    }
+
+    nodeTreeTraversal(node->left, array, currentArrayIndex);
+    array[*currentArrayIndex] = node->value;
+    ++(*currentArrayIndex);
+    nodeTreeTraversal(node->right, array, currentArrayIndex);
+}
+
+void treeTraversal(BinaryTree *binaryTree, Type array[]) {
+    int currentArrayIndex = 0;
+    nodeTreeTraversal(binaryTree->root, array, &currentArrayIndex);
+}

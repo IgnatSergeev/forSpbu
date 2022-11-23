@@ -27,3 +27,5 @@ int deleteValue(BinaryTree *tree, Type value, int (*compare)(Type, Type));
 
 //checks id the tree is empty
 bool isEmpty(BinaryTree *tree);
+
+void treeTraversal(BinaryTree *binaryTree, Type array[]);
