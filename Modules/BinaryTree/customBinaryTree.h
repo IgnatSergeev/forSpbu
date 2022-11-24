@@ -17,7 +17,7 @@ BinaryTree *create();
 
 //compare: should return 0 if equal, 1 if first is grater than second and -1 if first is less than second
 //whatIfEqualWhenAdding: first value - is old value; second value - is new value
-int addValue(BinaryTree *tree, Type value, int (*compare)(Type, Type), Type (*whatIfEqualInAdding)(Type, Type, int *));
+int addValue(BinaryTree *tree, Type value, int (*compare)(Type, Type), Type (*whatIfEqualInAdding)(Type, Type, int *), Type (*whatToDoInTheEndOfRight)(Type, Type, Type));
 
 //whatIfEqualInSearching: first value - is old value; second value - is new value
 //compare: should return 0 if equal, 1 if first is grater than second and -1 if first is less than second
@@ -35,4 +35,4 @@ int deleteValue(BinaryTree *tree, Type value, int (*compare)(Type, Type));
 bool isEmpty(BinaryTree *tree);
 
 //traverses the tree in a symmetrical order
-void treeTraversal(BinaryTree *binaryTree, void (*whatToDoWithValue)(Type), enum TypesOfTraversal typeOfTraversal);
+void treeTraversal(BinaryTree *binaryTree, void (*whatToDoWithValue)(Type), int *evaluatedValue);
