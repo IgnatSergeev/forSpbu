@@ -19,7 +19,7 @@ enum Direction {
     left
 };
 
-Node *addNode(Node *node, Type value, int *errorCode, int (*compare)(Type, Type), Type (*whatIfEqualInAdding)(Type, Type)) {
+Node *addNode(Node *node, Type value, int *errorCode, int (*compare)(Type, Type), Type (*whatIfEqualInAdding)(Type, Type, int *)) {
     *errorCode = 0;
     if (node == NULL) {
         Node *newNode = malloc(sizeof(Node));
@@ -40,7 +40,7 @@ Node *addNode(Node *node, Type value, int *errorCode, int (*compare)(Type, Type)
     }
 
     if (!compareResult) {
-        node->value = (*whatIfEqualInAdding)(node->value, value);
+        node->value = (*whatIfEqualInAdding)(node->value, value, errorCode);
         return node;
     }
     if (compareResult == -1) {
@@ -52,7 +52,7 @@ Node *addNode(Node *node, Type value, int *errorCode, int (*compare)(Type, Type)
     return node;
 }
 
-int addValue(BinaryTree *tree, Type value, int (*compare)(Type, Type), Type (*whatIfEqualInAdding)(Type, Type)) {
+int addValue(BinaryTree *tree, Type value, int (*compare)(Type, Type), Type (*whatIfEqualInAdding)(Type, Type, int *)) {
     int errorCode = 0;
     tree->root = addNode(tree->root, value, &errorCode, compare, whatIfEqualInAdding);
     return errorCode;
@@ -180,4 +180,26 @@ int deleteValue(BinaryTree *tree, Type value, int (*compare)(Type, Type)) {
         return 0;
     }
     return deleteNodeValue(NULL, right, tree->root, value, compare);
+}
+
+void nodeTreeTraversal(Node *node, void (*whatToDoWithValue)(Type), enum TypesOfTraversal typeOfTraversal) {
+    if (node == NULL) {
+        return;
+    }
+
+    if (typeOfTraversal == preorder) {
+        (*whatToDoWithValue)(node->value);
+    }
+    nodeTreeTraversal(node->left, whatToDoWithValue, typeOfTraversal);
+    if (typeOfTraversal == inorder) {
+        (*whatToDoWithValue)(node->value);
+    }
+    nodeTreeTraversal(node->right, whatToDoWithValue, typeOfTraversal);
+    if (typeOfTraversal == postorder) {
+        (*whatToDoWithValue)(node->value);
+    }
+}
+
+void treeTraversal(BinaryTree *binaryTree, void (*whatToDoWithValue)(Type), enum TypesOfTraversal typeOfTraversal) {
+    nodeTreeTraversal(binaryTree->root, whatToDoWithValue, typeOfTraversal);
 }
