@@ -110,7 +110,11 @@ int mostFrequentElement(const int sortedArray[], int arraySize) {
             currentNumberOfElements = 1;
             currentElement = sortedArray[i];
         }
-     }
+    }
+
+    if (currentNumberOfElements > maxNumberOfElements) {
+        mostFrequentElem = currentElement;
+    }
 
     return mostFrequentElem;
 }
