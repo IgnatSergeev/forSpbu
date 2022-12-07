@@ -15,6 +15,8 @@ int enqueue(Queue *queue, int element);
 
 int dequeue(Queue *queue, int *errorCode);
 
-bool isEmpty(Queue queue);
+bool isEmpty(Queue *queue);
 
 void clear(Queue *queue);
+
+Queue *createQueue();
