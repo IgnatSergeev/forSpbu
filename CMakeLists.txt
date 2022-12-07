@@ -3,4 +3,4 @@ project(forSpbu C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(forSpbu Modules/BinaryTree/customBinaryTree.c Modules/BinaryTree/customBinaryTree.h Modules/BinaryTree/tempForBT.c KR5/rewrite.c)
+add_executable(forSpbu Modules/ListModule/customList.c KR5/rewrite.c)
