@@ -47,6 +47,16 @@ int addValue(HashMap *hashMap, KeyType key, Type value) {
     return returnValue;
 }
 
+void deleteValue(HashMap *hashMap, KeyType key, Type value) {
+    int hashFunctionOfValueToDelete = hashFunction(key);
+    List *listToDeleteIn = hashMap->hashArray[hashFunctionOfValueToDelete];
+
+    int indexToDelete = findNodeIndexByValue(listToDeleteIn, value);
+    if (indexToDelete == -1) {
+        return ;
+    }
+    deleteNode(listToDeleteIn, indexToDelete);
+}
 
 
 

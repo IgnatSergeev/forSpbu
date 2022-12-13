@@ -10,4 +10,6 @@ HashMap *createHashMap();
 
 int addValue(HashMap *hashMap, KeyType key, Type value);
 
+void deleteValue(HashMap *hashMap, KeyType key, Type value);
+
 void clearHashMap(HashMap *hashMap);
