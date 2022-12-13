@@ -8,6 +8,6 @@ typedef struct HashMap HashMap;
 
 HashMap *createHashMap();
 
-int addValue(HashMap *hashMap, KeyType key, ValueType value);
+int addValue(HashMap *hashMap, KeyType key, Type value);
 
 void clearHashMap(HashMap *hashMap);
