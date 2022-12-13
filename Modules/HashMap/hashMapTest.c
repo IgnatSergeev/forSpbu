@@ -11,6 +11,7 @@ int main() {
     addValue(hashMap, array2, 6, NULL);
     addValue(hashMap, array3, 6, NULL);
 
+    deleteValue(hashMap, array1);
 
     return 0;
 }
