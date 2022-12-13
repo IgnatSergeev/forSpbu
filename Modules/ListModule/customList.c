@@ -8,6 +8,7 @@ typedef struct Node {
 
 struct List {
     Node *head;
+    int listSize;
 };
 
 /*void print(List *list) {
@@ -31,6 +32,7 @@ int insertNode(List *list, Type value, int index) {
         newNode->next = list->head;
         newNode->value = value;
         list->head = newNode;
+        list->listSize += 1;
         return 0;
     }
     if (isEmpty(list)) {
@@ -54,12 +56,21 @@ int insertNode(List *list, Type value, int index) {
     newNode->value = value;
     newNode->next = iteratorNode->next;
     iteratorNode->next = newNode;
+    list->listSize += 1;
     return 0;
+}
+
+int insertNodeToEnd(List *list, Type value) {
+    return insertNode(list, value, list->listSize);
 }
 
 List *create() {
     List *list = malloc(sizeof(List));
+    if (list == NULL) {
+        return NULL;
+    }
     list->head = NULL;
+    list->listSize = 0;
 
     return list;
 }
@@ -75,6 +86,7 @@ int deleteNode(List* list, int index) {
         Node *nodeToDelete = list->head;
         list->head = nodeToDelete->next;
         free(nodeToDelete);
+        list->listSize -= 1;
         return 0;
     }
 
@@ -90,6 +102,7 @@ int deleteNode(List* list, int index) {
     Node *nodeToDelete = iteratorNode->next;
     iteratorNode->next = nodeToDelete->next;
     free(nodeToDelete);
+    list->listSize -= 1;
     return 0;
 }
 

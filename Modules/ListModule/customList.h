@@ -12,6 +12,8 @@ List *create();
 //inserts the node which has that index(indexes starts from 0)
 int insertNode(List *list, Type value, int index);
 
+int insertNodeToEnd(List *list, Type value);
+
 //prints list`s elements values
 //void print(List *list);
 
