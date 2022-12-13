@@ -3,10 +3,12 @@
 
 struct HashMap {
     List *hashArray[HASH_FUNCTION_RANGE];
+    int arrayOfNumberOfElementsInHashArray[HASH_FUNCTION_RANGE];
+    int numOfElementsInHashMap;
 };
 
 HashMap *createHashMap() {
-    HashMap *hashMap = malloc(sizeof(HashMap));
+    HashMap *hashMap = calloc(1, sizeof(HashMap));
     if (hashMap == NULL) {
         return NULL;
     }
@@ -33,10 +35,16 @@ void clearHashMap(HashMap *hashMap) {
     free(hashMap);
 }
 
-int addValue(HashMap *hashMap, Type value, int (*compare)(Type, Type), Type (*whatIfEqualInAdding)(Type, Type)) {
-    int hashFunctionValue = hashFunction(value);
+int addValue(HashMap *hashMap, KeyType key, Type value) {
+    int hashFunctionValue = hashFunction(key);
     List *listToAddValue = hashMap->hashArray[hashFunctionValue];
-    insertNode(listToAddValue, value, )
+
+    int returnValue = insertNodeToEnd(listToAddValue, value);
+    if (!returnValue) {
+        hashMap->arrayOfNumberOfElementsInHashArray[hashFunctionValue] += 1;
+        hashMap->numOfElementsInHashMap += 1;
+    }
+    return returnValue;
 }
 
 
