@@ -35,27 +35,35 @@ void clearHashMap(HashMap *hashMap) {
     free(hashMap);
 }
 
-int addValue(HashMap *hashMap, KeyType key, Type value) {
+int addValue(HashMap *hashMap, Type key, int keySize, Type (*whatToDoIfAlreadyExist)(Type)) {
     int hashFunctionValue = hashFunction(key);
     List *listToAddValue = hashMap->hashArray[hashFunctionValue];
 
-    int returnValue = insertNodeToEnd(listToAddValue, value);
-    if (!returnValue) {
-        hashMap->arrayOfNumberOfElementsInHashArray[hashFunctionValue] += 1;
-        hashMap->numOfElementsInHashMap += 1;
+    int indexOfValueInListIfExist = findNodeIndexByValue(listToAddValue, key);
+    if (indexOfValueInListIfExist == -1) {
+        int returnValue = insertNodeToEnd(listToAddValue, key, keySize);
+        if (!returnValue) {
+            hashMap->arrayOfNumberOfElementsInHashArray[hashFunctionValue] += 1;
+            hashMap->numOfElementsInHashMap += 1;
+        }
+        return returnValue;
+    } else {
+        changeNode(listToAddValue, indexOfValueInListIfExist, key);
+        return 0;
     }
-    return returnValue;
 }
 
-void deleteValue(HashMap *hashMap, KeyType key, Type value) {
+void deleteValue(HashMap *hashMap, Type key) {
     int hashFunctionOfValueToDelete = hashFunction(key);
     List *listToDeleteIn = hashMap->hashArray[hashFunctionOfValueToDelete];
 
-    int indexToDelete = findNodeIndexByValue(listToDeleteIn, value);
+    int indexToDelete = findNodeIndexByValue(listToDeleteIn, key);
     if (indexToDelete == -1) {
-        return ;
+        return;
     }
     deleteNode(listToDeleteIn, indexToDelete);
+    hashMap->numOfElementsInHashMap -= 1;
+    hashMap->arrayOfNumberOfElementsInHashArray[hashFunctionOfValueToDelete] -= 1;
 }
 
 

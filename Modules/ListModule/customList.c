@@ -1,8 +1,10 @@
 #include "customList.h"
 #include <stdio.h>
+#include <string.h>
 
 typedef struct Node {
     Type value;
+    int frequency;
     struct Node *next;
 } Node;
 
@@ -20,17 +22,19 @@ struct List {
     printf("%d\n", temp->value);
 }*/
 
-int insertNode(List *list, Type value, int index) {
+int insertNode(List *list, Type value, int keySize, int index) {
     if (index < 0) {
         return -1;
     }
     if (index == 0) {
-        Node *newNode = malloc(sizeof(Node));
+        Node *newNode = calloc(1, sizeof(Node));
         if (newNode == NULL) {
             return -1;
         }
         newNode->next = list->head;
-        newNode->value = value;
+        newNode->value = calloc(keySize, sizeof(char));
+        strcpy(newNode->value, value);
+        newNode->frequency = 1;
         list->head = newNode;
         list->listSize += 1;
         return 0;
@@ -53,15 +57,15 @@ int insertNode(List *list, Type value, int index) {
     if (newNode == NULL) {
         return -1;
     }
-    newNode->value = value;
+    strcpy(newNode->value, value);
     newNode->next = iteratorNode->next;
     iteratorNode->next = newNode;
     list->listSize += 1;
     return 0;
 }
 
-int insertNodeToEnd(List *list, Type value) {
-    return insertNode(list, value, list->listSize);
+int insertNodeToEnd(List *list, Type value, int keySize) {
+    return insertNode(list, value, keySize, list->listSize);
 }
 
 List *create() {
@@ -133,7 +137,7 @@ int findNodeIndexByValue(List *list, Type value) {
 
     int currentIndex = 0;
     while (iteratorNode != NULL) {
-        if (iteratorNode->value == value) {
+        if (!strcmp(iteratorNode->value, value)) {
             break;
         }
         ++currentIndex;
@@ -175,7 +179,8 @@ int changeNode(List *list, int index, Type value) {
         iteratorNode = iteratorNode->next;
     }
 
-    iteratorNode->value = value;
+    strcpy(iteratorNode->value, value);
+    ++iteratorNode->frequency;
     return 0;
 }
 
