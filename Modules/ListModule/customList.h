@@ -2,7 +2,7 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
-#include "../typeDef.h"
+#include "typeDef.h"
 
 typedef struct List List;
 
