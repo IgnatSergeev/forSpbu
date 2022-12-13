@@ -125,6 +125,27 @@ Type findNode(List *list, int index, int *errorCode) {
     return iteratorNode->value;
 }
 
+int findNodeIndexByValue(List *list, Type value) {
+    if (isEmpty(list)) {
+        return -1;
+    }
+    Node *iteratorNode = list->head;
+
+    int currentIndex = 0;
+    while (iteratorNode != NULL) {
+        if (iteratorNode->value == value) {
+            break;
+        }
+        ++currentIndex;
+        iteratorNode = iteratorNode->next;
+    }
+
+    if (iteratorNode == NULL) {
+        return -1;
+    }
+    return currentIndex;
+}
+
 bool isEmpty(List *list) {
     return list->head == NULL;
 }

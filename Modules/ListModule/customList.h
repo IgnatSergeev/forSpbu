@@ -31,3 +31,6 @@ void clear(List *list);
 
 //finds the value of the node which has that index(indexes starts from 0)
 Type findNode(List *list, int index, int *errorCode);
+
+//finds the index of the node which has that value(indexes starts from 0)
+int findNodeIndexByValue(List *list, Type value);
