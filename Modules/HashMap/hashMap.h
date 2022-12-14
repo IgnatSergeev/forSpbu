@@ -7,7 +7,7 @@ typedef struct HashMap HashMap;
 
 HashMap *createHashMap();
 
-int addValue(HashMap *hashMap, Type key, int keySize, Type (*whatToDoIfAlreadyExist)(Type));
+int addValue(HashMap *hashMap, Type key, int keySize);
 
 void deleteValue(HashMap *hashMap, Type key);
 

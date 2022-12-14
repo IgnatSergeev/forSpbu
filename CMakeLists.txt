@@ -3,4 +3,4 @@ project(forSpbu C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(forSpbu Modules/HashMap/hashMapTest.c Modules/HashMap/hashMap.c Modules/ListModule/customList.c Modules/HashMap/hashFunction.c)
+add_executable(forSpbu Modules/HashMap/hashMapTest.c Modules/HashMap/hashMap.c Modules/HashMap/customListForHashMap.c Modules/HashMap/hashFunction.c)

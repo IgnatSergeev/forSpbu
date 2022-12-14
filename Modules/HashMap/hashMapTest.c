@@ -7,9 +7,9 @@ int main() {
     char array2[] = "abcdec";
     char array3[] = "abcded";
     printf("%d", hashFunction(array1));
-    addValue(hashMap, array1, 6, NULL);
-    addValue(hashMap, array2, 6, NULL);
-    addValue(hashMap, array3, 6, NULL);
+    addValue(hashMap, array1, 6);
+    addValue(hashMap, array2, 6);
+    addValue(hashMap, array3, 6);
 
     deleteValue(hashMap, array1);
 

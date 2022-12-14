@@ -1,7 +1,10 @@
 #pragma once
 
-#define HASH_FUNCTION_RANGE 256
+#include <stdlib.h>
 
-typedef char * Type;
+typedef struct Type {
+    char *string;
+    int stringSize;
+} Type;
 
 int hashFunction(Type key);
