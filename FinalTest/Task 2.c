@@ -43,7 +43,7 @@ bool test() {
         printf("Возникла ошибка при удалении ноды\n");
         return false;
     }
-    if (strcmp(value, "acd")) {
+    if (strcmp(value, "acd") != 0) {
         testResult = false;
     }
 
@@ -52,7 +52,7 @@ bool test() {
         printf("Возникла ошибка при удалении ноды\n");
         return false;
     }
-    if (strcmp(value, "abc")) {
+    if (strcmp(value, "abc") != 0) {
         testResult = false;
     }
 
@@ -61,7 +61,7 @@ bool test() {
         printf("Возникла ошибка при удалении ноды\n");
         return false;
     }
-    if (strcmp(value, "bcd")) {
+    if (strcmp(value, "bcd") != 0) {
         testResult = false;
     }
 
@@ -70,7 +70,7 @@ bool test() {
         printf("Возникла ошибка при удалении ноды\n");
         return false;
     }
-    if (strcmp(value, "acd")) {
+    if (strcmp(value, "acd") != 0) {
         testResult = false;
     }
 
@@ -79,7 +79,7 @@ bool test() {
         printf("Возникла ошибка при удалении ноды\n");
         return false;
     }
-    if (strcmp(value, "")) {
+    if (strcmp(value, "") != 0) {
         testResult = false;
     }
 
@@ -88,7 +88,7 @@ bool test() {
         printf("Возникла ошибка при удалении ноды\n");
         return false;
     }
-    if (strcmp(value, "abc")) {
+    if (strcmp(value, "abc") != 0) {
         testResult = false;
     }
     clear(list);
