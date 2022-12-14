@@ -8,16 +8,8 @@ typedef struct Node {
 
 struct List {
     Node *head;
+    int listSize;
 };
-
-/*void print(List *list) {
-    Node *temp = list->head;
-    while (temp->next != NULL) {
-        printf("%d ", temp->value);
-        temp = temp->next;
-    }
-    printf("%d\n", temp->value);
-}*/
 
 int insertNode(List *list, Type value, int index) {
     if (index < 0) {
@@ -31,6 +23,7 @@ int insertNode(List *list, Type value, int index) {
         newNode->next = list->head;
         newNode->value = value;
         list->head = newNode;
+        list->listSize += 1;
         return 0;
     }
     if (isEmpty(list)) {
@@ -54,11 +47,19 @@ int insertNode(List *list, Type value, int index) {
     newNode->value = value;
     newNode->next = iteratorNode->next;
     iteratorNode->next = newNode;
+    list->listSize += 1;
     return 0;
 }
 
+int insertNodeToEnd(List *list, Type value) {
+    return insertNode(list, value, list->listSize);
+}
+
 List *create() {
-    List *list = malloc(sizeof(List));
+    List *list = calloc(1, sizeof(List));
+    if (list == NULL) {
+        return NULL;
+    }
     list->head = NULL;
 
     return list;
@@ -74,6 +75,7 @@ int deleteNode(List* list, int index) {
     if (index == 0) {
         Node *nodeToDelete = list->head;
         list->head = nodeToDelete->next;
+        list->listSize -= 1;
         free(nodeToDelete);
         return 0;
     }
@@ -89,14 +91,15 @@ int deleteNode(List* list, int index) {
     }
     Node *nodeToDelete = iteratorNode->next;
     iteratorNode->next = nodeToDelete->next;
+    list->listSize -= 1;
     free(nodeToDelete);
     return 0;
 }
 
-Type findNode(List *list, int index, int *errorCode) {
+Type findNode(List *list, int index, int *errorCode, Type nullReturn) {
     if (isEmpty(list) || index < 0) {
         *errorCode = -1;
-        return (Type)0;
+        return nullReturn;
     }
     Node *iteratorNode = list->head;
 
@@ -104,7 +107,7 @@ Type findNode(List *list, int index, int *errorCode) {
         iteratorNode = iteratorNode->next;
         if (iteratorNode == NULL) {
             *errorCode = -1;
-            return (Type)0;
+            return nullReturn;
         }
     }
 
@@ -144,4 +147,31 @@ int changeNode(List *list, int index, Type value) {
     iteratorNode->value = value;
     return 0;
 }
+
+int appendToEndStringsStartingWithA(List *list) {
+    if (isEmpty(list)) {
+        return 0;
+    }
+    Node *iteratorNode = list->head;
+    while (iteratorNode->next != NULL) {
+        iteratorNode = iteratorNode->next;
+    }
+
+    Node *endNode = iteratorNode;
+
+    iteratorNode = list->head;
+    while (iteratorNode != endNode) {
+        if (iteratorNode->value != NULL && iteratorNode->value[0] == 'a') {
+            int errorCode = insertNodeToEnd(list, iteratorNode->value);
+            if (errorCode) {
+                return 1;
+            }
+        }
+        iteratorNode = iteratorNode->next;
+    }
+    if (iteratorNode->value != NULL && iteratorNode->value[0] == 'a') {
+        insertNodeToEnd(list, iteratorNode->value);
+    }
+}
+
 

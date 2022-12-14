@@ -2,7 +2,7 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
-#include "../typeDef.h"
+#include "typeDef.h"
 
 typedef struct List List;
 
@@ -12,8 +12,7 @@ List *create();
 //inserts the node which has that index(indexes starts from 0)
 int insertNode(List *list, Type value, int index);
 
-//prints list`s elements values
-//void print(List *list);
+int insertNodeToEnd(List *list, Type value);
 
 //deletes the node which has that index(indexes starts from 0)
 int deleteNode(List *list, int index);
@@ -28,4 +27,7 @@ bool isEmpty(List *list);
 void clear(List *list);
 
 //finds the value of the node which has that index(indexes starts from 0)
-Type findNode(List *list, int index, int *errorCode);
+Type findNode(List *list, int index, int *errorCode, Type nullReturn);
+
+//appends to the end of th list all string which starts with 'a'
+int appendToEndStringsStartingWithA(List *list);
