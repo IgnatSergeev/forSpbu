@@ -3,4 +3,4 @@ project(forSpbu C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(forSpbu FinalTest/Task1.c)
+add_executable(forSpbu  "FinalTest/Task 2.c")
