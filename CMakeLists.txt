@@ -3,4 +3,4 @@ project(forSpbu C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(forSpbu Modules/BinaryTree/customBinaryTree.c Modules/BinaryTree/customBinaryTree.h Modules/BinaryTree/tempForBT.c)
+add_executable(forSpbu Modules/Graph/graph.c Modules/Graph/graph.h Modules/Graph/typeDef.h)
