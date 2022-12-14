@@ -15,7 +15,7 @@ int insertNode(List *list, Type value, int index);
 int insertNodeToEnd(List *list, Type value);
 
 //deletes the node which has that index(indexes starts from 0)
-int deleteNode(List *list, int index);
+Type deleteNode(List *list, int index);
 
 //changes the value of the node which has that index(indexes starts from 0)
 int changeNode(List *list, int index, Type value);

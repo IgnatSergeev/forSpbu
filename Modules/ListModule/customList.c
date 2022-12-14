@@ -65,35 +65,41 @@ List *create() {
     return list;
 }
 
-int deleteNode(List* list, int index) {
+Type deleteNode(List* list, int index) {
     if (isEmpty(list)) {
-        return -1;
+        return NULL;
     }
     if (index < 0) {
-        return -1;
+        return NULL;
     }
     if (index == 0) {
         Node *nodeToDelete = list->head;
         list->head = nodeToDelete->next;
         list->listSize -= 1;
+        Type value = nodeToDelete->value;
         free(nodeToDelete);
-        return 0;
+        return value;
     }
 
     Node *iteratorNode = list->head;
     int currentIndex = 0;
     while (currentIndex != index - 1) {
         if (iteratorNode->next == NULL) {
-            return -1;
+            return NULL;
         }
         ++currentIndex;
         iteratorNode = iteratorNode->next;
     }
     Node *nodeToDelete = iteratorNode->next;
     iteratorNode->next = nodeToDelete->next;
+    Type value = nodeToDelete->value;
     list->listSize -= 1;
     free(nodeToDelete);
-    return 0;
+    return value;
+}
+
+Type deleteLastNode(List *list) {
+    return deleteNode(list, list->listSize - 1);
 }
 
 Type findNode(List *list, int index, int *errorCode, Type nullReturn) {
@@ -170,8 +176,12 @@ int appendToEndStringsStartingWithA(List *list) {
         iteratorNode = iteratorNode->next;
     }
     if (iteratorNode->value != NULL && iteratorNode->value[0] == 'a') {
-        insertNodeToEnd(list, iteratorNode->value);
+        int errorCode = insertNodeToEnd(list, iteratorNode->value);
+        if (errorCode) {
+            return 1;
+        }
     }
+    return 0;
 }
 
 
