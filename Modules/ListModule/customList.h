@@ -12,10 +12,14 @@ List *create();
 //inserts the node which has that index(indexes starts from 0)
 int insertNode(List *list, Type value, int index);
 
+//inserts node to the end
 int insertNodeToEnd(List *list, Type value);
 
 //deletes the node which has that index(indexes starts from 0)
 Type deleteNode(List *list, int index);
+
+//deletes last node
+Type deleteLastNode(List *list);
 
 //changes the value of the node which has that index(indexes starts from 0)
 int changeNode(List *list, int index, Type value);
