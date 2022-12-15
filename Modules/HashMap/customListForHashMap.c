@@ -4,7 +4,6 @@
 
 typedef struct Node {
     Type value;
-    int frequency;
     struct Node *next;
 } Node;
 
@@ -13,16 +12,7 @@ struct List {
     int listSize;
 };
 
-/*void print(List *list) {
-    Node *temp = list->head;
-    while (temp->next != NULL) {
-        printf("%d ", temp->value);
-        temp = temp->next;
-    }
-    printf("%d\n", temp->value);
-}*/
-
-int insertNode(List *list, Type value, int keySize, int startFrequency, int index) {
+int insertNode(List *list, Type value, int index) {
     if (index < 0) {
         return -1;
     }
@@ -32,9 +22,8 @@ int insertNode(List *list, Type value, int keySize, int startFrequency, int inde
             return -1;
         }
         newNode->next = list->head;
-        newNode->value = calloc(keySize, sizeof(char));
-        strcpy(newNode->value, value);
-        newNode->frequency = startFrequency;
+        strcpy(newNode->value.key, value.key);
+        newNode->value.value = value.value;
         list->head = newNode;
         list->listSize += 1;
         return 0;
@@ -57,15 +46,16 @@ int insertNode(List *list, Type value, int keySize, int startFrequency, int inde
     if (newNode == NULL) {
         return -1;
     }
-    strcpy(newNode->value, value);
+    strcpy(newNode->value.key, value.key);
+    newNode->value.value = value.value;
     newNode->next = iteratorNode->next;
     iteratorNode->next = newNode;
     list->listSize += 1;
     return 0;
 }
 
-int insertNodeToEnd(List *list, Type value, int keySize, int startFrequency) {
-    return insertNode(list, value, keySize, startFrequency, list->listSize);
+int insertNodeToEnd(List *list, Type value) {
+    return insertNode(list, value, list->listSize);
 }
 
 List *create() {
@@ -79,7 +69,8 @@ List *create() {
     return list;
 }
 
-Type deleteNode(List* list, int index, Type nullResult) {
+Type deleteNode(List* list, int index) {
+    Type nullResult = {0};
     if (isEmpty(list)) {
         return nullResult;
     }
@@ -92,7 +83,7 @@ Type deleteNode(List* list, int index, Type nullResult) {
         Type value = nodeToDelete->value;
         free(nodeToDelete);
         list->listSize -= 1;
-        return value;
+        return value;//user must free value.key after all
     }
 
     Node *iteratorNode = list->head;
@@ -117,9 +108,10 @@ Type deleteLastNode(List *list) {
 }
 
 Type findNode(List *list, int index, int *errorCode) {
+    Type nullResult = {0};
     if (isEmpty(list) || index < 0) {
         *errorCode = -1;
-        return (Type)0;
+        return nullResult;
     }
     Node *iteratorNode = list->head;
 
@@ -127,7 +119,7 @@ Type findNode(List *list, int index, int *errorCode) {
         iteratorNode = iteratorNode->next;
         if (iteratorNode == NULL) {
             *errorCode = -1;
-            return (Type)0;
+            return nullResult;
         }
     }
 
@@ -143,7 +135,7 @@ int findNodeIndexByValue(List *list, Type value) {
 
     int currentIndex = 0;
     while (iteratorNode != NULL) {
-        if (!strcmp(iteratorNode->value.string, value.string)) {
+        if (!strcmp(iteratorNode->value.key, value.key)) {
             break;
         }
         ++currentIndex;
@@ -185,9 +177,29 @@ int changeNode(List *list, int index, Type value) {
         iteratorNode = iteratorNode->next;
     }
 
-    strcpy(iteratorNode->value.string, value.string);
-    iteratorNode->value.stringSize = value.stringSize;
-    ++iteratorNode->frequency;
+    strcpy(iteratorNode->value.key, value.key);
+    iteratorNode->value.value = value.value;
     return 0;
 }
 
+int changeNodeValueByOne(List *list, int index) {
+    if (index < 0) {
+        return -1;
+    }
+    if (isEmpty(list)) {
+        return -1;
+    }
+
+    Node *iteratorNode = list->head;
+    int currentIndex = 0;
+    while (currentIndex != index) {
+        if (iteratorNode->next == NULL) {
+            return -1;
+        }
+        ++currentIndex;
+        iteratorNode = iteratorNode->next;
+    }
+
+    ++iteratorNode->value.value;
+    return 0;
+}

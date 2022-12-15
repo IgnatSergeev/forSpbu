@@ -10,18 +10,22 @@ typedef struct List List;
 List *create();
 
 //inserts the node which has that index(indexes starts from 0)
-int insertNode(List *list, Type value, int keySize, int startFrequency, int index);
+int insertNode(List *list, Type value, int index);
 
-int insertNodeToEnd(List *list, Type value, int keySize, int startFrequency);
-
-//prints list`s elements values
-//void print(List *list);
+//inserts node to end
+int insertNodeToEnd(List *list, Type value);
 
 //deletes the node which has that index(indexes starts from 0)
 Type deleteNode(List *list, int index);
 
+//deletes last node
+Type deleteLastNode(List *list);
+
 //changes the value of the node which has that index(indexes starts from 0)
 int changeNode(List *list, int index, Type value);
+
+//changes value.value by 1
+int changeNodeValueByOne(List *list, int index);
 
 //checks if the list is empty
 bool isEmpty(List *list);
