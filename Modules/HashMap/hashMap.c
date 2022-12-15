@@ -27,20 +27,14 @@ HashMap *createHashMap() {
         return NULL;
     }
 
-
-    for (int i = 0; i < hashMap->hashMapSize; i++) {
-        List *currentList = create();
-        if (currentList == NULL) {
-            for (int j = 0; j < i; j++) {
-                clear(hashMap->hashArray[j]);
-            }
-            free(hashMap->hashArray);
-            free(hashMap->arrayOfNumberOfElementsInHashArray);
-            free(hashMap);
-            return NULL;
-        }
-        hashMap->hashArray[i] = currentList;
+    List *currentList = create();
+    if (currentList == NULL) {
+        free(hashMap->hashArray);
+        free(hashMap->arrayOfNumberOfElementsInHashArray);
+        free(hashMap);
+        return NULL;
     }
+    hashMap->hashArray[0] = currentList;
 
     return hashMap;
 }
@@ -56,27 +50,33 @@ void clearHashMap(HashMap *hashMap) {
 
 void resize(HashMap *hashMap) {
     int oldHashMapSize = hashMap->hashMapSize;
-    hashMap->hashMapSize *= 2;
     List **oldHashArray = hashMap->hashArray;
-    int *oldArrayOfNumberOfElementsInHashArray = hashMap->arrayOfNumberOfElementsInHashArray;
+    free(hashMap->arrayOfNumberOfElementsInHashArray);
+
+    hashMap->hashMapSize *= 2;
     hashMap->hashArray = calloc(hashMap->hashMapSize, sizeof(List *));
+    for (int i = 0; i < hashMap->hashMapSize; i++) {
+        hashMap->hashArray[i] = create();
+    }
     hashMap->arrayOfNumberOfElementsInHashArray = calloc(hashMap->hashMapSize, sizeof(int));
 
     for (int i = 0; i < oldHashMapSize; i++) {
         while (!isEmpty(oldHashArray[i])) {
             Type value = deleteNode(oldHashArray[i], 0);
-            addValue(hashMap, value, )
+            addValue(hashMap, value);
         }
+        clear(oldHashArray[i]);
     }
+    free(oldHashArray);
 }
 
-int addValue(HashMap *hashMap, Type key, int keySize) {
-    int hashFunctionValue = hashFunction(key) % hashMap->hashMapSize;
+int addValue(HashMap *hashMap, Type value) {
+    int hashFunctionValue = hashFunction(value) % hashMap->hashMapSize;
     List *listToAddValue = hashMap->hashArray[hashFunctionValue];
 
-    int indexOfValueInListIfExist = findNodeIndexByValue(listToAddValue, key);
+    int indexOfValueInListIfExist = findNodeIndexByValue(listToAddValue, value);
     if (indexOfValueInListIfExist == -1) {
-        int returnValue = insertNodeToEnd(listToAddValue, key, keySize, 1);
+        int returnValue = insertNodeToEnd(listToAddValue, value);
         if (!returnValue) {
             hashMap->arrayOfNumberOfElementsInHashArray[hashFunctionValue] += 1;
             hashMap->numberOfElementsInHashMap += 1;
@@ -86,7 +86,7 @@ int addValue(HashMap *hashMap, Type key, int keySize) {
         }
         return returnValue;
     } else {
-        changeNode(listToAddValue, indexOfValueInListIfExist, key);
+        changeNodeValueByOne(listToAddValue, indexOfValueInListIfExist);
         return 0;
     }
 }
