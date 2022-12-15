@@ -3,8 +3,8 @@
 #include <stdlib.h>
 
 typedef struct Type {
-    char *string;
-    int stringSize;
+    char key[100];
+    int value;
 } Type;
 
 int hashFunction(Type key);

@@ -7,7 +7,7 @@
 
 //hashFunction should return number >= 0 and < HASH_FUNCTION_RANGE
 int hashFunction(Type element) {
-    char *key = element.string;
+    char *key = element.key;
     int index = 0;
     int currentP = 1;
     int result = 0;
