@@ -12,7 +12,7 @@ void readFileIntoHashMap(HashMap *hashMap, FILE *file) {
     }
 }
 
-bool test() {
+bool test(void) {
     bool testResult = true;
 
     HashMap *testHashMap = createHashMap();
