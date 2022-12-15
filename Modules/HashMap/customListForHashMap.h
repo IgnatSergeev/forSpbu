@@ -12,6 +12,8 @@ List *create();
 //inserts the node which has that index(indexes starts from 0)
 int insertNode(List *list, Type value, int index);
 
+void printList(List *list);
+
 //inserts node to end
 int insertNodeToEnd(List *list, Type value);
 
@@ -28,7 +30,7 @@ int changeNode(List *list, int index, Type value);
 int changeNodeValueByOne(List *list, int index);
 
 //checks if the list is empty
-bool isEmpty(List *list);
+bool isListEmpty(List *list);
 
 //clears the list
 void clear(List *list);

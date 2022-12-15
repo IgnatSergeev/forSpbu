@@ -28,7 +28,7 @@ int insertNode(List *list, Type value, int index) {
         list->listSize += 1;
         return 0;
     }
-    if (isEmpty(list)) {
+    if (isListEmpty(list)) {
         return -1;
     }
 
@@ -69,9 +69,20 @@ List *create() {
     return list;
 }
 
+void printList(List *list) {
+    if (isListEmpty(list)) {
+        return;
+    }
+    Node *iteratorNode = list->head;
+    while (iteratorNode != NULL) {
+        printf("%s : %d\n", iteratorNode->value.key, iteratorNode->value.value);
+        iteratorNode = iteratorNode->next;
+    }
+}
+
 Type deleteNode(List* list, int index) {
     Type nullResult = {0};
-    if (isEmpty(list)) {
+    if (isListEmpty(list)) {
         return nullResult;
     }
     if (index < 0) {
@@ -109,7 +120,7 @@ Type deleteLastNode(List *list) {
 
 Type findNode(List *list, int index, int *errorCode) {
     Type nullResult = {0};
-    if (isEmpty(list) || index < 0) {
+    if (isListEmpty(list) || index < 0) {
         *errorCode = -1;
         return nullResult;
     }
@@ -128,7 +139,7 @@ Type findNode(List *list, int index, int *errorCode) {
 }
 
 int findNodeIndexByValue(List *list, Type value) {
-    if (isEmpty(list)) {
+    if (isListEmpty(list)) {
         return -1;
     }
     Node *iteratorNode = list->head;
@@ -148,12 +159,12 @@ int findNodeIndexByValue(List *list, Type value) {
     return currentIndex;
 }
 
-bool isEmpty(List *list) {
+bool isListEmpty(List *list) {
     return list->head == NULL;
 }
 
 void clear(List *list) {
-    while (!isEmpty(list)) {
+    while (!isListEmpty(list)) {
         deleteNode(list, 0);
     }
     free(list);
@@ -163,7 +174,7 @@ int changeNode(List *list, int index, Type value) {
     if (index < 0) {
         return -1;
     }
-    if (isEmpty(list)) {
+    if (isListEmpty(list)) {
         return -1;
     }
 
@@ -186,7 +197,7 @@ int changeNodeValueByOne(List *list, int index) {
     if (index < 0) {
         return -1;
     }
-    if (isEmpty(list)) {
+    if (isListEmpty(list)) {
         return -1;
     }
 

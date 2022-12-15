@@ -9,11 +9,15 @@ HashMap *createHashMap();
 
 int addValue(HashMap *hashMap, Type key);
 
+void print(HashMap *hashMap);
+
+bool isEmpty(HashMap *hashMap);
+
 void deleteValue(HashMap *hashMap, Type key);
 
 void clearHashMap(HashMap *hashMap);
 
-int calculateFillFactor(HashMap *hashMap);
+float calculateFillFactor(HashMap *hashMap);
 
 int calculateMaxListSize(HashMap *hashMap);
 

@@ -9,6 +9,16 @@ struct HashMap {
     int numberOfElementsInHashMap;
 };
 
+bool isEmpty(HashMap *hashMap) {
+    return hashMap->numberOfElementsInHashMap == 0;
+}
+
+void print(HashMap *hashMap) {
+    for (int i = 0; i < hashMap->hashMapSize; i++) {
+        printList(hashMap->hashArray[i]);
+    }
+}
+
 HashMap *createHashMap() {
     HashMap *hashMap = calloc(1, sizeof(HashMap));
     if (hashMap == NULL) {
@@ -62,7 +72,7 @@ void resize(HashMap *hashMap) {
     hashMap->arrayOfNumberOfElementsInHashArray = calloc(hashMap->hashMapSize, sizeof(int));
 
     for (int i = 0; i < oldHashMapSize; i++) {
-        while (!isEmpty(oldHashArray[i])) {
+        while (!isListEmpty(oldHashArray[i])) {
             Type value = deleteNode(oldHashArray[i], 0);
             addValue(hashMap, value);
         }
@@ -105,8 +115,9 @@ void deleteValue(HashMap *hashMap, Type key) {
     hashMap->arrayOfNumberOfElementsInHashArray[hashFunctionOfValueToDelete] -= 1;
 }
 
-int calculateFillFactor(HashMap *hashMap) {
-    return hashMap->numberOfElementsInHashMap / hashMap->hashMapSize;
+float calculateFillFactor(HashMap *hashMap) {
+    float result = (float)hashMap->numberOfElementsInHashMap / (float)hashMap->hashMapSize;
+    return result;
 }
 
 int calculateMaxListSize(HashMap *hashMap) {
@@ -119,7 +130,7 @@ int calculateMaxListSize(HashMap *hashMap) {
     return maxListSize;
 }
 
-int calculateMiddleListSize(HashMap *hashMap) {
+float calculateMiddleListSize(HashMap *hashMap) {
     int sumListSize = 0;
     for (int i = 0; i < hashMap->hashMapSize; i++) {
         sumListSize += hashMap->arrayOfNumberOfElementsInHashArray[i];
