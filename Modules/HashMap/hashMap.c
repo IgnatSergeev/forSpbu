@@ -105,5 +105,26 @@ void deleteValue(HashMap *hashMap, Type key) {
     hashMap->arrayOfNumberOfElementsInHashArray[hashFunctionOfValueToDelete] -= 1;
 }
 
+int calculateFillFactor(HashMap *hashMap) {
+    return hashMap->numberOfElementsInHashMap / hashMap->hashMapSize;
+}
+
+int calculateMaxListSize(HashMap *hashMap) {
+    int maxListSize = 0;
+    for (int i = 0; i < hashMap->hashMapSize; i++) {
+        if (hashMap->arrayOfNumberOfElementsInHashArray[i] > maxListSize) {
+            maxListSize = hashMap->arrayOfNumberOfElementsInHashArray[i];
+        }
+    }
+    return maxListSize;
+}
+
+int calculateMiddleListSize(HashMap *hashMap) {
+    int sumListSize = 0;
+    for (int i = 0; i < hashMap->hashMapSize; i++) {
+        sumListSize += hashMap->arrayOfNumberOfElementsInHashArray[i];
+    }
+    return sumListSize / hashMap->hashMapSize;//equal to fill factor)))
+}
 
 
