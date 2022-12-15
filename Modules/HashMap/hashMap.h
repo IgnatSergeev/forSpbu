@@ -22,3 +22,5 @@ float calculateFillFactor(HashMap *hashMap);
 int calculateMaxListSize(HashMap *hashMap);
 
 int calculateMiddleListSize(HashMap *hashMap);
+
+Type findValue(HashMap *hashMap, Type value);

@@ -130,12 +130,29 @@ int calculateMaxListSize(HashMap *hashMap) {
     return maxListSize;
 }
 
-float calculateMiddleListSize(HashMap *hashMap) {
+int calculateMiddleListSize(HashMap *hashMap) {
     int sumListSize = 0;
     for (int i = 0; i < hashMap->hashMapSize; i++) {
         sumListSize += hashMap->arrayOfNumberOfElementsInHashArray[i];
     }
     return sumListSize / hashMap->hashMapSize;//equal to fill factor)))
+}
+
+Type findValue(HashMap *hashMap, Type value) {
+    Type nullValue = {0};
+    int hashFunctionValue = hashFunction(value) % hashMap->hashMapSize;
+    List *listToSearchIn = hashMap->hashArray[hashFunctionValue];
+
+    int indexOfValueInListIfExist = findNodeIndexByValue(listToSearchIn, value);
+    if (indexOfValueInListIfExist == -1) {
+        return nullValue;
+    }
+    int errorCode = 0;
+    Type newValue = findNode(listToSearchIn, indexOfValueInListIfExist, &errorCode);
+    if (errorCode) {
+        return nullValue;
+    }
+    return newValue;
 }
 
 
