@@ -54,6 +54,7 @@ void resize(HashMap *hashMap) {
     free(hashMap->arrayOfNumberOfElementsInHashArray);
 
     hashMap->hashMapSize *= 2;
+    hashMap->numberOfElementsInHashMap = 0;
     hashMap->hashArray = calloc(hashMap->hashMapSize, sizeof(List *));
     for (int i = 0; i < hashMap->hashMapSize; i++) {
         hashMap->hashArray[i] = create();
