@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "typeDef.h"
 #include <malloc.h>
 #include <stdbool.h>
@@ -61,6 +60,7 @@ int insertNodeIntoAdjacencyList(AdjacencyList *list, EdgeProperties value, int i
 AdjacencyList *createAdjacencyList() {
     AdjacencyList *list = malloc(sizeof(AdjacencyList));
     list->head = NULL;
+    list->listSize = 0;
 
     return list;
 }

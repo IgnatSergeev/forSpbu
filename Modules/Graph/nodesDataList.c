@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include "typeDef.h"
+#include "graph.h"
 #include <malloc.h>
 #include <stdbool.h>
 
@@ -8,10 +8,10 @@ typedef struct Node {
     struct Node *next;
 } Node;
 
-typedef struct NodesDataList {
+struct NodesDataList {
     Node *head;
     int listSize;
-} NodesDataList;
+};
 
 bool isEmpty(NodesDataList *list) {
     return list->head == NULL;
@@ -60,7 +60,7 @@ int insertNode(NodesDataList *list, NodeData value, int index) {
 NodesDataList *create() {
     NodesDataList *list = malloc(sizeof(NodesDataList));
     list->head = NULL;
-
+    list->listSize = 0;
     return list;
 }
 

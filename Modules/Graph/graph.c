@@ -1,5 +1,6 @@
 #include "graph.h"
 #include "malloc.h"
+#include <stdio.h>
 #include "typeDef.h"
 #include "adjacencyList.c"
 #include "nodesDataList.c"
@@ -59,31 +60,46 @@ void depthFirstSearch(Graph *graph, NodeData (*whatToDoWithTheValue)(NodeData), 
     listOfEdges->nodeData = (*whatToDoWithTheValue)(listOfEdges->nodeData);
 }
 
-Node *findClosestToCapitalNode(NodesDataList *list, int countryIndex) {//даётся список со всеми крайними нодами непринадлежащими стране
+Node *findClosestToCapitalNode(NodesDataList *list, int countryIndex, int *closestNodeIndexInList) {//даётся список со всеми крайними нодами непринадлежащими стране
     if (isEmpty(list)) {
         return NULL;
     }
     int minDistance = -1;
     Node *closestNode = NULL;
+    int closestNodeIndex = 0;
+
     Node *iteratorNode = list->head;
+    int currentIndex = 0;
     while (iteratorNode != NULL) {
         if (minDistance == -1 || iteratorNode->value.distancesToTheCapitals[countryIndex] < minDistance) {
             minDistance = iteratorNode->value.distancesToTheCapitals[countryIndex];
             closestNode = iteratorNode;
+            closestNodeIndex = currentIndex;
         }
+        ++currentIndex;
         iteratorNode = iteratorNode->next;
     }
 
+    *closestNodeIndexInList = closestNodeIndex;
     return closestNode;
 }
 
+NodeData getNodeData(Graph *graph, int index) {
+    return graph->adjacencyLists[index]->nodeData;
+}
+
+void changeNodeData(Graph *graph, int index, NodeData nodeData) {
+    graph->adjacencyLists[index]->nodeData = nodeData;
+}
+
 int addNodeToTheCountry(Graph *graph, NodesDataList *list, int countryIndex) {//Dijkstra
-    Node *pointerToTheClosestToCapitalNode = findClosestToCapitalNode(list, countryIndex);
+    int closestNodeIndexInList = 0;
+    Node *pointerToTheClosestToCapitalNode = findClosestToCapitalNode(list, countryIndex, &closestNodeIndexInList);
     if (pointerToTheClosestToCapitalNode == NULL) {
         return -1;
     }
     Node closestToCapitalNode = *pointerToTheClosestToCapitalNode;
-    deleteNode(list, closestToCapitalNode.value.index);
+    deleteNode(list, closestNodeIndexInList);
     graph->adjacencyLists[closestToCapitalNode.value.index]->nodeData.countryIndex = countryIndex;
 
     int startDistance = closestToCapitalNode.value.distancesToTheCapitals[countryIndex];
@@ -109,4 +125,16 @@ int addNodeToTheCountry(Graph *graph, NodesDataList *list, int countryIndex) {//
     }
 
     return 0;
+}
+
+void print(Graph *graph, int numberOfCountries) {
+    for (int i = 0; i < numberOfCountries; i++) {
+        printf("Страна %d : ", i + 1);
+        for (int j = 0; j < graph->graphSize; j++) {
+            if (graph->adjacencyLists[j]->nodeData.countryIndex == i) {
+                printf("%d ", j + 1);
+            }
+        }
+        printf("\n");
+    }
 }
