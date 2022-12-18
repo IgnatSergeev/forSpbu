@@ -77,7 +77,7 @@ Node *findClosestToCapitalNode(NodesDataList *list, int countryIndex) {//даё�
     return closestNode;
 }
 
-int addNodeToTheCountry(Graph *graph, NodesDataList *list, int countryIndex) {
+int addNodeToTheCountry(Graph *graph, NodesDataList *list, int countryIndex) {//Dijkstra
     Node *pointerToTheClosestToCapitalNode = findClosestToCapitalNode(list, countryIndex);
     if (pointerToTheClosestToCapitalNode == NULL) {
         return -1;
