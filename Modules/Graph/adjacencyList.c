@@ -8,17 +8,17 @@ typedef struct Edge {
     struct Edge *next;
 } Edge;
 
-typedef struct List {
+typedef struct AdjacencyList {
     Edge *head;
     int listSize;
     NodeData nodeData;
-} List;
+} AdjacencyList;
 
-bool isEmpty(List *list) {
+bool isAdjacencyListEmpty(AdjacencyList *list) {
     return list->head == NULL;
 }
 
-int insertNode(List *list, EdgeProperties value, int index) {
+int insertNodeIntoAdjacencyList(AdjacencyList *list, EdgeProperties value, int index) {
     if (index < 0) {
         return -1;
     }
@@ -33,7 +33,7 @@ int insertNode(List *list, EdgeProperties value, int index) {
         list->listSize += 1;
         return 0;
     }
-    if (isEmpty(list)) {
+    if (isAdjacencyListEmpty(list)) {
         return -1;
     }
 
@@ -58,19 +58,19 @@ int insertNode(List *list, EdgeProperties value, int index) {
     return 0;
 }
 
-List *create() {
-    List *list = malloc(sizeof(List));
+AdjacencyList *createAdjacencyList() {
+    AdjacencyList *list = malloc(sizeof(AdjacencyList));
     list->head = NULL;
 
     return list;
 }
 
-int insertNodeToEnd(List *list, EdgeProperties value) {
-    return insertNode(list, value, list->listSize);
+int insertNodeToEndIntoAdjacencyList(AdjacencyList *list, EdgeProperties value) {
+    return insertNodeIntoAdjacencyList(list, value, list->listSize);
 }
 
-int deleteNode(List* list, int index) {
-    if (isEmpty(list)) {
+int deleteNodeFromAdjacencyList(AdjacencyList* list, int index) {
+    if (isAdjacencyListEmpty(list)) {
         return -1;
     }
     if (index < 0) {
@@ -100,9 +100,9 @@ int deleteNode(List* list, int index) {
     return 0;
 }
 
-void clear(List *list) {
-    while (!isEmpty(list)) {
-        deleteNode(list, 0);
+void clearAdjacencyList(AdjacencyList *list) {
+    while (!isAdjacencyListEmpty(list)) {
+        deleteNodeFromAdjacencyList(list, 0);
     }
     free(list);
 }
