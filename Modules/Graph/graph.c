@@ -4,10 +4,10 @@
 #include "adjacencyList.c"
 #include "nodesDataList.c"
 
-typedef struct Graph {
+struct Graph {
     int graphSize;
     AdjacencyList **adjacencyLists;
-} Graph;
+};
 
 Graph *createGraph(int numberOfNodes, NodeData nodesData[]) {
     Graph *graph = calloc(1, sizeof(Graph));
@@ -59,7 +59,7 @@ void depthFirstSearch(Graph *graph, NodeData (*whatToDoWithTheValue)(NodeData), 
     listOfEdges->nodeData = (*whatToDoWithTheValue)(listOfEdges->nodeData);
 }
 
-Node *findClosestToCapitalNode(NodesDataList *list) {//даётся список со всеми крайними нодами принадлежащими стране
+Node *findClosestToCapitalNode(NodesDataList *list, int countryIndex) {//даётся список со всеми крайними нодами непринадлежащими стране
     if (isEmpty(list)) {
         return NULL;
     }
@@ -67,8 +67,8 @@ Node *findClosestToCapitalNode(NodesDataList *list) {//даётся список
     Node *closestNode = NULL;
     Node *iteratorNode = list->head;
     while (iteratorNode != NULL) {
-        if (minDistance == -1 || iteratorNode->value.distanceToTheCapital < minDistance) {
-            minDistance = iteratorNode->value.distanceToTheCapital;
+        if (minDistance == -1 || iteratorNode->value.distancesToTheCapitals[countryIndex] < minDistance) {
+            minDistance = iteratorNode->value.distancesToTheCapitals[countryIndex];
             closestNode = iteratorNode;
         }
         iteratorNode = iteratorNode->next;
@@ -77,10 +77,36 @@ Node *findClosestToCapitalNode(NodesDataList *list) {//даётся список
     return closestNode;
 }
 
-void addNodeToTheCountry(Graph *graph, NodesDataList *list) {
-    Node *closestToCapitalNode = findClosestToCapitalNode(list);
-    int countryIndex = closestToCapitalNode->value.countryIndex;
-    int startDistance = closestToCapitalNode->value.distanceToTheCapital;
-    AdjacencyList *listWithNeighbours = graph->adjacencyLists[closestToCapitalNode->value.index];
-    Edge *iteratorNode = listWithNeighbours->head
+int addNodeToTheCountry(Graph *graph, NodesDataList *list, int countryIndex) {
+    Node *pointerToTheClosestToCapitalNode = findClosestToCapitalNode(list, countryIndex);
+    if (pointerToTheClosestToCapitalNode == NULL) {
+        return -1;
+    }
+    Node closestToCapitalNode = *pointerToTheClosestToCapitalNode;
+    deleteNode(list, closestToCapitalNode.value.index);
+    graph->adjacencyLists[closestToCapitalNode.value.index]->nodeData.countryIndex = countryIndex;
+
+    int startDistance = closestToCapitalNode.value.distancesToTheCapitals[countryIndex];
+    AdjacencyList *listWithNeighbours = graph->adjacencyLists[closestToCapitalNode.value.index];
+    Edge *iteratorNode = listWithNeighbours->head;
+    while (iteratorNode != NULL) {
+        int iteratorNodeIndex = iteratorNode->value.endNodeIndex;
+        int distanceToCapital = iteratorNode->value.length + startDistance;
+        NodeData currentNodeData = graph->adjacencyLists[iteratorNodeIndex]->nodeData;
+        if (currentNodeData.countryIndex != countryIndex) {
+            if (currentNodeData.countryIndex == -1) {
+                if (currentNodeData.distancesToTheCapitals[countryIndex] == -1) {
+                    graph->adjacencyLists[iteratorNodeIndex]->nodeData.distancesToTheCapitals[countryIndex] = distanceToCapital;
+                    insertNode(list, currentNodeData, 0);
+                } else {
+                    if (currentNodeData.distancesToTheCapitals[countryIndex] > distanceToCapital) {
+                        graph->adjacencyLists[iteratorNodeIndex]->nodeData.distancesToTheCapitals[countryIndex] = distanceToCapital;
+                    }
+                }
+            }
+        }
+        iteratorNode = iteratorNode->next;
+    }
+
+    return 0;
 }

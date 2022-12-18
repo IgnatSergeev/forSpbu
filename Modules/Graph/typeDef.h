@@ -8,5 +8,5 @@ typedef struct EdgeProperties {
 typedef struct NodeData {
     int index;
     int countryIndex;//-1 - none
-    int distanceToTheCapital;//-1 - not appended to any country
+    int *distancesToTheCapitals;//-1 - not appended to any country
 } NodeData;
