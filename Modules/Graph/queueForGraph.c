@@ -37,7 +37,7 @@ int enqueue(Queue *queue, int value) {
 }
 
 int dequeue(Queue *queue, int *errorCode) {
-    if (queue->head == NULL) {
+    if (isEmpty(queue)) {
         if (errorCode != NULL) {
             *errorCode = -1;
         }
