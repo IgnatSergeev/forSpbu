@@ -69,66 +69,78 @@ void depthFirstSearch(Graph *graph, NodeData (*whatToDoWithTheValue)(NodeData), 
     graph->nodesDataArray[currentNodeIndex] = (*whatToDoWithTheValue)(graph->nodesDataArray[currentNodeIndex]);
 }
 
-void breadthFirstSearch(Graph *graph, NodeData (*whatToDoWithTheValue)(NodeData), int currentNodeIndex, bool *isVisited) {
+void breadthFirstSearch(Graph *graph, NodeData (*whatToDoWithTheValue)(NodeData), int nodeIndex) {
+    bool *isVisited = calloc(graph->graphSize, sizeof(bool));
+    Queue *queue = createQueue();
+    enqueue(queue, nodeIndex);
+    isVisited[nodeIndex] = true;
+    while (!isEmpty(queue)) {
+        int currentNodeIndex = dequeue(queue, NULL);
+        for (int i = 0; i < graph->graphSize; i++) {
+            if (currentNodeIndex != i && graph->adjacencyMatrix[currentNodeIndex][i] != -1 && !isVisited[i]) {
+                isVisited[i] = true;
+                enqueue(queue, i);
+            }
+        }
+    }
+    free(isVisited);
+}
+
+int *minimalDistancesFromNodeIndexToEachNode(Graph *graph, int nodeIndex) {
+    bool *isVisited = calloc(graph->graphSize, sizeof(bool));
+    int *minimalDistancesToTheIndexNode = calloc(graph->graphSize, sizeof(int));
     for (int i = 0; i < graph->graphSize; i++) {
-        if (currentNodeIndex != i && graph->adjacencyMatrix[currentNodeIndex][i] != -1 && !isVisited[i]) {
-            isVisited[i] = true;
-            depthFirstSearch(graph, whatToDoWithTheValue, i, isVisited);
+        minimalDistancesToTheIndexNode[i] = INT_MAX;
+    }
+    minimalDistancesToTheIndexNode[nodeIndex] = 0;
+    for (int i = 0; i < graph->graphSize; i++) {
+        int closestNode = -1;
+        for (int j = 0; j < graph->graphSize; j++) {
+            if (!isVisited[j] && (closestNode == -1 || minimalDistancesToTheIndexNode[j] < minimalDistancesToTheIndexNode[i])) {
+                closestNode = j;
+            }
+        }
+        if (minimalDistancesToTheIndexNode[closestNode] == INT_MAX) {
+            free(isVisited);
+            return minimalDistancesToTheIndexNode;
+        }
+        isVisited[closestNode] = true;
+        for (int j = 0; j < graph->graphSize; j++) {
+            if (graph->adjacencyMatrix[closestNode][j] != -1 && closestNode != j && (minimalDistancesToTheIndexNode[closestNode] + graph->adjacencyMatrix[closestNode][j] < minimalDistancesToTheIndexNode[j])) {
+                minimalDistancesToTheIndexNode[j] = minimalDistancesToTheIndexNode[closestNode] + graph->adjacencyMatrix[closestNode][j];
+            }
         }
     }
-    graph->nodesDataArray[currentNodeIndex] = (*whatToDoWithTheValue)(graph->nodesDataArray[currentNodeIndex]);
+    free(isVisited);
+    return minimalDistancesToTheIndexNode;
 }
 
-Node *findClosestToCapitalNode(NodesDataList *list, int countryIndex) {//даётся список со всеми крайними нодами непринадлежащими стране
-    if (isEmpty(list)) {
-        return NULL;
-    }
-    int minDistance = -1;
-    Node *closestNode = NULL;
-    Node *iteratorNode = list->head;
-    while (iteratorNode != NULL) {
-        if (minDistance == -1 || iteratorNode->value.distancesToTheCapitals[countryIndex] < minDistance) {
-            minDistance = iteratorNode->value.distancesToTheCapitals[countryIndex];
-            closestNode = iteratorNode;
+int **minimalDistancesFromEachToEachNode(Graph *graph) {
+    int **minimalDistances = calloc(graph->graphSize, sizeof(int *));
+    for (int i = 0; i < graph->graphSize; i++) {
+        minimalDistances[i] = calloc(graph->graphSize, sizeof(int));
+        for (int j = 0; j < graph->graphSize; j++) {
+            minimalDistances[i][j] = INT_MAX / 3;
         }
-        iteratorNode = iteratorNode->next;
     }
 
-    return closestNode;
-}
-
-
-
-int addNodeToTheCountry(Graph *graph, NodesDataList *list, int countryIndex) {//Dijkstra
-    Node *pointerToTheClosestToCapitalNode = findClosestToCapitalNode(list, countryIndex);
-    if (pointerToTheClosestToCapitalNode == NULL) {
-        return -1;
+    for (int i = 0; i < graph->graphSize; i++) {
+        for (int j = 0; j < graph->graphSize; j++) {
+            if (graph->adjacencyMatrix[i][j] != -1) {
+                minimalDistances[i][j] = graph->adjacencyMatrix[i][j];
+            }
+        }
     }
-    Node closestToCapitalNode = *pointerToTheClosestToCapitalNode;
-    deleteNode(list, closestToCapitalNode.value.index);
-    graph->adjacencyLists[closestToCapitalNode.value.index]->nodeData.countryIndex = countryIndex;
 
-    int startDistance = closestToCapitalNode.value.distancesToTheCapitals[countryIndex];
-    AdjacencyList *listWithNeighbours = graph->adjacencyLists[closestToCapitalNode.value.index];
-    Edge *iteratorNode = listWithNeighbours->head;
-    while (iteratorNode != NULL) {
-        int iteratorNodeIndex = iteratorNode->value.endNodeIndex;
-        int distanceToCapital = iteratorNode->value.length + startDistance;
-        NodeData currentNodeData = graph->adjacencyLists[iteratorNodeIndex]->nodeData;
-        if (currentNodeData.countryIndex != countryIndex) {
-            if (currentNodeData.countryIndex == -1) {
-                if (currentNodeData.distancesToTheCapitals[countryIndex] == -1) {
-                    graph->adjacencyLists[iteratorNodeIndex]->nodeData.distancesToTheCapitals[countryIndex] = distanceToCapital;
-                    insertNode(list, currentNodeData, 0);
-                } else {
-                    if (currentNodeData.distancesToTheCapitals[countryIndex] > distanceToCapital) {
-                        graph->adjacencyLists[iteratorNodeIndex]->nodeData.distancesToTheCapitals[countryIndex] = distanceToCapital;
-                    }
+    for (int k = 0; k < graph->graphSize; k++) {
+        for (int j = 0; j < graph->graphSize; j++) {
+            for (int i = 0; i < graph->graphSize; i++) {
+                if (minimalDistances[i][k] + minimalDistances[k][j] < minimalDistances[i][j]) {
+                    minimalDistances[i][j] = minimalDistances[i][k] + minimalDistances[k][j];
                 }
             }
         }
-        iteratorNode = iteratorNode->next;
     }
 
-    return 0;
+    return minimalDistances;
 }

@@ -17,4 +17,10 @@ void addEdge(Graph *graph, int indexOfStartNode, int indexOfEndNode, int length)
 
 void depthFirstSearch(Graph *graph, NodeData (*whatToDoWithTheValue)(NodeData), int currentNodeIndex, bool *isVisited);
 
+void breadthFirstSearch(Graph *graph, NodeData (*whatToDoWithTheValue)(NodeData), int nodeIndex);
+
+int *minimalDistancesFromNodeIndexToEachNode(Graph *graph, int nodeIndex);
+
+int **minimalDistancesFromEachToEachNode(Graph *graph);
+
 int addNodeToTheCountry(Graph *graph, NodesDataList *list, int countryIndex);
