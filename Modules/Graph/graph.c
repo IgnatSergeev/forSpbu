@@ -1,12 +1,12 @@
 #include "graph.h"
 #include "malloc.h"
 #include "typeDef.h"
-#include "adjacencyList.c"
-#include "nodesDataList.c"
+#include "queue.h"
 
 struct Graph {
     int graphSize;
-    AdjacencyList **adjacencyLists;
+    NodeData *nodesDataArray;
+    int **adjacencyMatrix;
 };
 
 Graph *createGraph(int numberOfNodes, NodeData nodesData[]) {
@@ -14,22 +14,27 @@ Graph *createGraph(int numberOfNodes, NodeData nodesData[]) {
     if (graph == NULL) {
         return NULL;
     }
-    graph->graphSize = numberOfNodes;
-    graph->adjacencyLists = calloc(numberOfNodes, sizeof(AdjacencyList *));
-    if (graph->adjacencyLists == NULL) {
+    graph->nodesDataArray = calloc(numberOfNodes, sizeof(NodeData));
+    if (graph->nodesDataArray == NULL) {
         free(graph);
         return NULL;
     }
     for (int i = 0; i < numberOfNodes; i++) {
-        graph->adjacencyLists[i] = createAdjacencyList();
-        graph->adjacencyLists[i]->nodeData = nodesData[i];
-        if (graph->adjacencyLists[i] == NULL) {
-            for (int j = 0; j < i; j++) {
-                clearAdjacencyList(graph->adjacencyLists[j]);
+        graph->nodesDataArray[i] = nodesData[i];
+    }
+    graph->graphSize = numberOfNodes;
+    graph->adjacencyMatrix = calloc(numberOfNodes, sizeof(int *));
+    if (graph->adjacencyMatrix == NULL) {
+        free(graph->nodesDataArray);
+        free(graph);
+        return NULL;
+    }
+    for (int i = 0; i < numberOfNodes; i++) {
+        graph->adjacencyMatrix[i] = calloc(numberOfNodes, sizeof(int));
+        for (int j = 0; j < numberOfNodes; j++) {
+            if (i != j) {
+                graph->adjacencyMatrix[i][j] = -1;
             }
-            free(graph->adjacencyLists);
-            free(graph);
-            return NULL;
         }
     }
 
@@ -38,25 +43,40 @@ Graph *createGraph(int numberOfNodes, NodeData nodesData[]) {
 
 void clearGraph(Graph *graph) {
     for (int j = 0; j < graph->graphSize; j++) {
-        clearAdjacencyList(graph->adjacencyLists[j]);
+        free(graph->adjacencyMatrix[j]);
     }
-    free(graph->adjacencyLists);
+    free(graph->adjacencyMatrix);
+    free(graph->nodesDataArray);
     free(graph);
 }
 
-int addEdge(Graph *graph, int indexOfStartNode, EdgeProperties edgeProperties) {
-    AdjacencyList *listOfConnectedNodes = graph->adjacencyLists[indexOfStartNode];
-    return insertNodeToEndIntoAdjacencyList(listOfConnectedNodes, edgeProperties);
+void addEdge(Graph *graph, int indexOfStartNode, int indexOfEndNode, int length) {
+    graph->adjacencyMatrix[indexOfStartNode][indexOfEndNode] = length;
+    graph->adjacencyMatrix[indexOfEndNode][indexOfStartNode] = length;
 }
 
-void depthFirstSearch(Graph *graph, NodeData (*whatToDoWithTheValue)(NodeData), int currentNodeIndex) {
-    AdjacencyList *listOfEdges = graph->adjacencyLists[currentNodeIndex];
-    Edge *iteratorNode = listOfEdges->head;
-    while (iteratorNode != NULL) {
-        depthFirstSearch(graph, whatToDoWithTheValue, iteratorNode->value.endNodeIndex);
-        iteratorNode = iteratorNode->next;
+void changeNodeData(Graph *graph, int index, NodeData nodeData) {
+    graph->nodesDataArray[index] = nodeData;
+}
+
+void depthFirstSearch(Graph *graph, NodeData (*whatToDoWithTheValue)(NodeData), int currentNodeIndex, bool *isVisited) {
+    for (int i = 0; i < graph->graphSize; i++) {
+        if (currentNodeIndex != i && graph->adjacencyMatrix[currentNodeIndex][i] != -1 && !isVisited[i]) {
+            isVisited[i] = true;
+            depthFirstSearch(graph, whatToDoWithTheValue, i, isVisited);
+        }
     }
-    listOfEdges->nodeData = (*whatToDoWithTheValue)(listOfEdges->nodeData);
+    graph->nodesDataArray[currentNodeIndex] = (*whatToDoWithTheValue)(graph->nodesDataArray[currentNodeIndex]);
+}
+
+void breadthFirstSearch(Graph *graph, NodeData (*whatToDoWithTheValue)(NodeData), int currentNodeIndex, bool *isVisited) {
+    for (int i = 0; i < graph->graphSize; i++) {
+        if (currentNodeIndex != i && graph->adjacencyMatrix[currentNodeIndex][i] != -1 && !isVisited[i]) {
+            isVisited[i] = true;
+            depthFirstSearch(graph, whatToDoWithTheValue, i, isVisited);
+        }
+    }
+    graph->nodesDataArray[currentNodeIndex] = (*whatToDoWithTheValue)(graph->nodesDataArray[currentNodeIndex]);
 }
 
 Node *findClosestToCapitalNode(NodesDataList *list, int countryIndex) {//даётся список со всеми крайними нодами непринадлежащими стране
@@ -76,6 +96,8 @@ Node *findClosestToCapitalNode(NodesDataList *list, int countryIndex) {//даё�
 
     return closestNode;
 }
+
+
 
 int addNodeToTheCountry(Graph *graph, NodesDataList *list, int countryIndex) {//Dijkstra
     Node *pointerToTheClosestToCapitalNode = findClosestToCapitalNode(list, countryIndex);
