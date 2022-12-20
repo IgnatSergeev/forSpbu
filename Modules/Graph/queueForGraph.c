@@ -2,6 +2,21 @@
 #include <stdio.h>
 #include <malloc.h>
 
+typedef struct Node{
+    int value;
+    struct Node* next;
+} Node;
+
+struct Queue{
+    struct Node* head;
+    struct Node* tail;
+};
+
+Queue *createQueue() {
+    Queue *queue = calloc(1, sizeof(Queue));
+    return queue;
+}
+
 int enqueue(Queue *queue, int value) {
     Node *temp = malloc(sizeof(Node));
     if (temp == NULL) {
@@ -45,12 +60,12 @@ int dequeue(Queue *queue, int *errorCode) {
     return value;
 }
 
-bool isEmpty(Queue queue) {
-    return queue.head == NULL;
+bool isEmpty(Queue *queue) {
+    return queue->head == NULL;
 }
 
 void clear(Queue *queue) {
-    while (!isEmpty(*queue)) {
+    while (!isEmpty(queue)) {
         int errorCode = 0;
         dequeue(queue, &errorCode);
     }
