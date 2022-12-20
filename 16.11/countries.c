@@ -3,9 +3,109 @@
 #include <stdbool.h>
 #include "malloc.h"
 
+void readGraphEdgesAndCapitalsAndAssignCitiesToTheCountries(FILE *file, Graph *graph, int roadsNumber, int citiesNumber) {
+    for (int i = 0; i < roadsNumber; i++) {
+        int startCityIndex = 0;
+        int endCityIndex = 0;
+        int length = 0;
+        fscanf(file, "%d %d %d", &startCityIndex, &endCityIndex, &length);
+        startCityIndex -= 1;
+        endCityIndex -= 1;
+        EdgeProperties edgeProperties = {endCityIndex, length};
+        addEdge(graph, startCityIndex, edgeProperties);
+        edgeProperties.endNodeIndex = startCityIndex;
+        addEdge(graph, endCityIndex, edgeProperties);
+    }
+
+    int numberOfCapitals = 0;
+    NodesDataList **countriesClosestNodesLists = calloc(numberOfCapitals, sizeof(NodesDataList *));
+
+    fscanf(file, "%d", &numberOfCapitals);
+    assignGraphsNumberOfCapitals(graph, numberOfCapitals);
+    for (int i = 0; i < numberOfCapitals; i++) {
+        int capitalIndex = 0;
+        fscanf(file, "%d", &capitalIndex);
+        capitalIndex -= 1;
+        NodeData nodeData = getNodeData(graph, capitalIndex);
+        nodeData.countryIndex = i;
+        nodeData.distancesToTheCapitals[i] = 0;
+        changeNodeData(graph, capitalIndex, nodeData);
+
+        NodesDataList *list = create();
+        insertNodeToEnd(list, nodeData);
+        countriesClosestNodesLists[i] = list;
+    }
+
+    int numberOfCapturedNodes = 0;
+    int currentCountryMove = 0;
+    while (numberOfCapturedNodes < citiesNumber) {
+        addNodeToTheCountry(graph, countriesClosestNodesLists[currentCountryMove], currentCountryMove);
+        numberOfCapturedNodes += 1;
+        currentCountryMove = (currentCountryMove + 1) % numberOfCapitals;
+    }
+
+    for (int i = 0; i < numberOfCapitals; i++) {
+        clear(countriesClosestNodesLists[i]);
+    }
+    free(countriesClosestNodesLists);
+}
+
 bool test(void) {
     bool testResult = true;
+    FILE *testFile = fopen("../16.11/countriesTest.txt", "r");
+    if (testFile == NULL) {
+        return false;
+    }
 
+    int citiesNumber = 0;
+    int roadsNumber = 0;
+    fscanf(testFile, "%d", &citiesNumber);
+    fscanf(testFile, "%d", &roadsNumber);
+
+    NodeData *nodesData = calloc(citiesNumber, sizeof(NodeData));
+    for (int i = 0; i < citiesNumber; i++) {
+        nodesData[i].countryIndex = -1;
+        nodesData[i].index = i;
+        nodesData[i].distancesToTheCapitals = calloc(citiesNumber, sizeof(int));
+        for (int j = 0; j < citiesNumber; j++) {
+            nodesData[i].distancesToTheCapitals[j] = -1;
+        }
+    }
+
+    Graph *testGraph = createGraph(citiesNumber, nodesData);
+    if (testGraph == NULL) {
+        for (int i = 0; i < citiesNumber; i++) {
+            free(nodesData[i].distancesToTheCapitals);
+        }
+        free(nodesData);
+        fclose(testFile);
+        return false;
+    }
+
+    readGraphEdgesAndCapitalsAndAssignCitiesToTheCountries(testFile, testGraph, roadsNumber, citiesNumber);
+    fclose(testFile);
+
+    int **countriesProperties = print(testGraph, true);
+    for (int i = 0; i < 4; i++) {
+        if (countriesProperties[0][i] != i + 1) {
+            testResult = false;
+        }
+    }
+    for (int i = 0; i < 3; i++) {
+        if (countriesProperties[1][i] != i + 5) {
+            testResult = false;
+        }
+    }
+
+    for (int i = 0; i < citiesNumber; i++) {
+        free(nodesData[i].distancesToTheCapitals);
+    }
+    for (int i = 0; i < 2; i++) {
+        free(countriesProperties[i]);
+    }
+    free(countriesProperties);
+    free(nodesData);
+    clearGraph(testGraph);
     return testResult;
 }
 
@@ -48,56 +148,15 @@ int main(void) {
         return -1;
     }
 
-    for (int i = 0; i < roadsNumber; i++) {
-        int startCityIndex = 0;
-        int endCityIndex = 0;
-        int length = 0;
-        fscanf(file, "%d %d %d", &startCityIndex, &endCityIndex, &length);
-        startCityIndex -= 1;
-        endCityIndex -= 1;
-        EdgeProperties edgeProperties = {endCityIndex, length};
-        addEdge(graph, startCityIndex, edgeProperties);
-        edgeProperties.endNodeIndex = startCityIndex;
-        addEdge(graph, endCityIndex, edgeProperties);
-    }
-
-    int numberOfCapitals = 0;
-    NodesDataList **countriesClosestNodesLists = calloc(numberOfCapitals, sizeof(NodesDataList *));
-
-    fscanf(file, "%d", &numberOfCapitals);
-    for (int i = 0; i < numberOfCapitals; i++) {
-        int capitalIndex = 0;
-        fscanf(file, "%d", &capitalIndex);
-        capitalIndex -= 1;
-        NodeData nodeData = getNodeData(graph, capitalIndex);
-        nodeData.countryIndex = i;
-        nodeData.distancesToTheCapitals[i] = 0;
-        changeNodeData(graph, capitalIndex, nodeData);
-
-        NodesDataList *list = create();
-        insertNodeToEnd(list, nodeData);
-        countriesClosestNodesLists[i] = list;
-    }
+    readGraphEdgesAndCapitalsAndAssignCitiesToTheCountries(file, graph, roadsNumber, citiesNumber);
     fclose(file);
 
-    int numberOfCapturedNodes = 0;
-    int currentCountryMove = 0;
-    while (numberOfCapturedNodes < citiesNumber) {
-        addNodeToTheCountry(graph, countriesClosestNodesLists[currentCountryMove], currentCountryMove);
-        numberOfCapturedNodes += 1;
-        currentCountryMove = (currentCountryMove + 1) % numberOfCapitals;
-    }
+    print(graph, false);
 
-    print(graph, numberOfCapitals);
-
-    for (int i = 0; i < numberOfCapitals; i++) {
-        clear(countriesClosestNodesLists[i]);
-    }
     for (int i = 0; i < citiesNumber; i++) {
         free(nodesData[i].distancesToTheCapitals);
     }
     free(nodesData);
-    free(countriesClosestNodesLists);
     clearGraph(graph);
     return 0;
 }

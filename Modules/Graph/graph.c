@@ -7,6 +7,7 @@
 
 struct Graph {
     int graphSize;
+    int numberOfCapitals;
     AdjacencyList **adjacencyLists;
 };
 
@@ -127,14 +128,37 @@ int addNodeToTheCountry(Graph *graph, NodesDataList *list, int countryIndex) {//
     return 0;
 }
 
-void print(Graph *graph, int numberOfCountries) {
-    for (int i = 0; i < numberOfCountries; i++) {
-        printf("Страна %d : ", i + 1);
-        for (int j = 0; j < graph->graphSize; j++) {
-            if (graph->adjacencyLists[j]->nodeData.countryIndex == i) {
-                printf("%d ", j + 1);
+void assignGraphsNumberOfCapitals(Graph *graph, int numberOfCapitals) {
+    graph->numberOfCapitals = numberOfCapitals;
+}
+
+int **print(Graph *graph, bool isTest) {
+    if (isTest) {
+        int **countriesProperties = calloc(graph->numberOfCapitals, sizeof(int *));
+        int numberOfCountries = graph->numberOfCapitals;
+        for (int i = 0; i < numberOfCountries; i++) {
+            countriesProperties[i] = calloc(graph->graphSize, sizeof(int));
+            for (int j = 0; j < graph->graphSize; j++) {
+                if (graph->adjacencyLists[j]->nodeData.countryIndex == i) {
+                    countriesProperties[i][j] = 1;
+                }
             }
         }
-        printf("\n");
+
+        return countriesProperties;
+    } else {
+        int numberOfCountries = graph->numberOfCapitals;
+        for (int i = 0; i < numberOfCountries; i++) {
+            printf("Страна %d: ", i + 1);
+            for (int j = 0; j < graph->graphSize; j++) {
+                if (graph->adjacencyLists[j]->nodeData.countryIndex == i) {
+                    printf("%d ", j + 1);
+                }
+            }
+            printf("\n");
+        }
+
+        return NULL;
     }
+
 }

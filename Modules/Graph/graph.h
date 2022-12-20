@@ -1,6 +1,7 @@
 #pragma once
 
 #include "typeDef.h"
+#include <stdbool.h>
 #include "nodesDataList.h"
 
 typedef struct Graph Graph;
@@ -19,4 +20,6 @@ void depthFirstSearch(Graph *graph, NodeData (*whatToDoWithTheValue)(NodeData), 
 
 int addNodeToTheCountry(Graph *graph, NodesDataList *list, int countryIndex);
 
-void print(Graph *graph, int numberOfCountries);
+void assignGraphsNumberOfCapitals(Graph *graph, int numberOfCapitals);
+
+int **print(Graph *graph, bool isTest);
