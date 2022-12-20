@@ -1,7 +1,7 @@
 #include "graph.h"
 #include "malloc.h"
 #include "typeDef.h"
-#include "queue.h"
+#include "queueForGraph.h"
 
 struct Graph {
     int graphSize;
