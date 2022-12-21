@@ -90,7 +90,6 @@ bool isStringRepresentedAsARegularExpression(char string[]) {
                     continue;
                 }
                 if (currentChar == '\n') {
-                    printf("Данная строка задаётся таким регулярным выражением\n");
                     state = success;
                 } else {
                     state = fail;
