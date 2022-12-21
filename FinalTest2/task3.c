@@ -2,6 +2,7 @@
 #include <stdbool.h>
 
 #define MAX_INPUT_STRING_SIZE 100
+#define STRING_SIZE (MAX_INPUT_STRING_SIZE + 1)
 
 enum State {
     start,
@@ -31,8 +32,7 @@ bool isDigit(char inputChar) {
 bool isStringRepresentedAsARegularExpression(char string[]) {
     enum State state = start;
     char currentChar = '\0';
-    bool endCondition = false;
-    for (int i = 0; i < MAX_INPUT_STRING_SIZE + 1; i++) {
+    for (int i = 0; i < STRING_SIZE; i++) {
         currentChar = string[i];
         switch (state) {
             case start: {
@@ -110,7 +110,7 @@ bool isStringRepresentedAsARegularExpression(char string[]) {
 }
 
 bool test(void) {
-    char testString[] = "AB0Z3.B%_1@A.1B.A\n";
+    char testString[STRING_SIZE] = "AB0Z3.B%_1@A.1B.A\n";
 
     bool testResult = isStringRepresentedAsARegularExpression(testString);
 
@@ -125,9 +125,9 @@ int main(void) {
     printf("Тесты пройдены\n");
 
     printf("Введите строку, которую хотите проверить на принадлежность регулярному выражению\n");
-    char string[MAX_INPUT_STRING_SIZE + 1] = {0};
+    char string[STRING_SIZE] = {0};
     scanf("%s", string);
-    for (int i = 0; i < MAX_INPUT_STRING_SIZE + 1; i++) {
+    for (int i = 0; i < STRING_SIZE; i++) {
         if (string[i] == '\0') {
             string[i] = '\n';
             break;
