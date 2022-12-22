@@ -31,7 +31,7 @@ bool isEmpty(AVLTree *avlTree) {
     return avlTree->root == NULL;
 }
 
-Node *rotateLeftSmall(Node *node) {
+Node *rotateLeftSmall(Node *node, bool *isBalancingStopped, bool isAdding) {
     Node *rightNode = node->right;
     node->right = rightNode->left;
     rightNode->left = node;
@@ -43,10 +43,18 @@ Node *rotateLeftSmall(Node *node) {
         rightNode->balance -= 1;
         node->balance -= 2;
     }
+
+    if (isBalancingStopped != NULL && isAdding && rightNode->balance == 0) {
+        *isBalancingStopped = true;
+    }
+    if (isBalancingStopped != NULL && !isAdding && (rightNode->balance == -1 || rightNode->balance == 1)) {
+        *isBalancingStopped = true;
+    }
+
     return rightNode;
 }
 
-Node *rotateRightSmall(Node *node) {
+Node *rotateRightSmall(Node *node, bool *isBalancingStopped, bool isAdding) {
     Node *leftNode = node->left;
     node->left = leftNode->right;
     leftNode->right = node;
@@ -59,33 +67,38 @@ Node *rotateRightSmall(Node *node) {
         leftNode->balance += 1;
     }
 
+    if (isBalancingStopped != NULL && isAdding && leftNode->balance == 0) {
+        *isBalancingStopped = true;
+    }
+    if (isBalancingStopped != NULL && !isAdding && (leftNode->balance == -1 || leftNode->balance == 1)) {
+        *isBalancingStopped = true;
+    }
+
     return leftNode;
 }
 
-Node *rotateLeftBig(Node *node) {
-    node->right = rotateRightSmall(node->right);
-    return rotateLeftSmall(node);
+Node *rotateLeftBig(Node *node, bool *isBalancingStopped, bool isAdding) {
+    node->right = rotateRightSmall(node->right, NULL, isAdding);
+    return rotateLeftSmall(node, isBalancingStopped, isAdding);
 }
 
-Node *rotateRightBig(Node *node) {
-    node->left = rotateLeftSmall(node->right);
-    return rotateRightSmall(node);
+Node *rotateRightBig(Node *node, bool *isBalancingStopped, bool isAdding) {
+    node->left = rotateLeftSmall(node->right, NULL, isAdding);
+    return rotateRightSmall(node, isBalancingStopped, isAdding);
 }
 
-Node *balance(Node *node, bool *isBalanced) {
+Node *balance(Node *node, bool *isBalancingStopped, bool isAdding) {
     if (node->balance == -2) {
-        *isBalanced = true;
         if (node->left->balance <= 0) {
-            return rotateRightSmall(node);
+            return rotateRightSmall(node, isBalancingStopped, isAdding);
         }
-        return rotateRightBig(node);
+        return rotateRightBig(node, isBalancingStopped, isAdding);
     }
     if (node->balance == 2) {
-        *isBalanced = true;
         if (node->right->balance >= 0) {
-            return rotateLeftSmall(node);
+            return rotateLeftSmall(node, isBalancingStopped, isAdding);
         }
-        return rotateLeftBig(node);
+        return rotateLeftBig(node, isBalancingStopped, isAdding);
 
     }
 
@@ -93,7 +106,7 @@ Node *balance(Node *node, bool *isBalanced) {
 }
 
 Node *addNode(Node *node, Type value, int (*compare)(Type, Type), Type (*whatIfEqualInAdding)(Type, Type),
-              int *errorCode, bool *isAdded, bool *isBalanced, bool *isBalancingStopped) {
+              int *errorCode, bool *isAdded, bool *isBalancingStopped) {
     if (node == NULL) {
         Node *newNode = malloc(sizeof(Node));
         if (newNode == NULL) {
@@ -121,25 +134,25 @@ Node *addNode(Node *node, Type value, int (*compare)(Type, Type), Type (*whatIfE
     }
 
     if (compareResult == -1) {
-        node->right = addNode(node->right, value, compare, whatIfEqualInAdding, errorCode, isAdded, isBalanced, isBalancingStopped);
+        node->right = addNode(node->right, value, compare, whatIfEqualInAdding, errorCode, isAdded, isBalancingStopped);
 
         if (*isAdded && !(*isBalancingStopped)) {
             ++node->balance;
         }
     }
     if (compareResult == 1) {
-        node->left = addNode(node->left, value, compare, whatIfEqualInAdding, errorCode, isAdded, isBalanced, isBalancingStopped);
+        node->left = addNode(node->left, value, compare, whatIfEqualInAdding, errorCode, isAdded, isBalancingStopped);
 
         if (*isAdded && !(*isBalancingStopped)) {
             --node->balance;
         }
     }
 
-    if (node->balance == 0 || node->balance == 2 || node->balance == -2) {
+    if (node->balance == 0) {
         *isBalancingStopped = true;
     }
 
-    return balance(node, isBalanced);
+    return balance(node, isBalancingStopped, true);
 }
 
 int addValue(AVLTree *avlTree, Type value, int (*compare)(Type, Type), Type (*whatIfEqualInAdding)(Type, Type)) {
@@ -158,48 +171,55 @@ int addValue(AVLTree *avlTree, Type value, int (*compare)(Type, Type), Type (*wh
     }
     int errorCode = 0;
     bool isAdded = false;
-    bool isBalanced = false;
     bool isBalancingStopped = false;
-    avlTree->root = addNode(avlTree->root, value, compare, whatIfEqualInAdding, &errorCode, &isAdded, &isBalanced, &isBalancingStopped);
+    avlTree->root = addNode(avlTree->root, value, compare, whatIfEqualInAdding, &errorCode, &isAdded, &isBalancingStopped);
     return errorCode;
 }
 
-Node *findAndCutOutBiggestNodeInLeftSonTree(Node *node, bool *isBalanced, Node **nodeForSearch) {
+Node *findAndCutOutBiggestNodeInLeftSonTree(Node *node, bool *isBalancingStopped, Node **nodeForSearch) {
     if (node->right == NULL) {
 
         *nodeForSearch = node;
         return node->left;
     }
-    node->right = findAndCutOutBiggestNodeInLeftSonTree(node->right, isBalanced, nodeForSearch);
-    if (!(*isBalanced)) {
+    node->right = findAndCutOutBiggestNodeInLeftSonTree(node->right, isBalancingStopped, nodeForSearch);
+    if (!(*isBalancingStopped)) {
         node->balance -= 1;
     }
 
-    return balance(node, isBalanced);
+    if (node->balance == -1 || node->balance == 1) {
+        *isBalancingStopped = true;
+    }
+
+    return balance(node, isBalancingStopped, false);
 }
 
-Node *deleteRoot(Node *root, bool *isBalanced) {
+Node *deleteRoot(Node *root, bool *isBalancingStopped) {
     if (root->left == NULL) {
         Node *newRoot = root->right;
         free(root);
         return newRoot;
     }
     Node **nodeForSearch = malloc(sizeof(Node *));
-    root->left = findAndCutOutBiggestNodeInLeftSonTree(root->left, isBalanced, nodeForSearch);
+    root->left = findAndCutOutBiggestNodeInLeftSonTree(root->left, isBalancingStopped, nodeForSearch);
     Node *newRoot = *nodeForSearch;
-    if (!(*isBalanced)) {
+    if (!(*isBalancingStopped)) {
         root->balance += 1;
+    }
+
+    if (root->balance == -1 || root->balance == 1) {
+        *isBalancingStopped = true;
     }
 
     newRoot->balance = root->balance;
     newRoot->right = root->right;
     newRoot->left = root->left;
     free(root);
-    newRoot = balance(newRoot, isBalanced);
+    newRoot = balance(newRoot, isBalancingStopped, false);
     return newRoot;
 }
 
-Node *deleteNodeValue(Node *node, Type value, int (*compare)(Type, Type), bool *isBalanced, bool *isDeleted, int *errorCode, bool *isBalancingStopped) {
+Node *deleteNodeValue(Node *node, Type value, int (*compare)(Type, Type), bool *isDeleted, int *errorCode, bool *isBalancingStopped) {
     *errorCode = 0;
     if (node == NULL) {
         return node;//это случай когда такой ноды нет в дереве
@@ -213,16 +233,16 @@ Node *deleteNodeValue(Node *node, Type value, int (*compare)(Type, Type), bool *
 
     if (!compareResult) {
         *isDeleted = true;
-        Node *newNode = deleteRoot(node, isBalanced);
+        Node *newNode = deleteRoot(node, isBalancingStopped);
         return newNode;
     }
     if (compareResult == -1) {
-        node->right = deleteNodeValue(node->right, value, compare, isBalanced, isDeleted, errorCode, isBalancingStopped);
+        node->right = deleteNodeValue(node->right, value, compare, isDeleted, errorCode, isBalancingStopped);
         if (*isDeleted && !(*isBalancingStopped)) {
             node->balance -= 1;
         }
     } else {
-        node->left = deleteNodeValue(node->left, value, compare, isBalanced, isDeleted, errorCode, isBalancingStopped);
+        node->left = deleteNodeValue(node->left, value, compare, isDeleted, errorCode, isBalancingStopped);
         if (*isDeleted && !(*isBalancingStopped)) {
             node->balance += 1;
         }
@@ -232,7 +252,7 @@ Node *deleteNodeValue(Node *node, Type value, int (*compare)(Type, Type), bool *
         *isBalancingStopped = true;
     }
 
-    return balance(node, isBalanced);
+    return balance(node, isBalancingStopped, false);
 }
 
 int deleteValue(AVLTree *avlTree, Type value, int (*compare)(Type, Type)) {
@@ -245,16 +265,15 @@ int deleteValue(AVLTree *avlTree, Type value, int (*compare)(Type, Type)) {
         return -1;//случай когда функция compare неправильна
     }
 
-    bool isBalanced = false;
+    bool isBalancingStopped = false;
     if (!compareResult) {
-        Node *newRoot = deleteRoot(avlTree->root, &isBalanced);
+        Node *newRoot = deleteRoot(avlTree->root, &isBalancingStopped);
         avlTree->root = newRoot;
         return 0;
     }
 
     bool isDeleted = false;
     int errorCode = 0;
-    bool isBalancingStopped = false;
-    avlTree->root = deleteNodeValue(avlTree->root, value, compare, &isBalanced, &isDeleted, &errorCode, &isBalancingStopped);
+    avlTree->root = deleteNodeValue(avlTree->root, value, compare, &isDeleted, &errorCode, &isBalancingStopped);
     return errorCode;
 }
