@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "../Modules/BinaryTree/customBinaryTree.h"
 
 #define MAX_LINE_SIZE 100
@@ -16,13 +17,41 @@ int compare(Type oldValue, Type newValue) {
     return (oldValue.key == newValue.key) ? 0 : (oldValue.key < newValue.key) ? -1 : 1;
 }
 
-bool test() {
+bool test(void) {
     bool testResult = true;
+    BinaryTree *testBinaryTree = create();
+    Type zeroValue = {0};
+    int errorCode = 0;
+
+    Type value1 = {1 , "asd"};
+    addValue(testBinaryTree, value1, &compare, &whatIfEqualWhenAdding);
+
+    Type value2 = {2 , "asx"};
+    addValue(testBinaryTree, value2, &compare, &whatIfEqualWhenAdding);
+
+    testResult = !strcmp("asx", findValue(testBinaryTree, value2, &errorCode, zeroValue, &compare, &whatIfEqualWhenSearching).value);
+    if (errorCode) {
+        return false;
+    }
+
+    if (deleteValue(testBinaryTree, value1, compare)) {
+        return false;
+    }
+
+    testResult = testResult && (findValue(testBinaryTree, value1, &errorCode, zeroValue, &compare, &whatIfEqualWhenSearching).value == NULL);
+    if (errorCode) {
+        return false;
+    }
+
+    testResult = testResult && !strcmp("asx", findValue(testBinaryTree, value2, &errorCode, zeroValue, &compare, &whatIfEqualWhenSearching).value);
+    if (errorCode) {
+        return false;
+    }
 
     return testResult;
 }
 
-int main() {
+int main(void) {
     if (!test()) {
         printf("Тесты провалены");
 
