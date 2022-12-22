@@ -18,9 +18,9 @@ void readGraphEdgesAndCapitalsAndAssignCitiesToTheCountries(FILE *file, Graph *g
     }
 
     int numberOfCapitals = 0;
+    fscanf(file, "%d", &numberOfCapitals);
     NodesDataList **countriesClosestNodesLists = calloc(numberOfCapitals, sizeof(NodesDataList *));
 
-    fscanf(file, "%d", &numberOfCapitals);
     assignGraphsNumberOfCapitals(graph, numberOfCapitals);
     for (int i = 0; i < numberOfCapitals; i++) {
         int capitalIndex = 0;
