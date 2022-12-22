@@ -2,5 +2,5 @@
 
 typedef struct Type {
     int key;
-    int value;
+    char *value;
 } Type;
