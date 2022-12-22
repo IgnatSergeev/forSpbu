@@ -144,3 +144,22 @@ int **minimalDistancesFromEachToEachNode(Graph *graph) {
 
     return minimalDistances;
 }
+
+int *print(Graph *graph, int countryIndex) {
+    int *countryProperties = calloc(graph->graphSize, sizeof(int));
+    for (int i = 0; i < graph->graphSize; i++) {
+        if (graph->nodesDataArray[i].countryIndex == countryIndex) {
+            countryProperties[i] = 1;
+        }
+    }
+
+    return countryProperties;
+}
+
+NodeData getNodeData(Graph *graph, int cityIndex) {
+    return graph->nodesDataArray[cityIndex];
+}
+
+void setNodeData(Graph *graph, int cityIndex, NodeData nodeData) {
+    graph->nodesDataArray[cityIndex] = nodeData;
+}
