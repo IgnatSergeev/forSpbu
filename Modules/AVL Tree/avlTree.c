@@ -105,7 +105,7 @@ Node *balance(Node *node, bool *isBalancingStopped, bool isAdding) {
     return node;
 }
 
-Node *addNode(Node *node, Type value, int (*compare)(Type, Type), Type (*whatIfEqualInAdding)(Type, Type),
+Node *addNode(Node *node, Type value, int (*compare)(Type, Type), void (*whatIfEqualInAdding)(Type, Type),
               int *errorCode, bool *isAdded, bool *isBalancingStopped) {
     if (node == NULL) {
         Node *newNode = malloc(sizeof(Node));
@@ -155,7 +155,7 @@ Node *addNode(Node *node, Type value, int (*compare)(Type, Type), Type (*whatIfE
     return balance(node, isBalancingStopped, true);
 }
 
-int addValue(AVLTree *avlTree, Type value, int (*compare)(Type, Type), Type (*whatIfEqualInAdding)(Type, Type)) {
+int addValue(AVLTree *avlTree, Type value, int (*compare)(Type, Type), void (*whatIfEqualInAdding)(Type, Type)) {
     if (isEmpty(avlTree)) {
         Node *newNode = malloc(sizeof(Node));
         if (newNode == NULL) {
@@ -219,7 +219,7 @@ Node *deleteRoot(Node *root, bool *isBalancingStopped) {
     return newRoot;
 }
 
-Node *deleteNodeValue(Node *node, Type value, int (*compare)(Type, Type), bool *isDeleted, int *errorCode, bool *isBalancingStopped) {
+Node *deleteNodeValue(Node *node, Type value, int (*compare)(Type, Type), bool *isDeleted, int *errorCode, bool *isBalancingStopped, Type *valueOfDeletedElement) {
     *errorCode = 0;
     if (node == NULL) {
         return node;//это случай когда такой ноды нет в дереве
@@ -233,16 +233,17 @@ Node *deleteNodeValue(Node *node, Type value, int (*compare)(Type, Type), bool *
 
     if (!compareResult) {
         *isDeleted = true;
+        *valueOfDeletedElement = node->value;
         Node *newNode = deleteRoot(node, isBalancingStopped);
         return newNode;
     }
     if (compareResult == -1) {
-        node->right = deleteNodeValue(node->right, value, compare, isDeleted, errorCode, isBalancingStopped);
+        node->right = deleteNodeValue(node->right, value, compare, isDeleted, errorCode, isBalancingStopped, valueOfDeletedElement);
         if (*isDeleted && !(*isBalancingStopped)) {
             node->balance -= 1;
         }
     } else {
-        node->left = deleteNodeValue(node->left, value, compare, isDeleted, errorCode, isBalancingStopped);
+        node->left = deleteNodeValue(node->left, value, compare, isDeleted, errorCode, isBalancingStopped, valueOfDeletedElement);
         if (*isDeleted && !(*isBalancingStopped)) {
             node->balance += 1;
         }
@@ -255,25 +256,72 @@ Node *deleteNodeValue(Node *node, Type value, int (*compare)(Type, Type), bool *
     return balance(node, isBalancingStopped, false);
 }
 
-int deleteValue(AVLTree *avlTree, Type value, int (*compare)(Type, Type)) {
+Type deleteValue(AVLTree *avlTree, Type value, int (*compare)(Type, Type)) {
+    Type nullResult = {0};
     if (isEmpty(avlTree)) {
-        return 0;
+        return nullResult;
     }
 
     int compareResult = (*compare)(avlTree->root->value, value);
     if (compareResult > 1 || compareResult < -1) {
-        return -1;//случай когда функция compare неправильна
+        return nullResult;//случай когда функция compare неправильна
     }
 
     bool isBalancingStopped = false;
     if (!compareResult) {
         Node *newRoot = deleteRoot(avlTree->root, &isBalancingStopped);
+        Type returnValue = avlTree->root->value;
         avlTree->root = newRoot;
-        return 0;
+        return returnValue;
     }
 
     bool isDeleted = false;
     int errorCode = 0;
-    avlTree->root = deleteNodeValue(avlTree->root, value, compare, &isDeleted, &errorCode, &isBalancingStopped);
-    return errorCode;
+    Type valueOfDeletedElement = {0};
+    avlTree->root = deleteNodeValue(avlTree->root, value, compare, &isDeleted, &errorCode, &isBalancingStopped, &valueOfDeletedElement);
+    return valueOfDeletedElement;
+}
+
+void clearNode(Node *node) {
+    if (node == NULL) {
+        return;
+    }
+    clearNode(node->right);
+    clearNode(node->left);
+    free(node);
+}
+
+void clear(AVLTree *avlTree) {
+    if (isEmpty(avlTree)) {
+        return;
+    }
+    clearNode(avlTree->root);
+    free(avlTree);
+}
+
+Type findNodeValue(Node *node, Type value, int *errorCode, Type zeroValue, int (*compare)(Type, Type)) {
+    if (node == NULL) {
+        return zeroValue;
+    }
+
+    int compareResult = (*compare)(node->value, value);
+    if (compareResult > 1 || compareResult < -1) {
+        *errorCode = 1;
+        return zeroValue;//случай когда функция compare неправильна
+    }
+
+    if (!compareResult) {
+        return node->value;
+    }
+    if (compareResult == -1) {
+        return findNodeValue(node->right, value, errorCode, zeroValue, compare);
+    }
+    return findNodeValue(node->left, value, errorCode, zeroValue, compare);
+}
+
+Type findValue(AVLTree *avlTree, Type value, int *errorCode, Type zeroValue, int (*compare)(Type, Type)) {
+    if (isEmpty(avlTree)) {
+        return zeroValue;
+    }
+    return findNodeValue(avlTree->root, value, errorCode, zeroValue, compare);
 }
