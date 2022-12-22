@@ -87,12 +87,23 @@ bool test(void) {
 
     int **countriesProperties = print(testGraph, true);
     for (int i = 0; i < 4; i++) {
-        if (countriesProperties[0][i] != i + 1) {
+        if (countriesProperties[0][i] != 1) {
             testResult = false;
         }
     }
-    for (int i = 0; i < 3; i++) {
-        if (countriesProperties[1][i] != i + 5) {
+    for (int i = 4; i < 7; i++) {
+        if (countriesProperties[0][i] != 0) {
+            testResult = false;
+        }
+    }
+
+    for (int i = 0; i < 4; i++) {
+        if (countriesProperties[1][i] != 0) {
+            testResult = false;
+        }
+    }
+    for (int i = 4; i < 7; i++) {
+        if (countriesProperties[1][i] != 1) {
             testResult = false;
         }
     }
