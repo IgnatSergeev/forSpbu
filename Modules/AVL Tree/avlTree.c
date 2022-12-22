@@ -40,8 +40,8 @@ Node *rotateLeftSmall(Node *node, bool *isBalancingStopped, bool isAdding) {
         rightNode->balance += 1;
         node->balance -= 1;
     } else {
-        rightNode->balance -= 1;
-        node->balance -= 2;
+        rightNode->balance = 0;
+        node->balance = 0;
     }
 
     if (isBalancingStopped != NULL && isAdding && rightNode->balance == 0) {
@@ -63,8 +63,8 @@ Node *rotateRightSmall(Node *node, bool *isBalancingStopped, bool isAdding) {
         node->balance += 1;
         leftNode->balance -= 1;
     } else {
-        node->balance += 2;
-        leftNode->balance += 1;
+        node->balance = 0;
+        leftNode->balance = 0;
     }
 
     if (isBalancingStopped != NULL && isAdding && leftNode->balance == 0) {
