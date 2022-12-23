@@ -61,7 +61,7 @@ void depthFirstSearch(Graph *graph, NodeData (*whatToDoWithTheValue)(NodeData), 
     listOfEdges->nodeData = (*whatToDoWithTheValue)(listOfEdges->nodeData);
 }
 
-Node *findClosestToCapitalNode(NodesDataList *list, int countryIndex, int *closestNodeIndexInList) {//даётся список со всеми крайними нодами непринадлежащими стране
+Node *findClosestToCapitalNode(Graph *graph, NodesDataList *list, int countryIndex, int *closestNodeIndexInList) {//даётся список со всеми крайними нодами непринадлежащими стране
     if (isEmpty(list)) {
         return NULL;
     }
@@ -72,7 +72,8 @@ Node *findClosestToCapitalNode(NodesDataList *list, int countryIndex, int *close
     Node *iteratorNode = list->head;
     int currentIndex = 0;
     while (iteratorNode != NULL) {
-        if (minDistance == -1 || iteratorNode->value.distancesToTheCapitals[countryIndex] < minDistance) {
+        int iteratorNodeCountryIndex = graph->adjacencyLists[iteratorNode->value.index]->nodeData.countryIndex;
+        if ((minDistance == -1 || iteratorNode->value.distancesToTheCapitals[countryIndex] < minDistance) && (iteratorNodeCountryIndex == -1 || iteratorNodeCountryIndex == countryIndex)) {
             minDistance = iteratorNode->value.distancesToTheCapitals[countryIndex];
             closestNode = iteratorNode;
             closestNodeIndex = currentIndex;
@@ -95,7 +96,7 @@ void changeNodeData(Graph *graph, int index, NodeData nodeData) {
 
 int addNodeToTheCountry(Graph *graph, NodesDataList *list, int countryIndex) {//Dijkstra
     int closestNodeIndexInList = 0;
-    Node *pointerToTheClosestToCapitalNode = findClosestToCapitalNode(list, countryIndex, &closestNodeIndexInList);
+    Node *pointerToTheClosestToCapitalNode = findClosestToCapitalNode(graph, list, countryIndex, &closestNodeIndexInList);
     if (pointerToTheClosestToCapitalNode == NULL) {
         return -1;
     }

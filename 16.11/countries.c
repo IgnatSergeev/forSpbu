@@ -39,8 +39,9 @@ void readGraphEdgesAndCapitalsAndAssignCitiesToTheCountries(FILE *file, Graph *g
     int numberOfCapturedNodes = 0;
     int currentCountryMove = 0;
     while (numberOfCapturedNodes < citiesNumber) {
-        addNodeToTheCountry(graph, countriesClosestNodesLists[currentCountryMove], currentCountryMove);
-        numberOfCapturedNodes += 1;
+        if (!addNodeToTheCountry(graph, countriesClosestNodesLists[currentCountryMove], currentCountryMove)) {
+            numberOfCapturedNodes += 1;
+        }
         currentCountryMove = (currentCountryMove + 1) % numberOfCapitals;
     }
 
