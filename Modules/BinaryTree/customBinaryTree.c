@@ -231,8 +231,6 @@ void printTreeNodes(Node *node) {
     } else {
         printf("%d", node->value.number);
     }
-
-
 }
 
 void printTree(BinaryTree *binaryTree) {
