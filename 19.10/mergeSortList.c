@@ -5,11 +5,7 @@
 #include "../Modules/ListModule/customList.h"
 
 bool isDigit(char symbol) {
-    if (symbol == '1' || symbol == '2' || symbol == '3' || symbol == '4' || symbol == '5' || symbol == '6'
-        || symbol == '7' || symbol == '8' || symbol == '9' || symbol == '0') {
-        return true;
-    }
-    return false;
+    return symbol >= '0' && symbol <= '9';
 }
 
 int readPhoneBookFromFile(FILE *file, List *phoneBook) {
@@ -85,59 +81,74 @@ bool test() {
     int errorCode = 0;
     Type firstNodeBeforeSort = findNode(phoneBook, 0, zeroValue, &errorCode);
     if (errorCode) {
+        clear(phoneBook);
         return false;
     }
     Type secondNodeBeforeSort = findNode(phoneBook, 1, zeroValue, &errorCode);
     if (errorCode) {
+        clear(phoneBook);
         return false;
     }
 
     if (strcmp(firstNodeBeforeSort.phoneNumber, "+79219210202") != 0 || strcmp(firstNodeBeforeSort.name, "person2") != 0) {
+        clear(phoneBook);
         return false;
     }
     if (strcmp(secondNodeBeforeSort.phoneNumber, "+72212323434") != 0 || strcmp(secondNodeBeforeSort.name, "person1") != 0) {
+        clear(phoneBook);
         return false;
     }
 
     if (mergeSort(phoneBook, &compareNames)) {
+        clear(phoneBook);
         return false;
     }
 
     Type firstNodeAfterNameSort = findNode(phoneBook, 0, zeroValue, &errorCode);
     if (errorCode) {
+        clear(phoneBook);
         return false;
     }
     Type secondNodeAfterNameSort = findNode(phoneBook, 1, zeroValue, &errorCode);
     if (errorCode) {
+        clear(phoneBook);
         return false;
     }
 
     if (strcmp(firstNodeAfterNameSort.phoneNumber, "+72212323434") != 0 || strcmp(firstNodeAfterNameSort.name, "person1") != 0) {
+        clear(phoneBook);
         return false;
     }
     if (strcmp(secondNodeAfterNameSort.phoneNumber, "+79219210202") != 0 || strcmp(secondNodeAfterNameSort.name, "person2") != 0) {
+        clear(phoneBook);
         return false;
     }
 
     if (mergeSort(phoneBook, &comparePhoneNumbers)) {
+        clear(phoneBook);
         return false;
     }
 
     Type firstNodeAfterPhoneNumberSort = findNode(phoneBook, 0, zeroValue, &errorCode);
     if (errorCode) {
+        clear(phoneBook);
         return false;
     }
     Type secondNodeAfterPhoneNumberSort = findNode(phoneBook, 1, zeroValue, &errorCode);
     if (errorCode) {
+        clear(phoneBook);
         return false;
     }
 
     if (strcmp(firstNodeAfterPhoneNumberSort.phoneNumber, "+72212323434") != 0 || strcmp(firstNodeAfterPhoneNumberSort.name, "person1") != 0) {
+        clear(phoneBook);
         return false;
     }
     if (strcmp(secondNodeAfterPhoneNumberSort.phoneNumber, "+79219210202") != 0 || strcmp(secondNodeAfterPhoneNumberSort.name, "person2") != 0) {
+        clear(phoneBook);
         return false;
     }
+    clear(phoneBook);
     return true;
 }
 

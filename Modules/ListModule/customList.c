@@ -151,7 +151,7 @@ Node *mergeNodeSort(Node *begin, Node *end, int startIndex, int endIndex, int (*
         return begin;
     }
 
-    int middleIndex = (startIndex + endIndex)/2;
+    int middleIndex = (startIndex + endIndex) / 2;
     int currentIndex = startIndex;
     Node *leftMiddleNode = begin;
     while (currentIndex < middleIndex) {
