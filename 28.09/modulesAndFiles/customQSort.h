@@ -1,9 +1,7 @@
 #pragma once
 
-int median(int first, int second, int third);
-
+// sorts array in given bounds O(n^2)
 void insertSort(int inputArray[], int lowBorder, int highBorder);
 
-void halfQsort(int array[], int lowBound, int highBound);
-
+//sorts array in given bounds O(n log n)
 void qSort(int array[], int lowBorder, int highBorder);

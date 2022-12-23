@@ -4,6 +4,30 @@
 #include <malloc.h>
 #include <stdbool.h>
 
+int *readArrayFromFile(FILE *file, int *arraySize) {
+    int readBytes = fscanf(file, "%d", arraySize);
+    if (readBytes < 0) {
+        return NULL;
+    }
+    if (*arraySize <= 0) {
+        return NULL;
+    }
+
+    int *array = (int*)malloc(*arraySize * sizeof(int));
+    for (int i = 0; i < *arraySize; i++) {
+        int element = 0;
+        readBytes = fscanf(file, "%d", &element);
+        if (readBytes < 0) {
+            free(array);
+            return NULL;
+        }
+
+        array[i] = element;
+    }
+
+    return array;
+}
+
 int mostFrequentElement(const int sortedArray[], int arraySize) {
     int mostFrequentElem = sortedArray[0];
     int maxNumberOfElements = 1;
@@ -27,15 +51,24 @@ int mostFrequentElement(const int sortedArray[], int arraySize) {
 }
 
 bool test() {
-    bool typicalTest = true;
+    bool testResult = true;
 
     int sortedBigArray[15] = {1, 2, 3, 4, 5, 7, 8, 9, 9, 9, 9, 10, 16, 22, 28};
     const int bigArraySize = 15;
     if (mostFrequentElement(sortedBigArray, bigArraySize) != 9) {
-        typicalTest = false;
+        testResult = false;
     }
 
-    return typicalTest;
+    FILE *testFile = fopen("../28.09/modulesAndFiles/testInput.txt", "r");
+    int arraySize = 0;
+    int *array = readArrayFromFile(testFile, &arraySize);
+    if (array == NULL) {
+        return false;
+    }
+    testResult = testResult && (array[0] == 1 && array[1] == 2 && array[2] == 3 && array[3] == 4 && array[4] == 1);
+
+    free(array);
+    return testResult;
 }
 
 int main() {
@@ -55,32 +88,12 @@ int main() {
         return -1;
     }
     int arraySize = 0;
-    int readBytes = fscanf(file, "%d", &arraySize);
-    if (readBytes < 0) {
-        printf("Возникла ошибка при чтении\n");
-
-        return -1;
-    }
-    if (arraySize <= 0) {
-        printf("Размер массива должен быть положительным");
-
-        return -1;
-    }
-
-    int *array = (int*)malloc(arraySize * sizeof(int));
-    for (int i = 0; i < arraySize; i++) {
-        int element = 0;
-        readBytes = fscanf(file, "%d", &element);
-        if (readBytes < 0) {
-            printf("Возникла ошибка при чтении\n");
-
-            free(array);
-            return -1;
-        }
-
-        array[i] = element;
-    }
+    int *array = readArrayFromFile(file, &arraySize);
     fclose(file);
+    if (array == NULL) {
+        printf("Возникла ошибка при чтении\n");
+        return -1;
+    }
 
     qSort(array, 0, arraySize);
     int mostFrequentElem = mostFrequentElement(array, arraySize);
