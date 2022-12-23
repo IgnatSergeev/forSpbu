@@ -12,11 +12,6 @@ struct AVLTree {
     Node *root;
 };
 
-enum Direction {
-    right,
-    left
-};
-
 AVLTree *createAVLTree() {
     AVLTree *avlTree = malloc(sizeof(AVLTree));
     if (avlTree == NULL) {
@@ -99,7 +94,6 @@ Node *balance(Node *node, bool *isBalancingStopped, bool isAdding) {
             return rotateLeftSmall(node, isBalancingStopped, isAdding);
         }
         return rotateLeftBig(node, isBalancingStopped, isAdding);
-
     }
 
     return node;
