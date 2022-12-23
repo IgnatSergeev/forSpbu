@@ -73,7 +73,8 @@ Node *findClosestToCapitalNode(Graph *graph, NodesDataList *list, int countryInd
     int currentIndex = 0;
     while (iteratorNode != NULL) {
         int iteratorNodeCountryIndex = graph->adjacencyLists[iteratorNode->value.index]->nodeData.countryIndex;
-        if ((minDistance == -1 || iteratorNode->value.distancesToTheCapitals[countryIndex] < minDistance) && (iteratorNodeCountryIndex == -1 || iteratorNodeCountryIndex == countryIndex)) {
+        if ((minDistance == -1 || iteratorNode->value.distancesToTheCapitals[countryIndex] < minDistance)
+                && (iteratorNodeCountryIndex == -1 || iteratorNodeCountryIndex == countryIndex)) {
             minDistance = iteratorNode->value.distancesToTheCapitals[countryIndex];
             closestNode = iteratorNode;
             closestNodeIndex = currentIndex;
