@@ -30,6 +30,7 @@ bool test() {
         testResult = false;
     }
 
+    clearLoopedList(testLoopedList);
     return testResult;
 }
 
@@ -43,7 +44,7 @@ int main() {
     }
 
     LoopedList *loopedList = createLoopedList();
-    printf("Введите количество войнов и какого по номеру война убивают в следующий раз\n");
+    printf("Введите количество воинов и какого по номеру война убивают в следующий раз\n");
     int numberOfWarriors = 0;
     int indexOfFirstDyingWarrior = 0;
     scanf("%d", &numberOfWarriors);
@@ -51,7 +52,7 @@ int main() {
 
     calculateSurvivorIndex(loopedList, numberOfWarriors, indexOfFirstDyingWarrior);
 
-    printf("Индекс выжившего война(при индексировании от 1) = ");
+    printf("Индекс выжившего воина (при индексировании от 1) = ");
     printLoopedList(loopedList);
     clearLoopedList(loopedList);
     return 0;
