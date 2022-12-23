@@ -16,6 +16,7 @@ void parseMatrixIntoDotFile(int **matrix, int size) {
         }
     }
     fprintf(file, "}");
+    fclose(file);
 }
 
 int findIntSqrt(int square) {
@@ -42,6 +43,7 @@ int main(void) {
         linearMatrix[index] = currentLength;
         ++index;
     }
+    fclose(file);
 
     int size = findIntSqrt(index);
     if (size == -1) {
