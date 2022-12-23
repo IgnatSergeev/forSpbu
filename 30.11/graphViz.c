@@ -2,11 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
+#include <string.h>
 
 #define MAX_MATRIX_SIZE 15
+#define MAX_STRING_SIZE 100
 
-void parseMatrixIntoDotFile(int **matrix, int size) {
-    FILE *file = fopen("../30.11/graphViz.dot", "w");
+void parseMatrixIntoDotFile(int **matrix, int size, char filename[]) {
+    FILE *file = fopen(filename, "w");
     fprintf(file, "digraph Graph {\n");
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
@@ -31,11 +33,7 @@ int findIntSqrt(int square) {
     return -1;
 }
 
-int main(void) {
-    //elements on main diagonal should be equal to -1
-    //there cant be edges with length 0
-
-    FILE *file = fopen("../30.11/adjacencyMatrix.txt", "r");
+int **readMatrix(FILE *file, int *size) {
     int currentLength = 0;
     int index = 0;
     int linearMatrix[MAX_MATRIX_SIZE * MAX_MATRIX_SIZE] = {0};
@@ -43,23 +41,121 @@ int main(void) {
         linearMatrix[index] = currentLength;
         ++index;
     }
-    fclose(file);
 
-    int size = findIntSqrt(index);
-    if (size == -1) {
-        printf("Матрица должна быть квадратной\n");
-        return -1;
-    }
+    *size = findIntSqrt(index);
 
-    int **matrix = calloc(size, sizeof(int *));
-    for (int i = 0; i < size; i++) {
-        matrix[i] = calloc(size, sizeof(int));
-        for (int j = 0; j < size; j++) {
-            matrix[i][j] = linearMatrix[i * size + j];
+    int **matrix = calloc(*size, sizeof(int *));
+    for (int i = 0; i < *size; i++) {
+        matrix[i] = calloc(*size, sizeof(int));
+        for (int j = 0; j < *size; j++) {
+            matrix[i][j] = linearMatrix[i * *size + j];
         }
     }
 
-    parseMatrixIntoDotFile(matrix, size);
+    return matrix;
+}
+bool test(void) {
+    bool testResult = true;
+    FILE *testFile = fopen("../30.11/adjacencyMatrixTest.txt", "r");
+    if (testFile == NULL) {
+        return false;
+    }
+    int size = 0;
+    int **matrix = readMatrix(testFile, &size);
+    fclose(testFile);
+
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            if (j == size - i - 1) {
+                if (matrix[i][j] != 1) {
+                    testResult = false;
+                }
+            }
+            if (matrix[i][j] != -1) {
+                testResult = false;
+            }
+        }
+    }
+
+    parseMatrixIntoDotFile(matrix, size, "../30.11/graphVizTest.dot");
+
+    FILE *graphVizTestFile = fopen("../30.11/graphVizTest.dot", "r");
+    char string[MAX_STRING_SIZE] = {0};
+
+    fscanf(file, "%s", string);
+    if (strcmp(string, "digraph") {
+        testResult = false;
+    }
+    fscanf(file, "%s", string);
+    if (strcmp(string, "Graph") {
+        testResult = false;
+    }
+    fscanf(file, "%s", string);
+    if (strcmp(string, "{") {
+        testResult = false;
+    }
+    fscanf(file, "%s", string);
+    if (strcmp(string, "0") {
+        testResult = false;
+    }
+    fscanf(file, "%s", string);
+    if (strcmp(string, "->") {
+        testResult = false;
+    }
+    fscanf(file, "%s", string);
+    if (strcmp(string, "{") {
+        testResult = false;
+    }
+    fscanf(file, "%s", string);
+    if (strcmp(string, "{") {
+        testResult = false;
+    }
+    fscanf(file, "%s", string);
+    if (strcmp(string, "{") {
+        testResult = false;
+    }
+    fscanf(file, "%s", string);
+    if (strcmp(string, "{") {
+        testResult = false;
+    }
+    fscanf(file, "%s", string);
+    if (strcmp(string, "{") {
+        testResult = false;
+    }
+    fscanf(file, "%s", string);
+    if (strcmp(string, "{") {
+        testResult = false;
+    }
+
+
+    for (int i = 0; i < size; i++) {
+        free(matrix[i]);
+    }
+    free(matrix);
+    fclose(graphVizTestFile);
+    return testResult;
+}
+
+int main(void) {
+    if (!test()) {
+        printf("Тесты провалены\n");
+        return -1;
+    }
+    printf("Тесты пройдены\n");
+
+    printf("Программа прочитает матрицу смежности из файла adjacencyMatrix.txt и откроет визуализированную матрицу "
+           "(в ней не может быть нулей и элементы на главной диагонали должны быть  равны -1) \n");
+
+    FILE *file = fopen("../30.11/adjacencyMatrix.txt", "r");
+    if (file == NULL) {
+        printf("Файл не найден\n");
+        return -1;
+    }
+    int size = 0;
+    int **matrix = readMatrix(file, &size);
+    fclose(file);
+
+    parseMatrixIntoDotFile(matrix, size, "../30.11/graphViz.dot");
 
     system("cd ..\\30.11 && dot -Tpng graphViz.dot -o graphViz.png && timeout 1 && start graphViz.png");
 
