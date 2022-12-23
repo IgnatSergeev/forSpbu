@@ -1,13 +1,13 @@
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdbool.h>
+#include <stdlib.h>
 #include <malloc.h>
 
 #define MAX_MATRIX_SIZE 15
 
 void parseMatrixIntoDotFile(int **matrix, int size) {
     FILE *file = fopen("../30.11/graphViz.dot", "w");
-    fprintf(file, "graph Graph {\n");
+    fprintf(file, "digraph Graph {\n");
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             if (matrix[i][j] != -1) {
@@ -59,7 +59,11 @@ int main(void) {
 
     parseMatrixIntoDotFile(matrix, size);
 
-    system("dot -Tpng graphViz.dot -o graphViz.png");
+    system("..\\30.11\\graphViz.bat ");
 
+    for (int i = 0; i < size; i++) {
+        free(matrix[i]);
+    }
+    free(matrix);
     return 0;
 }
