@@ -2,10 +2,8 @@
 #include <string.h>
 #include "../Modules/BinaryTree/customBinaryTree.h"
 
-#define MAX_LINE_SIZE 100
-
 Type whatIfEqualWhenAdding(Type oldValue, Type newValue) {
-    oldValue.value = newValue.value;
+    strcpy(oldValue.value, newValue.value);
     return oldValue;
 }
 
@@ -38,7 +36,7 @@ bool test(void) {
         return false;
     }
 
-    testResult = testResult && (findValue(testBinaryTree, value1, &errorCode, zeroValue, &compare, &whatIfEqualWhenSearching).value == NULL);
+    testResult = testResult && (!strcmp(findValue(testBinaryTree, value1, &errorCode, zeroValue, &compare, &whatIfEqualWhenSearching).value, zeroValue.value));
     if (errorCode) {
         return false;
     }
@@ -61,7 +59,7 @@ int main(void) {
     }
 
     BinaryTree *binaryTree = create();
-    Type zeroValue = {0, NULL};
+    Type zeroValue = {0};
 
     while (true) {
         int userInput = 0;
@@ -78,11 +76,13 @@ int main(void) {
                 break;
             } case 1: {
                 printf("Введите ключ и значение элемента, который хотите добавить в словарь\n");
-                char inputValue[MAX_LINE_SIZE] = {0};
+                char inputValue[MAX_STRING_SIZE] = {0};
                 int inputKey = 0;
                 scanf("%d", &inputKey);
                 scanf("%s", inputValue);
-                Type element = {inputKey, inputValue};
+                Type element = {0};
+                element.key = inputKey;
+                strcpy(element.value, inputValue);
                 int errorCode = addValue(binaryTree, element, &compare, &whatIfEqualWhenAdding);
                 if (errorCode) {
                     printf("Возникла ошибка\n");
@@ -92,7 +92,8 @@ int main(void) {
                 printf("Введите ключ элемента, значение которого хотите найти в словаре\n");
                 int inputKey = 0;
                 scanf("%d", &inputKey);
-                Type element = {inputKey, NULL};
+                Type element = {0};
+                element.key = inputKey;
                 int errorCode = 0;
                 Type returnValue = findValue(binaryTree, element, &errorCode, zeroValue, &compare, &whatIfEqualWhenSearching);
                 if (errorCode) {
@@ -105,7 +106,8 @@ int main(void) {
                 printf("Введите ключ, наличие которого в словаре вы хотите проверить\n");
                 int inputKey = 0;
                 scanf("%d", &inputKey);
-                Type element = {inputKey, NULL};
+                Type element = {0};
+                element.key = inputKey;
                 int errorCode = 0;
                 bool returnValue = isTheValueInTree(binaryTree, element, &errorCode, &compare);
                 if (errorCode) {
@@ -122,7 +124,8 @@ int main(void) {
                 printf("Введите ключ элемента, который хотите удалить из словаря\n");
                 int inputKey = 0;
                 scanf("%d", &inputKey);
-                Type element = {inputKey, NULL};
+                Type element = {0};
+                element.key = inputKey;
                 int errorCode = deleteValue(binaryTree, element, &compare);
                 if (errorCode) {
                     printf("Произошла ошибка\n");
