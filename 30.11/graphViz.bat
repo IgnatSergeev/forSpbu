@@ -1,5 +1,4 @@
 @echo off
 
-start dot -Tpng ../30.11/graphViz.dot -o graphViz.png
-
-start ../30.11/graphViz.png
+start dot -Tpng graphViz.dot -o graphViz.png
+start graphViz.png
