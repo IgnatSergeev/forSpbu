@@ -34,10 +34,11 @@ int main(void) {
     //elements on main diagonal should be equal to -1
     //there cant be edges with length 0
 
+    FILE *file = fopen("../30.11/adjacencyMatrix.txt", "r");
     int currentLength = 0;
     int index = 0;
     int linearMatrix[MAX_MATRIX_SIZE * MAX_MATRIX_SIZE] = {0};
-    while (scanf("%d", &currentLength) == 1) {
+    while (fscanf(file, "%d", &currentLength) != EOF) {
         linearMatrix[index] = currentLength;
         ++index;
     }
@@ -57,6 +58,8 @@ int main(void) {
     }
 
     parseMatrixIntoDotFile(matrix, size);
+
+    system("dot -Tpng graphViz.dot -o graphViz.png");
 
     return 0;
 }
