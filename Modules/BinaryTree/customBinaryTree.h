@@ -36,3 +36,5 @@ bool isEmpty(BinaryTree *tree);
 
 //traverses the tree in a symmetrical order
 void treeTraversal(BinaryTree *binaryTree, void (*whatToDoWithValue)(Type), int *evaluatedValue);
+
+void printTree(BinaryTree *binaryTree);

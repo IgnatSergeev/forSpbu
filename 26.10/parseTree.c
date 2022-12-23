@@ -90,20 +90,15 @@ int main(void) {
         return -1;
     }
 
-    char inputChar = (char)fgetc(file);
-    printf("Вот прочитанное выражение:\n");
-    while (inputChar != -1) {
-        printf("%c", inputChar);
-        inputChar = (char)fgetc(file);
-    }
-    printf("\n");
-    fseek(file, 0, SEEK_SET);
-
     if (readTheExpressionIntoTreeFromFile(file, parseTree)) {
         printf("Ошибка - неправильная скобочная запись\n");
         clear(parseTree);
         return -1;
     }
+
+    printf("Вот прочитанное выражение: ");
+    printTree(parseTree);
+    printf("\n");
 
     int evaluatedValue = 0;
     treeTraversal(parseTree, NULL, &evaluatedValue);

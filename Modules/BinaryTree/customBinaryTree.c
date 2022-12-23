@@ -220,3 +220,21 @@ void nodeTreeTraversal(Node *node, void (*whatToDoWithValue)(Type), int *evaluat
 void treeTraversal(BinaryTree *binaryTree, void (*whatToDoWithValue)(Type),  int *evaluatedValue) {
     nodeTreeTraversal(binaryTree->root, whatToDoWithValue, evaluatedValue);
 }
+
+void printTreeNodes(Node *node) {
+    if (node->value.type == operation) {
+        printf("(%c ", node->value.operation);
+        printTreeNodes(node->left);
+        printf(" ");
+        printTreeNodes(node->right);
+        printf(")");
+    } else {
+        printf("%d", node->value.number);
+    }
+
+
+}
+
+void printTree(BinaryTree *binaryTree) {
+    printTreeNodes(binaryTree->root);
+}
