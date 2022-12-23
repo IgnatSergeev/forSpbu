@@ -54,6 +54,7 @@ int **readMatrix(FILE *file, int *size) {
 
     return matrix;
 }
+
 bool test(void) {
     bool testResult = true;
     FILE *testFile = fopen("../30.11/adjacencyMatrixTest.txt", "r");
@@ -66,10 +67,11 @@ bool test(void) {
 
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            if (j == size - i - 1) {
+            if (i == size - j - 1) {
                 if (matrix[i][j] != 1) {
                     testResult = false;
                 }
+                continue;
             }
             if (matrix[i][j] != -1) {
                 testResult = false;
@@ -77,62 +79,10 @@ bool test(void) {
         }
     }
 
-    parseMatrixIntoDotFile(matrix, size, "../30.11/graphVizTest.dot");
-
-    FILE *graphVizTestFile = fopen("../30.11/graphVizTest.dot", "r");
-    char string[MAX_STRING_SIZE] = {0};
-
-    fscanf(file, "%s", string);
-    if (strcmp(string, "digraph") {
-        testResult = false;
-    }
-    fscanf(file, "%s", string);
-    if (strcmp(string, "Graph") {
-        testResult = false;
-    }
-    fscanf(file, "%s", string);
-    if (strcmp(string, "{") {
-        testResult = false;
-    }
-    fscanf(file, "%s", string);
-    if (strcmp(string, "0") {
-        testResult = false;
-    }
-    fscanf(file, "%s", string);
-    if (strcmp(string, "->") {
-        testResult = false;
-    }
-    fscanf(file, "%s", string);
-    if (strcmp(string, "{") {
-        testResult = false;
-    }
-    fscanf(file, "%s", string);
-    if (strcmp(string, "{") {
-        testResult = false;
-    }
-    fscanf(file, "%s", string);
-    if (strcmp(string, "{") {
-        testResult = false;
-    }
-    fscanf(file, "%s", string);
-    if (strcmp(string, "{") {
-        testResult = false;
-    }
-    fscanf(file, "%s", string);
-    if (strcmp(string, "{") {
-        testResult = false;
-    }
-    fscanf(file, "%s", string);
-    if (strcmp(string, "{") {
-        testResult = false;
-    }
-
-
     for (int i = 0; i < size; i++) {
         free(matrix[i]);
     }
     free(matrix);
-    fclose(graphVizTestFile);
     return testResult;
 }
 
