@@ -87,7 +87,7 @@ int main(void) {
 
     float fillFactor = calculateFillFactor(hashMap);
     int maxListSize = calculateMaxListSize(hashMap);
-    int middleListSize = calculateMiddleListSize(hashMap);
+    int middleListSize = calculateAverageListSize(hashMap);
 
     printf("Вот получившиеся частоты слов:\n");
     print(hashMap);

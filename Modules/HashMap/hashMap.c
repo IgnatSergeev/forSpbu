@@ -1,6 +1,5 @@
 #include "hashMap.h"
 #include "customListForHashMap.h"
-#include <string.h>
 
 struct HashMap {
     List **hashArray;
@@ -82,7 +81,7 @@ void resize(HashMap *hashMap) {
 }
 
 int addValue(HashMap *hashMap, Type value) {
-    int hashFunctionValue = hashFunction(value) % hashMap->hashMapSize;
+    int hashFunctionValue = abs(hashFunction(value)) % hashMap->hashMapSize;
     List *listToAddValue = hashMap->hashArray[hashFunctionValue];
 
     int indexOfValueInListIfExist = findNodeIndexByValue(listToAddValue, value);
@@ -130,7 +129,7 @@ int calculateMaxListSize(HashMap *hashMap) {
     return maxListSize;
 }
 
-int calculateMiddleListSize(HashMap *hashMap) {
+int calculateAverageListSize(HashMap *hashMap) {
     int sumListSize = 0;
     for (int i = 0; i < hashMap->hashMapSize; i++) {
         sumListSize += hashMap->arrayOfNumberOfElementsInHashArray[i];
@@ -140,7 +139,7 @@ int calculateMiddleListSize(HashMap *hashMap) {
 
 Type findValue(HashMap *hashMap, Type value) {
     Type nullValue = {0};
-    int hashFunctionValue = hashFunction(value) % hashMap->hashMapSize;
+    int hashFunctionValue = abs(hashFunction(value)) % hashMap->hashMapSize;
     List *listToSearchIn = hashMap->hashArray[hashFunctionValue];
 
     int indexOfValueInListIfExist = findNodeIndexByValue(listToSearchIn, value);
