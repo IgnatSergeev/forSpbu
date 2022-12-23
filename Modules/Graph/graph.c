@@ -24,7 +24,6 @@ Graph *createGraph(int numberOfNodes, NodeData nodesData[]) {
     }
     for (int i = 0; i < numberOfNodes; i++) {
         graph->adjacencyLists[i] = createAdjacencyList();
-        graph->adjacencyLists[i]->nodeData = nodesData[i];
         if (graph->adjacencyLists[i] == NULL) {
             for (int j = 0; j < i; j++) {
                 clearAdjacencyList(graph->adjacencyLists[j]);
@@ -33,6 +32,7 @@ Graph *createGraph(int numberOfNodes, NodeData nodesData[]) {
             free(graph);
             return NULL;
         }
+        graph->adjacencyLists[i]->nodeData = nodesData[i];
     }
 
     return graph;
@@ -134,6 +134,9 @@ void assignGraphsNumberOfCapitals(Graph *graph, int numberOfCapitals) {
 
 int **print(Graph *graph, bool isTest) {
     if (isTest) {
+        if (!graph->numberOfCapitals) {
+            return NULL;
+        }
         int **countriesProperties = calloc(graph->numberOfCapitals, sizeof(int *));
         int numberOfCountries = graph->numberOfCapitals;
         for (int i = 0; i < numberOfCountries; i++) {
@@ -160,5 +163,4 @@ int **print(Graph *graph, bool isTest) {
 
         return NULL;
     }
-
 }
