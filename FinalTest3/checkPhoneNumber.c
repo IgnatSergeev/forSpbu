@@ -132,15 +132,15 @@ bool test(void) {
 
     return testResult;
 }
+
+//Regular expression: +(digit+)('(')(digit+)(')')(digit+)-(digit+)-(digit+)
+//digit = [0..9]
 int main(void) {
     if (!test()) {
         printf("Тесты провалены\n");
         return -1;
     }
     printf("Тесты пройдены\n");
-
-    //Regular expression: +(digit+)('(')(digit+)(')')(digit+)-(digit+)-(digit+)
-    //digit = [0..9]
 
     printf("Введите строку, о которой хотите узнать является ли она корректным номером телефона\n");
     char string[MAX_STRING_SIZE] = {0};
