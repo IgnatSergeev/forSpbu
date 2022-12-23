@@ -14,8 +14,7 @@ void printSortedList(SortedList *sortedList) {
     if (!isSortedListEmpty(sortedList)) {
         Node *temp = sortedList->head;
 
-        while(temp->next != NULL)
-        {
+        while (temp->next != NULL) {
             printf("%d ", temp->value);
             temp = temp->next;
         }
@@ -29,16 +28,15 @@ int insertNode(SortedList *sortedList, int value) {
     if (newNode == NULL) {
         return -1;
     }
+    newNode->value = value;
 
     if (isSortedListEmpty(sortedList)) {
-        newNode->value = value;
         newNode->next = NULL;
         sortedList->head = newNode;
         return 0;
     }
 
     if (currentNode->value >= value) {
-        newNode->value = value;
         newNode->next = currentNode;
         sortedList->head = newNode;
         return 0;
@@ -47,7 +45,6 @@ int insertNode(SortedList *sortedList, int value) {
     while (currentNode->next != NULL && currentNode->next->value < value) {
         currentNode = currentNode->next;
     }
-    newNode->value = value;
     newNode->next = currentNode->next;
     currentNode->next = newNode;
     return 0;
