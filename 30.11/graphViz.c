@@ -61,7 +61,7 @@ int main(void) {
 
     parseMatrixIntoDotFile(matrix, size);
 
-    system("cd ..\\30.11 && graphViz.bat");
+    system("cd ..\\30.11 && dot -Tpng graphViz.dot -o graphViz.png && timeout 1 && start graphViz.png");
 
     for (int i = 0; i < size; i++) {
         free(matrix[i]);
