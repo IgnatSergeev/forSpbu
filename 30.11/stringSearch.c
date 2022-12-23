@@ -1,7 +1,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include <malloc.h>
 
 #define MAX_STRING_SIZE 100
 #define P 13
