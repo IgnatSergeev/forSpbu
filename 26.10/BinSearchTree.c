@@ -99,7 +99,7 @@ int main(void) {
                     printf("Произошла ошибка\n");
                     break;
                 }
-                printf("Значение элемента по ключу = %s", returnValue.value);
+                printf("Значение элемента по ключу = %s\n", returnValue.value);
                 break;
             } case 3: {
                 printf("Введите ключ, наличие которого в словаре вы хотите проверить\n");
