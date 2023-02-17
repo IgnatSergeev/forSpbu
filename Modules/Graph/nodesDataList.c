@@ -1,49 +1,35 @@
-#include "customList.h"
-#include <stdio.h>
-#include <string.h>
+#include "typeDef.h"
+#include "graph.h"
+#include <malloc.h>
+#include <stdbool.h>
 
 typedef struct Node {
-    Type value;
-    int frequency;
+    NodeData value;
     struct Node *next;
 } Node;
 
-struct List {
+struct NodesDataList {
     Node *head;
-
     int listSize;
 };
 
-/*void print(List *list) {
-    Node *temp = list->head;
-    while (temp->next != NULL) {
-        printf("%d ", temp->value);
-        temp = temp->next;
-    }
-    printf("%d\n", temp->value);
-}*/
+bool isEmpty(NodesDataList *list) {
+    return list->head == NULL;
+}
 
-
-int insertNode(List *list, Type value, int keySize, int index) {
-
+int insertNode(NodesDataList *list, NodeData value, int index) {
     if (index < 0) {
         return -1;
     }
     if (index == 0) {
-
-        Node *newNode = calloc(1, sizeof(Node));
-
+        Node *newNode = malloc(sizeof(Node));
         if (newNode == NULL) {
             return -1;
         }
         newNode->next = list->head;
-
-        newNode->value = calloc(keySize, sizeof(char));
-        strcpy(newNode->value, value);
-        newNode->frequency = 1;
+        newNode->value = value;
         list->head = newNode;
         list->listSize += 1;
-
         return 0;
     }
     if (isEmpty(list)) {
@@ -64,30 +50,25 @@ int insertNode(List *list, Type value, int keySize, int index) {
     if (newNode == NULL) {
         return -1;
     }
-
-    strcpy(newNode->value, value);
+    newNode->value = value;
     newNode->next = iteratorNode->next;
     iteratorNode->next = newNode;
     list->listSize += 1;
     return 0;
 }
 
-int insertNodeToEnd(List *list, Type value, int keySize) {
-    return insertNode(list, value, keySize, list->listSize);
-}
-
-List *create() {
-    List *list = malloc(sizeof(List));
-    if (list == NULL) {
-        return NULL;
-    }
+NodesDataList *create() {
+    NodesDataList *list = malloc(sizeof(NodesDataList));
     list->head = NULL;
     list->listSize = 0;
-
     return list;
 }
 
-int deleteNode(List* list, int index) {
+int insertNodeToEnd(NodesDataList *list, NodeData value) {
+    return insertNode(list, value, list->listSize);
+}
+
+int deleteNode(NodesDataList* list, int index) {
     if (isEmpty(list)) {
         return -1;
     }
@@ -98,9 +79,7 @@ int deleteNode(List* list, int index) {
         Node *nodeToDelete = list->head;
         list->head = nodeToDelete->next;
         free(nodeToDelete);
-
         list->listSize -= 1;
-
         return 0;
     }
 
@@ -116,13 +95,18 @@ int deleteNode(List* list, int index) {
     Node *nodeToDelete = iteratorNode->next;
     iteratorNode->next = nodeToDelete->next;
     free(nodeToDelete);
-
     list->listSize -= 1;
-
     return 0;
 }
 
-Type findNode(List *list, int index, int *errorCode) {
+void clear(NodesDataList *list) {
+    while (!isEmpty(list)) {
+        deleteNode(list, 0);
+    }
+    free(list);
+}
+
+/*Type findNode(List *list, int index, int *errorCode) {
     if (isEmpty(list) || index < 0) {
         *errorCode = -1;
         return (Type)0;
@@ -139,40 +123,6 @@ Type findNode(List *list, int index, int *errorCode) {
 
     *errorCode = 0;
     return iteratorNode->value;
-}
-
-
-int findNodeIndexByValue(List *list, Type value) {
-    if (isEmpty(list)) {
-        return -1;
-    }
-    Node *iteratorNode = list->head;
-
-    int currentIndex = 0;
-    while (iteratorNode != NULL) {
-        if (!strcmp(iteratorNode->value, value)) {
-            break;
-        }
-        ++currentIndex;
-        iteratorNode = iteratorNode->next;
-    }
-
-    if (iteratorNode == NULL) {
-        return -1;
-    }
-    return currentIndex;
-}
-
-
-bool isEmpty(List *list) {
-    return list->head == NULL;
-}
-
-void clear(List *list) {
-    while (!isEmpty(list)) {
-        deleteNode(list, 0);
-    }
-    free(list);
 }
 
 int changeNode(List *list, int index, Type value) {
@@ -193,10 +143,7 @@ int changeNode(List *list, int index, Type value) {
         iteratorNode = iteratorNode->next;
     }
 
-
-    strcpy(iteratorNode->value, value);
-    ++iteratorNode->frequency;
-
+    iteratorNode->value = value;
     return 0;
-}
+}*/
 
