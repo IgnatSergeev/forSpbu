@@ -3,4 +3,6 @@ project(forSpbu C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(forSpbu 30.11/stringSearch.c)
+
+add_executable(forSpbu 07.12/floatLexer.c)
+
