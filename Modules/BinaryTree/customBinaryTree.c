@@ -19,7 +19,7 @@ enum Direction {
     left
 };
 
-Node *addNode(Node *node, Type value, int *errorCode, int (*compare)(Type, Type), Type (*whatIfEqualInAdding)(Type, Type)) {
+Node *addNode(Node *node, Type value, int *errorCode, int (*compare)(Type, Type), Type (*whatIfEqualInAdding)(Type, Type, int *), Type (*whatToDoInTheEndOfRight)(Type, Type, Type)) {
     *errorCode = 0;
     if (node == NULL) {
         Node *newNode = malloc(sizeof(Node));
@@ -33,28 +33,36 @@ Node *addNode(Node *node, Type value, int *errorCode, int (*compare)(Type, Type)
         return newNode;
     }
 
-    int compareResult = (*compare)(node->value, value);
-    if (compareResult > 1 || compareResult < -1) {
-        *errorCode = 1;//случай когда функция compare неправильна
-        return node;
+    int compareResult = 0;
+    if (node->left == NULL || !node->left->value.isSubtreeFull) {
+        compareResult = 1;
+    } else {
+        if (node->right == NULL || !node->right->value.isSubtreeFull) {
+            compareResult = -1;
+        } else {
+            compareResult = 0;
+        }
     }
 
     if (!compareResult) {
-        node->value = (*whatIfEqualInAdding)(node->value, value);
+        node->value = (*whatIfEqualInAdding)(node->value, value, errorCode);
         return node;
     }
     if (compareResult == -1) {
-        node->right = addNode(node->right, value, errorCode, compare, whatIfEqualInAdding);
+        node->right = addNode(node->right, value, errorCode, compare, whatIfEqualInAdding, whatToDoInTheEndOfRight);
+        if (node->left != NULL && node->right != NULL) {
+            node->value = (*whatToDoInTheEndOfRight)(node->value, node->left->value, node->right->value);
+        }
         return node;
 
     }
-    node->left = addNode(node->left, value, errorCode, compare, whatIfEqualInAdding);
+    node->left = addNode(node->left, value, errorCode, compare, whatIfEqualInAdding, whatToDoInTheEndOfRight);
     return node;
 }
 
-int addValue(BinaryTree *tree, Type value, int (*compare)(Type, Type), Type (*whatIfEqualInAdding)(Type, Type)) {
+int addValue(BinaryTree *tree, Type value, int (*compare)(Type, Type), Type (*whatIfEqualInAdding)(Type, Type, int *), Type (*whatToDoInTheEndOfRight)(Type, Type, Type)) {
     int errorCode = 0;
-    tree->root = addNode(tree->root, value, &errorCode, compare, whatIfEqualInAdding);
+    tree->root = addNode(tree->root, value, &errorCode, compare, whatIfEqualInAdding, whatToDoInTheEndOfRight);
     return errorCode;
 }
 
@@ -67,7 +75,6 @@ Type findNodeValue(Node *node, Type value, int *errorCode, Type zeroValue, int (
     if (node == NULL) {        //случай когда нода не найдена
         return zeroValue;
     }
-
     int compareResult = (*compare)(node->value, value);
     if (compareResult > 1 || compareResult < -1) {
         *errorCode = 1;//случай когда функция compare неправильна
@@ -207,7 +214,6 @@ void nodeTreeTraversal(Node *node, Type array[], int *currentArrayIndex) {
     if (node == NULL) {
         return;
     }
-
     nodeTreeTraversal(node->left, array, currentArrayIndex);
     array[*currentArrayIndex] = node->value;
     ++(*currentArrayIndex);
