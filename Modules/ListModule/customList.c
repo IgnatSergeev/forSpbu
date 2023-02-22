@@ -7,11 +7,13 @@ typedef struct Node {
     Type value;
     int frequency;
 
+
     struct Node *next;
 } Node;
 
 struct List {
     Node *head;
+
     int listSize;
 };
 
@@ -124,6 +126,7 @@ Type findNode(List *list, int index, Type zeroValue, int *errorCode) {
     if (isEmpty(list) || index < 0) {
         *errorCode = -1;
         return zeroValue;
+
     }
     Node *iteratorNode = list->head;
 
@@ -284,6 +287,7 @@ int mergeSort(List *list, int (*compare)(Type, Type)) {
     }
 
     list->head = mergeNodeSort(beginNode, endNode, 0, currentIndex, compare);
+
 
     return 0;
 }
