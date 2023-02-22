@@ -3,6 +3,8 @@
 #include <malloc.h>
 #include <time.h>
 
+#define ARRAY_SIZE 10000
+
 void bubbleSort(int inputArray[], int arraySize) {
     for (int i = 0; i < arraySize - 1; i++) {
         for (int j = 0; j < arraySize - i - 1; j++) {
@@ -50,18 +52,15 @@ void countingSort(int inputArray[], int arraySize, int *errorCode) {
     free(countingArray);
 }
 
-bool test(int *errorCode) {
+bool test(void) {
     int forBubbleSortArray[4] = {5, 4, 3, 2};
     int forCountingSortArray[4] = {5, 4, 3, 2};
     bubbleSort(forBubbleSortArray, 4);
     int countingFunctionErrorCode = 0;
     countingSort(forCountingSortArray, 4, &countingFunctionErrorCode);
     if (countingFunctionErrorCode == 1) {
-        *errorCode = 1;
-
         return false;
     }
-    *errorCode = 0;
 
     bool typicalTest = true;
     int sortedArray[4] = {2, 3, 4, 5};
@@ -76,22 +75,21 @@ bool test(int *errorCode) {
 }
 
 void timeTest(int *errorCode) {
-    const int arraySize = 100000;
-    int forBubbleSortArray[100000] = {0};
-    int forCountingSortArray[100000] = {0};
-    for (int i = 0; i < arraySize; i++) {
-        forBubbleSortArray[i] = arraySize - i;
-        forCountingSortArray[i] = arraySize - i;
+    int forBubbleSortArray[ARRAY_SIZE] = {0};
+    int forCountingSortArray[ARRAY_SIZE] = {0};
+    for (int i = 0; i < ARRAY_SIZE; i++) {
+        forBubbleSortArray[i] = ARRAY_SIZE - i;
+        forCountingSortArray[i] = ARRAY_SIZE - i;
     }
 
     int startBubbleTime = clock();
-    bubbleSort(forBubbleSortArray, arraySize);
+    bubbleSort(forBubbleSortArray, ARRAY_SIZE);
     int endBubbleTime = clock();
     int bubbleTime  = endBubbleTime - startBubbleTime;
 
     int startCountingSortTime = clock();
     int countingFunctionErrorCode = 0;
-    countingSort(forCountingSortArray, arraySize, &countingFunctionErrorCode);
+    countingSort(forCountingSortArray, ARRAY_SIZE, &countingFunctionErrorCode);
     if (countingFunctionErrorCode == 1) {
         *errorCode = 1;
 
@@ -104,20 +102,14 @@ void timeTest(int *errorCode) {
     printf("Bubble sort time: %d\nCounting sort time: %d", bubbleTime, countingSortTime);
 }
 
-int main() {
-    int errorCodeForTests = 0;
-    if (!test(&errorCodeForTests)) {
+int main(void) {
+
+    if (!test()) {
         printf("Tests failed");
 
         return -1;
     } else {
         printf("Tests passed\n");
-
-        if (errorCodeForTests == 1) {
-            printf("Error with allocation and maybe tests failed");
-
-            return -1;
-        }
     }
 
     int arraySize = 0;
@@ -139,6 +131,7 @@ int main() {
     if (forCountingSortArray == NULL) {
         printf("Error with allocation");
 
+        free(forBubbleSortArray);
         return -1;
     }
 
@@ -162,6 +155,8 @@ int main() {
     if (errorCode == 1) {
         printf("Error code occurred");
 
+        free(forBubbleSortArray);
+        free(forCountingSortArray);
         return -1;
     }
     printf("Here is the result of the counting sort:\n");
@@ -175,6 +170,8 @@ int main() {
     if (errorCodeForTimeTest == 1) {
         printf("Error code occurred");
 
+        free(forBubbleSortArray);
+        free(forCountingSortArray);
         return -1;
     }
 
