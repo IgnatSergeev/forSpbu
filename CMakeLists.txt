@@ -1,6 +1,9 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.20.2)
 project(forSpbu C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(forSpbu KR2/Task_3.c)
+
+add_executable(forSpbu 07.12/floatLexer.c)
+
+

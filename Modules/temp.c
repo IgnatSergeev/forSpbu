@@ -4,8 +4,8 @@
 
 int main() {
     Stack* stack = createStack();
-    push(stack, 100);
-    printf("%d", top(stack));
+    push(stack, 'a');
+    printf("%c", top(stack));
 
     free(stack);
     return 0;
