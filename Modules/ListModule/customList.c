@@ -1,13 +1,17 @@
 #include "customList.h"
 #include <stdio.h>
+#include <string.h>
 
 typedef struct Node {
     Type value;
+    int frequency;
     struct Node *next;
 } Node;
 
 struct List {
     Node *head;
+
+    int listSize;
 };
 
 void print(List *list, void (*print)(Type)) {
@@ -18,18 +22,27 @@ void print(List *list, void (*print)(Type)) {
     }
 }
 
-int insertNode(List *list, Type value, int index) {
+
+int insertNode(List *list, Type value, int keySize, int index) {
+
     if (index < 0) {
         return -1;
     }
     if (index == 0) {
-        Node *newNode = malloc(sizeof(Node));
+
+        Node *newNode = calloc(1, sizeof(Node));
+
         if (newNode == NULL) {
             return -1;
         }
         newNode->next = list->head;
-        newNode->value = value;
+
+        newNode->value = calloc(keySize, sizeof(char));
+        strcpy(newNode->value, value);
+        newNode->frequency = 1;
         list->head = newNode;
+        list->listSize += 1;
+
         return 0;
     }
     if (isEmpty(list)) {
@@ -50,17 +63,26 @@ int insertNode(List *list, Type value, int index) {
     if (newNode == NULL) {
         return -1;
     }
-    newNode->value = value;
+
+    strcpy(newNode->value, value);
     newNode->next = iteratorNode->next;
     iteratorNode->next = newNode;
+    list->listSize += 1;
     return 0;
+}
+
+int insertNodeToEnd(List *list, Type value, int keySize) {
+    return insertNode(list, value, keySize, list->listSize);
 }
 
 List *create() {
     List *list = malloc(sizeof(List));
-    if (list != NULL) {
-        list->head = NULL;
+    if (list == NULL) {
+        return NULL;
     }
+    list->head = NULL;
+    list->listSize = 0;
+
 
     return list;
 }
@@ -76,6 +98,9 @@ int deleteNode(List* list, int index) {
         Node *nodeToDelete = list->head;
         list->head = nodeToDelete->next;
         free(nodeToDelete);
+
+        list->listSize -= 1;
+
         return 0;
     }
 
@@ -91,6 +116,9 @@ int deleteNode(List* list, int index) {
     Node *nodeToDelete = iteratorNode->next;
     iteratorNode->next = nodeToDelete->next;
     free(nodeToDelete);
+
+    list->listSize -= 1;
+
     return 0;
 }
 
@@ -112,6 +140,29 @@ Type findNode(List *list, int index, Type zeroValue, int *errorCode) {
     *errorCode = 0;
     return iteratorNode->value;
 }
+
+
+int findNodeIndexByValue(List *list, Type value) {
+    if (isEmpty(list)) {
+        return -1;
+    }
+    Node *iteratorNode = list->head;
+
+    int currentIndex = 0;
+    while (iteratorNode != NULL) {
+        if (!strcmp(iteratorNode->value, value)) {
+            break;
+        }
+        ++currentIndex;
+        iteratorNode = iteratorNode->next;
+    }
+
+    if (iteratorNode == NULL) {
+        return -1;
+    }
+    return currentIndex;
+}
+
 
 bool isEmpty(List *list) {
     return list->head == NULL;
@@ -142,7 +193,10 @@ int changeNode(List *list, int index, Type value) {
         iteratorNode = iteratorNode->next;
     }
 
-    iteratorNode->value = value;
+
+    strcpy(iteratorNode->value, value);
+    ++iteratorNode->frequency;
+
     return 0;
 }
 
