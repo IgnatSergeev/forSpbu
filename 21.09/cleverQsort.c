@@ -17,9 +17,7 @@ int median(int first, int second, int third) {
     }
 
     if (third < second) {
-        int temp = third;
-        third = second;
-        second = temp;
+        second = third;
     }
 
     return second;
@@ -64,33 +62,33 @@ void qSort(int array[], int lowBorder, int highBorder) {
         return;
     }
 
-    int middleIndex = (lowBorder + highBorder)/2;
+    int middleIndex = (lowBorder + highBorder) / 2;
     int elementToSplitBy = median(array[lowBorder], array[highBorder - 1], array[middleIndex]);
-    int indOfElementToSplitBy = 0;
+    int indexOfElementToSplitBy = 0;
     if (elementToSplitBy == array[lowBorder]) {
-        indOfElementToSplitBy = lowBorder;
+        indexOfElementToSplitBy = lowBorder;
     }
     if (elementToSplitBy == array[highBorder - 1]) {
-        indOfElementToSplitBy = highBorder - 1;
+        indexOfElementToSplitBy = highBorder - 1;
     }
     if (elementToSplitBy == array[middleIndex]) {
-        indOfElementToSplitBy = middleIndex;
+        indexOfElementToSplitBy = middleIndex;
     }
 
-    int temp = array[indOfElementToSplitBy];
-    array[indOfElementToSplitBy] = array[lowBorder];
+    int temp = array[indexOfElementToSplitBy];
+    array[indexOfElementToSplitBy] = array[lowBorder];
     array[lowBorder] = temp;
 
     halfQsort(array, lowBorder, highBorder);
     for (int i = lowBorder; i < highBorder; i++) {
         if (array[i] == elementToSplitBy) {
-            indOfElementToSplitBy = i;
+            indexOfElementToSplitBy = i;
             break;
         }
     }
 
-    qSort(array, lowBorder, indOfElementToSplitBy);
-    qSort(array, indOfElementToSplitBy + 1, highBorder);
+    qSort(array, lowBorder, indexOfElementToSplitBy);
+    qSort(array, indexOfElementToSplitBy + 1, highBorder);
 }
 
 bool test() {

@@ -18,7 +18,10 @@ int addValue(BinaryTree *tree, Type value, int (*compare)(Type, Type), Type (*wh
 //zeroValue - the value which is returned in case the search is failed
 Type findValue(BinaryTree *tree, Type value, int *errorCode, Type zeroValue, int (*compare)(Type, Type), Type (*whatIfEqualInSearching)(Type, Type));
 
-//clears the tree(cannot be used after cleaning)
+
+bool isTheValueInTree(BinaryTree *tree, Type value, int *errorCode, int (*compare)(Type, Type));
+
+
 void clear(BinaryTree *tree);
 
 //deletes element from the tree by value
