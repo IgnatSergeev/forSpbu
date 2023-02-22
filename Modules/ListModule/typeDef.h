@@ -1,3 +1,4 @@
 #pragma once
 
-typedef char * Type;
+#include "../HashMap/typeDef.h"
+
