@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <time.h>
+#include <locale.h>
 
 int recursiveFibonacci(int fibonacciIndex) {
     if (fibonacciIndex <= 1) {
@@ -35,20 +36,27 @@ bool test() {
 }
 
 void timeTest() {
-    int startRecursiveFibonacciTime = clock();
-    recursiveFibonacci();
-    int endRecursiveFibonacciTime = clock();
-    int recursiveFibonacciTime  = endRecursiveFibonacciTime - startRecursiveFibonacciTime;
+    for (int i = 0; i <= 1000; i++) {
+        int startRecursiveFibonacciTime = clock();
+        recursiveFibonacci(i);
+        int endRecursiveFibonacciTime = clock();
+        int recursiveFibonacciTime  = endRecursiveFibonacciTime - startRecursiveFibonacciTime;
 
-    int startIterativeFibonacciTime = clock();
-    iterativeFibonacci();
-    int endIterativeFibonacciTime = clock();
-    int iterativeFibonacciTime  = endIterativeFibonacciTime - startIterativeFibonacciTime;
+        int startIterativeFibonacciTime = clock();
+        iterativeFibonacci(i);
+        int endIterativeFibonacciTime = clock();
+        int iterativeFibonacciTime  = endIterativeFibonacciTime - startIterativeFibonacciTime;
 
-    printf("Recursive fibonacci time: %d\nIterative fibonacci time: %d",recursiveFibonacciTime, iterativeFibonacciTime);
+        int timeDifference = abs(recursiveFibonacciTime - iterativeFibonacciTime);
+        if (timeDifference > CLOCKS_PER_SEC * 2) {
+            printf("Индекс, с которого итеративный вариант заметно быстрее рекурсивного = %d", i);
+            break;
+        }
+    }
 }
 
 int main() {
+    setlocale (LC_ALL, "ru_RU.UTF-8");
     if (!test()) {
         printf("Tests failed");
 
