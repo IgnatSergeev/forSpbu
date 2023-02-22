@@ -87,14 +87,33 @@ Type findValue(BinaryTree *tree, Type value, int *errorCode, Type zeroValue, int
     return findNodeValue(tree->root, value, errorCode, zeroValue, compare, whatIfEqualInSearching);
 }
 
-BinaryTree *create() {
-    BinaryTree *binaryTree = malloc(sizeof(BinaryTree));
-    if (binaryTree == NULL) {
-        return NULL;
+bool contains(Node *node, Type value, int *errorCode, int (*compare)(Type, Type)) {
+    *errorCode = 0;
+    if (node == NULL) {        //случай когда нода не найдена
+        return false;
     }
-    binaryTree->root = NULL;
 
-    return binaryTree;
+    int compareResult = (*compare)(node->value, value);
+    if (compareResult > 1 || compareResult < -1) {
+        *errorCode = 1;//случай когда функция compare неправильна
+        return false;
+    }
+
+    if (!compareResult) {
+        return true;
+    }
+    if (compareResult == -1) {
+        return contains(node->right, value, errorCode, compare);
+    }
+    return contains(node->left, value, errorCode, compare);
+}
+
+bool isTheValueInTree(BinaryTree *tree, Type value, int *errorCode, int (*compare)(Type, Type)) {
+    return contains(tree->root, value, errorCode, compare);
+}
+
+BinaryTree *create() {
+    return calloc(1, sizeof(BinaryTree));
 }
 
 void clearNode(Node *node) {
@@ -141,7 +160,8 @@ Node *deleteRoot(Node *root) {
 
 int deleteNodeValue(Node *parent, enum Direction dir, Node *node, Type value, int (*compare)(Type, Type)) {
     if (node == NULL) {
-        return 0;//это случай когда такой ноды нет в дереве
+        // это случай когда такой ноды нет в дереве
+        return 0;
     }
 
     int compareResult = (*compare)(node->value, value);
