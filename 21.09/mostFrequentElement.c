@@ -93,26 +93,30 @@ void qSort(int array[], int lowBorder, int highBorder) {
     qSort(array, indOfElementToSplitBy + 1, highBorder);
 }
 
-int binSearch(const int array[], int elementToSearch, int arraySize) {
-    int leftBorder = 0;
-    int rightBorder = arraySize - 1;
-
-    while (leftBorder < rightBorder - 1) {
-        int middle = (leftBorder + rightBorder) / 2;
-        if (array[middle] < elementToSearch) {
-            leftBorder = middle;
+int mostFrequentElement(const int sortedArray[], int arraySize) {
+    int mostFrequentElem = sortedArray[0];
+    int maxNumberOfElements = 1;
+    int currentElement = sortedArray[0];
+    int currentNumberOfElements = 1;
+    for (int i = 1; i < arraySize; i++) {
+        if (sortedArray[i] == currentElement) {
+            ++currentNumberOfElements;
         } else {
-            rightBorder = middle;
+            if (currentNumberOfElements > maxNumberOfElements) {
+                maxNumberOfElements = currentNumberOfElements;
+                mostFrequentElem = currentElement;
+            }
+
+            currentNumberOfElements = 1;
+            currentElement = sortedArray[i];
         }
     }
 
-    if (array[leftBorder] == elementToSearch) {
-        return leftBorder;
+    if (currentNumberOfElements > maxNumberOfElements) {
+        mostFrequentElem = currentElement;
     }
-    if (array[rightBorder] == elementToSearch) {
-        return rightBorder;
-    }
-    return -1;
+
+    return mostFrequentElem;
 }
 
 bool test() {
@@ -128,10 +132,9 @@ bool test() {
         }
     }
 
-    if (binSearch(sortedBigArray, 10, 15) != 11 || binSearch(sortedBigArray, -1, 15) != -1) {
+    if (mostFrequentElement(sortedBigArray, 15) != 9) {
         typicalTest = false;
     }
-
     return typicalTest;
 }
 
@@ -145,11 +148,9 @@ int main() {
     }
 
     int arraySize = 0;
-    int arrayOfNumbersToSearchSize = 0;
-    printf("%s", "Enter the arrays sizes\n");
+    printf("%s", "Enter the array size\n");
     scanf("%d", &arraySize);
-    scanf("%d", &arrayOfNumbersToSearchSize);
-    if (arraySize <= 0 || arrayOfNumbersToSearchSize <= 0) {
+    if (arraySize <= 0) {
         printf("Something wrong");
 
         return -1;
@@ -162,51 +163,17 @@ int main() {
         return -1;
     }
 
-    printf("%s", "Here are the random array elements\n");
-    srand(time(0));
-    for (int i = 0; i < arraySize - 1; i++) {
-        array[i] = rand();
-
-        printf("%d, ", array[i]);
+    printf("%s", "Enter the array elements\n");
+    for (int i = 0; i < arraySize; i++) {
+        int element = 0;
+        scanf("%d", &element);
+        array[i] = element;
     }
-    array[arraySize - 1] = rand();
-    printf("%d\n", array[arraySize - 1]);
-
-    int *arrayOfNumbersToSearch = (int*)malloc(arrayOfNumbersToSearchSize * sizeof(int));
-    if (arrayOfNumbersToSearch == NULL) {
-        printf("Error with allocation");
-
-        free(array);
-        return -1;
-    }
-
-    printf("%s", "Here are the random elements which will be searched\n");
-    srand(time(0) * time(0));
-    for (int i = 0; i < arrayOfNumbersToSearchSize - 1; i++) {
-        arrayOfNumbersToSearch[i] = rand();
-
-        printf("%d, ", arrayOfNumbersToSearch[i]);
-    }
-    arrayOfNumbersToSearch[arrayOfNumbersToSearchSize - 1] = rand();
-    printf("%d\n", arrayOfNumbersToSearch[arrayOfNumbersToSearchSize - 1]);
 
     qSort(array, 0, arraySize);
-    printf("%s", "Here is the sorted array\n");
-    for (int i = 0; i < arraySize - 1; i++) {
-        printf("%d, ", array[i]);
-    }
-    printf("%d\n", array[arraySize - 1]);
-
-    for (int i = 0; i < arrayOfNumbersToSearchSize; i++) {
-        int result = binSearch(array, arrayOfNumbersToSearch[i], arraySize);
-        if (result == -1) {
-            printf("%d - doesnt contain\n", arrayOfNumbersToSearch[i]);
-        } else {
-            printf("%d - contains\n", arrayOfNumbersToSearch[i]);
-        }
-    }
+    int mostFrequentElem = mostFrequentElement(array, arraySize);
+    printf("Here is the most frequent element of the array: %d", mostFrequentElem);
 
     free(array);
-    free(arrayOfNumbersToSearch);
     return 0;
 }
