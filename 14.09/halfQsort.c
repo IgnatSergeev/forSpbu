@@ -24,7 +24,7 @@ void halfQsort(int array[], int arraySize) {
 }
 
 bool test() {
-    bool typicalTest = true;
+    bool testResult = true;
     int array[5] = {2, 5, 1, 4, 0};
     int firstElement = 2;
     int indexOfFirstElement = 0;
@@ -47,7 +47,7 @@ bool test() {
         }
     }
 
-    return typicalTest;
+    return testResult;
 }
 
 int main() {
@@ -76,13 +76,13 @@ int main() {
     }
     printf("%s", "Here are the random array elements\n");
 
-    srand(time(0));
+    srand((unsigned)time(NULL));
     for (int i = 0; i < arraySize - 1; i++) {
-        array[i] = rand();
+        array[i] = rand() % 100;
 
         printf("%d, ", array[i]);
     }
-    array[arraySize - 1] = rand();
+    array[arraySize - 1] = rand() % 100;
     printf("%d\n", array[arraySize - 1]);
 
     printf("Here is the result of the half qsort:\n");

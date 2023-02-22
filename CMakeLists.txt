@@ -3,4 +3,4 @@ project(forSpbu C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(forSpbu 07.12/commentaryLexer.c)
+add_executable(forSpbu 07.12/floatLexer.c)
