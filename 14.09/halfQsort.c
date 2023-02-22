@@ -6,7 +6,7 @@
 void halfQsort(int array[], int arraySize) {
     int firstIndex = 0;
     int secondIndex = arraySize - 1;
-    while ((firstIndex < secondIndex) && (firstIndex + 1 < arraySize) && (secondIndex - 1 >= 0)){
+    while ((firstIndex < secondIndex) && (firstIndex + 1 < arraySize) && (secondIndex - 1 >= 0)) {
         if (array[firstIndex] >= array[firstIndex + 1]) {
             int temp = array[firstIndex];
             array[firstIndex] = array[firstIndex + 1];
@@ -40,7 +40,8 @@ bool test() {
     }
 
     for (int i = 0; i < arraySize; i++) {
-        if (((i < indexOfFirstElement) && (array[i] >= firstElement)) || ((i > indexOfFirstElement) && (array[i] < firstElement))) {
+        if (((i < indexOfFirstElement) && (array[i] >= firstElement))
+                || ((i > indexOfFirstElement) && (array[i] < firstElement))) {
             typicalTest = false;
             break;
         }

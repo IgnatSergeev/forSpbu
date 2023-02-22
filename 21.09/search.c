@@ -98,7 +98,7 @@ int binSearch(const int array[], int elementToSearch, int arraySize) {
     int rightBorder = arraySize - 1;
 
     while (leftBorder < rightBorder - 1) {
-        int middle = (leftBorder + rightBorder)/2;
+        int middle = (leftBorder + rightBorder) / 2;
         if (array[middle] < elementToSearch) {
             leftBorder = middle;
         } else {
@@ -113,7 +113,6 @@ int binSearch(const int array[], int elementToSearch, int arraySize) {
         return rightBorder;
     }
     return -1;
-
 }
 
 bool test() {
@@ -177,6 +176,7 @@ int main() {
     if (arrayOfNumbersToSearch == NULL) {
         printf("Error with allocation");
 
+        free(array);
         return -1;
     }
 
