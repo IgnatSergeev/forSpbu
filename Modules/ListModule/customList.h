@@ -28,7 +28,6 @@ int changeNode(List *list, int index, Type value);
 //checks if the list is empty
 bool isEmpty(List *list);
 
-
 //clears the list
 void clear(List *list);
 
@@ -43,6 +42,4 @@ int mergeSort(List *list, int (*compare)(Type, Type));
 
 //finds the index of the node which has that value(indexes starts from 0)
 int findNodeIndexByValue(List *list, Type value);
-
-
 

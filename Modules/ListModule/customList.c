@@ -6,14 +6,11 @@
 typedef struct Node {
     Type value;
     int frequency;
-
-
     struct Node *next;
 } Node;
 
 struct List {
     Node *head;
-
     int listSize;
 };
 
@@ -82,7 +79,6 @@ List *create() {
     }
     list->head = NULL;
     list->listSize = 0;
-
 
     return list;
 }
