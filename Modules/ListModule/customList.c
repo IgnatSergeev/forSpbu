@@ -14,14 +14,13 @@ struct List {
     int listSize;
 };
 
-/*void print(List *list) {
+void print(List *list, void (*print)(Type)) {
     Node *temp = list->head;
-    while (temp->next != NULL) {
-        printf("%d ", temp->value);
+    while (temp != NULL) {
+        (*print)(temp->value);
         temp = temp->next;
     }
-    printf("%d\n", temp->value);
-}*/
+}
 
 
 int insertNode(List *list, Type value, int keySize, int index) {
@@ -84,6 +83,7 @@ List *create() {
     list->head = NULL;
     list->listSize = 0;
 
+
     return list;
 }
 
@@ -122,10 +122,10 @@ int deleteNode(List* list, int index) {
     return 0;
 }
 
-Type findNode(List *list, int index, int *errorCode) {
+Type findNode(List *list, int index, Type zeroValue, int *errorCode) {
     if (isEmpty(list) || index < 0) {
         *errorCode = -1;
-        return (Type)0;
+        return zeroValue;
     }
     Node *iteratorNode = list->head;
 
@@ -133,7 +133,7 @@ Type findNode(List *list, int index, int *errorCode) {
         iteratorNode = iteratorNode->next;
         if (iteratorNode == NULL) {
             *errorCode = -1;
-            return (Type)0;
+            return zeroValue;
         }
     }
 
@@ -196,6 +196,95 @@ int changeNode(List *list, int index, Type value) {
 
     strcpy(iteratorNode->value, value);
     ++iteratorNode->frequency;
+
+    return 0;
+}
+
+Node *mergeNodeSort(Node *begin, Node *end, int startIndex, int endIndex, int (*compare)(Type, Type)) {
+    if (begin == end) {
+        return begin;
+    }
+
+    int middleIndex = (startIndex + endIndex) / 2;
+    int currentIndex = startIndex;
+    Node *leftMiddleNode = begin;
+    while (currentIndex < middleIndex) {
+        ++currentIndex;
+        leftMiddleNode = leftMiddleNode->next;
+    }
+
+    Node *nodeAfterEnd = end->next;
+    end->next = NULL;
+    Node *nodeAfterLeftMiddleNode = leftMiddleNode->next;
+    leftMiddleNode->next = NULL;
+    Node *firstPartBegin = mergeNodeSort(begin, leftMiddleNode, startIndex, currentIndex, compare);
+    Node *secondPartBegin = mergeNodeSort(nodeAfterLeftMiddleNode, end, currentIndex + 1, endIndex, compare);
+
+    int firstPartIndex = startIndex;
+    Node *firstPartNode = firstPartBegin;
+    int secondPartIndex = currentIndex + 1;
+    Node *secondPartNode = secondPartBegin;
+
+    Node *startNode = NULL;
+    if ((*compare)(firstPartNode->value, secondPartNode->value) == 1) {
+        startNode = secondPartNode;
+        secondPartNode = secondPartNode->next;
+        ++secondPartIndex;
+    } else {
+        startNode = firstPartNode;
+        firstPartNode = firstPartNode->next;
+        ++firstPartIndex;
+    }
+
+    Node *lastNode = startNode;
+    while (firstPartIndex != (currentIndex + 1) || secondPartIndex != (endIndex + 1)) {
+        if (firstPartIndex == (currentIndex + 1)) {
+            lastNode->next = secondPartNode;
+            secondPartNode = secondPartNode->next;
+            ++secondPartIndex;
+            lastNode = lastNode->next;
+            continue;
+        }
+        if (secondPartIndex == (endIndex + 1)) {
+            lastNode->next = firstPartNode;
+            firstPartNode = firstPartNode->next;
+            ++firstPartIndex;
+            lastNode = lastNode->next;
+            continue;
+        }
+
+        if ((*compare)(firstPartNode->value, secondPartNode->value) == -1) {
+            lastNode->next = secondPartNode;
+            secondPartNode = secondPartNode->next;
+            ++secondPartIndex;
+            lastNode = lastNode->next;
+        } else {
+            lastNode->next = firstPartNode;
+            firstPartNode = firstPartNode->next;
+            ++firstPartIndex;
+            lastNode = lastNode->next;
+        }
+    }
+    lastNode->next = nodeAfterEnd;
+    return startNode;
+}
+
+int mergeSort(List *list, int (*compare)(Type, Type)) {
+    if (isEmpty(list)) {
+        return -1;
+    }
+    if (list->head->next == NULL) {
+        return 0;
+    }
+    Node *beginNode = list->head;
+    Node *endNode = list->head;
+    int currentIndex = 0;
+    while (endNode->next != NULL) {
+        ++currentIndex;
+        endNode = endNode->next;
+    }
+
+    list->head = mergeNodeSort(beginNode, endNode, 0, currentIndex, compare);
 
     return 0;
 }
