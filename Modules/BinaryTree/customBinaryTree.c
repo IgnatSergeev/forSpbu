@@ -87,6 +87,7 @@ Type findValue(BinaryTree *tree, Type value, int *errorCode, Type zeroValue, int
     return findNodeValue(tree->root, value, errorCode, zeroValue, compare, whatIfEqualInSearching);
 }
 
+
 bool contains(Node *node, Type value, int *errorCode, int (*compare)(Type, Type)) {
     *errorCode = 0;
     if (node == NULL) {        //случай когда нода не найдена
@@ -200,4 +201,20 @@ int deleteValue(BinaryTree *tree, Type value, int (*compare)(Type, Type)) {
         return 0;
     }
     return deleteNodeValue(NULL, right, tree->root, value, compare);
+}
+
+void nodeTreeTraversal(Node *node, Type array[], int *currentArrayIndex) {
+    if (node == NULL) {
+        return;
+    }
+
+    nodeTreeTraversal(node->left, array, currentArrayIndex);
+    array[*currentArrayIndex] = node->value;
+    ++(*currentArrayIndex);
+    nodeTreeTraversal(node->right, array, currentArrayIndex);
+}
+
+void treeTraversal(BinaryTree *binaryTree, Type array[]) {
+    int currentArrayIndex = 0;
+    nodeTreeTraversal(binaryTree->root, array, &currentArrayIndex);
 }
