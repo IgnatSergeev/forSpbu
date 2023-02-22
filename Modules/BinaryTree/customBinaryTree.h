@@ -6,14 +6,9 @@
 
 typedef struct BinaryTree BinaryTree;
 
-enum TypesOfTraversal {
-    inorder,
-    postorder,
-    preorder
-};
 
 //creates an empty binary tree
-BinaryTree *create();
+BinaryTree *create(void);
 
 //compare: should return 0 if equal, 1 if first is grater than second and -1 if first is less than second
 //whatIfEqualWhenAdding: first value - is old value; second value - is new value
@@ -24,7 +19,11 @@ int addValue(BinaryTree *tree, Type value, int (*compare)(Type, Type), Type (*wh
 //zeroValue - the value which is returned in case the search is failed
 Type findValue(BinaryTree *tree, Type value, int *errorCode, Type zeroValue, int (*compare)(Type, Type), Type (*whatIfEqualInSearching)(Type, Type));
 
-//clears the tree(cannot be used after cleaning)
+
+
+bool isTheValueInTree(BinaryTree *tree, Type value, int *errorCode, int (*compare)(Type, Type));
+
+
 void clear(BinaryTree *tree);
 
 //deletes element from the tree by value
@@ -35,6 +34,5 @@ int deleteValue(BinaryTree *tree, Type value, int (*compare)(Type, Type));
 bool isEmpty(BinaryTree *tree);
 
 //traverses the tree in a symmetrical order
-void treeTraversal(BinaryTree *binaryTree, void (*whatToDoWithValue)(Type), int *evaluatedValue);
 
-void printTree(BinaryTree *binaryTree);
+void treeTraversal(BinaryTree *binaryTree, Type array[]);
