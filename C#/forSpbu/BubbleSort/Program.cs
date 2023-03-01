@@ -1,65 +1,68 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace BubbleSort
-{
-    class Program
+﻿namespace BubbleSort;
+public static class Sort
+{ 
+    public static void BubbleSort(int[] array)
     {
-        static bool test()
+        if (array == null)
         {
-            int[] array = { 12, 34, 5, 1 };
-            BubbleSort(array);
-
-            int[] sortedArray = { 1, 5, 12, 34 };
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (array[i] != sortedArray[i])
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            throw new Exception("Cannot sort null array");
         }
-        public static void BubbleSort(int[] array)
+        int size = array.Length;
+        for (int i = 0; i < size; i++)
         {
-            int size = array.Length;
-            for (int i = 0; i < size; i++)
+            for (int j = 0; j < size - 1; j++)
             {
-                for (int j = 0; j < size - 1; j++)
+                if (array[j] > array[j + 1])
                 {
-                    if (array[j] > array[j + 1])
-                    {
-                        int tmp = array[j];
-                        array[j] = array[j + 1];
-                        array[j + 1] = tmp;
-                    }
+                    int tmp = array[j];
+                    array[j] = array[j + 1];
+                    array[j + 1] = tmp;
                 }
             }
         }
-        
-        static int Main(string[] args)
-        {
-            if (!test())
-            {
-                Console.WriteLine("Тесты провалены");
-                return -1;
-            }
-            Console.WriteLine("Тесты пройдены\n");
-            
-            Console.WriteLine("Введите элементы массива, который хотите отсортировать, через пробел");
-            int[] array = Console.ReadLine().Split().Select(x => int.Parse(x)).ToArray();
-            BubbleSort(array);
-            
-            Console.WriteLine("Вот отсортированный массив:");
-            for (int i = 0; i < array.Length; i++)
-            {
-                Console.Write(array[i]);
-                Console.Write(" ");
-            }
+    }
+} 
 
-            return 0;
+public static class Test
+{
+    public static void TestBubbleSort()
+    {
+        int[] array = { 12, 34, 5, 1 };
+        Sort.BubbleSort(array);
+
+        int[] sortedArray = { 1, 5, 12, 34 };
+        for (int i = 0; i < array.Length; i++)
+        {
+            if (array[i] != sortedArray[i])
+            {
+                throw new Exception("Tests failed");
+            }
         }
     }
 }
+public static class Program
+{
+    static int Main(string[] args)
+    {
+        Test.TestBubbleSort();
+        
+        Console.WriteLine("Введите элементы массива, который хотите отсортировать, через пробел");
+        string line = Console.ReadLine();
+        if (line == null)
+        {
+            throw new Exception("Cannot sort this type of array, probably wrong input");
+        }
+        
+        int[] array = line.Split().Select(x => int.TryParse(x, out var y) ? y: throw new Exception("Wrong array elements")).ToArray();
+        Sort.BubbleSort(array);
+        
+        Console.WriteLine("Вот отсортированный массив:");
+        for (int i = 0; i < array.Length; i++)
+        {
+            Console.Write(array[i]);
+            Console.Write(" ");
+        }
 
-
+        return 0;
+    }
+}
