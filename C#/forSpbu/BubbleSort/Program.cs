@@ -53,7 +53,7 @@ public static class Program
             throw new Exception("Cannot sort this type of array, probably wrong input");
         }
         
-        int[] array = line.Split().Select(x => int.TryParse(x, out var y) ? y: throw new Exception("Wrong array elements")).ToArray();
+        int[] array = line.Split().Select(x => int.TryParse(x, out var y) ? y: throw new Exception("Wrong array element")).ToArray();
         Sort.BubbleSort(array);
         
         Console.WriteLine("Вот отсортированный массив:");
