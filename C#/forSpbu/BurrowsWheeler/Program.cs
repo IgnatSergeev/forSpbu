@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks.Dataflow;
+﻿using System.Collections.Generic;
+using System.Security.Principal;
 
 namespace BurrowsWheeler;
 
 public static class BurrowsWheeler 
 {
     //returns 1 if first string is greater than second, -1 if first is less than second, 0 if they are equal
-    private static int Compare(string str, int firstStartPosition, int secondStartPosition)
+    private static int Compare(int firstStartPosition, int secondStartPosition)
     {
         int size = str.Length;
         for (int i = 0; i < size; i++)
@@ -15,76 +16,120 @@ public static class BurrowsWheeler
             
             if (firstStringChar < secondStringChar)
             {
-                return 1;
+                return -1;
             } 
             if (firstStringChar > secondStringChar)
             {
-                return -1;
+                return 1;
             }
         }
 
         return 0;
     }
 
-    private static void Sort(int[] array, string str)
+    public static Tuple<string, int> Encode(string stringToEncode)
     {
-        int size = array.Length;
-        for (int i = 0; i < size; i++)
+        if (stringToEncode == null)
         {
-            for (int j = 0; j < size - 1; j++)
-            {
-                if (Compare(str, j, j + 1) < 0)
-                {
-                    int tmp = array[i];
-                    array[i] = array[j];
-                    array[j] = tmp;
-                }
-            }
-        }
-    }
-    
-    public static KeyValuePair<string, int> Encode(string str)
-    {
-        if (str == null)
-        {
-            throw new Exception("Cannot convert null string");
+            throw new Exception("Cannot encode null string");
         }
 
-        int size = str.Length;
+        int size = stringToEncode.Length;
+        str = stringToEncode;
         int[] indexArray = new int[size];
         for (int i = 0; i < size; i++)
         {
             indexArray[i] = i;
         }
 
+        Compare(3, 1);
         int initialStringIndex = 0;
-        Sort(indexArray, str);
+        Array.Sort(indexArray, Compare);
 
         char[] encodedCharArray = new char[size];
         for (int i = 0; i < size; i++)
         {
-            encodedCharArray[i] = str[(indexArray[i] - 1 + size) % size];
+            encodedCharArray[i] = stringToEncode[(indexArray[i] - 1 + size) % size];
             if (indexArray[i] == 0)
             {
                 initialStringIndex = i;
-                break;
             }
         }
-
-
+        
         string encodedString = new string(encodedCharArray);
-        return new KeyValuePair<string, int>(encodedString, initialStringIndex);
+        return new Tuple<string, int>(encodedString, initialStringIndex);
     }
+    
+    public static string Decode(string stringToDecode, int indexOfInitialString)
+    {
+        if (stringToDecode == null)
+        {
+            throw new Exception("Cannot decode null string");
+        }
+        
+        int size = stringToDecode.Length;
+        
+        char[] sortedString = new char[size];
+        for (int i = 0; i < size; i++)
+        {
+            sortedString[i] = stringToDecode[i];
+        }
+        Array.Sort(sortedString);
+
+        Dictionary<char, int> numOfSymbols = new Dictionary<char, int>();
+        for (int i = 0; i < size; i++)
+        {
+            if (numOfSymbols.ContainsKey(stringToDecode[i]))
+            {
+                ++numOfSymbols[stringToDecode[i]];
+            }
+            else
+            {
+                numOfSymbols.Add(stringToDecode[i], 1);
+            }
+        }
+        
+        Dictionary<char, int> indexesOfSymbols = new Dictionary<char, int>();
+        for (int indexOfFirstSymbol = 0; indexOfFirstSymbol < size; indexOfFirstSymbol += numOfSymbols[sortedString[indexOfFirstSymbol]])
+        {
+            indexesOfSymbols.Add(sortedString[indexOfFirstSymbol], indexOfFirstSymbol);
+        }
+
+        int[] reverseBwtVector = new int[size];
+        for (int i = 0; i < size; i++)
+        {
+            reverseBwtVector[indexesOfSymbols[stringToDecode[i]]] = i;
+            ++indexesOfSymbols[stringToDecode[i]];
+        }
+
+        char[] decodedArray = new char[size];
+        int j = reverseBwtVector[indexOfInitialString];
+        for (int i = 0; i < size; i++)
+        {
+            decodedArray[i] = stringToDecode[j];
+            j = reverseBwtVector[j];
+        }
+
+        return new string(decodedArray);
+    }
+    
+    private static string str;
 }
 
 public static class Test
 {
     public static void TestBurrowsWheeler()
     {
-        string str = ".ANA";
+        string str = "BANANA";
         
-        KeyValuePair<string, int> encodedValue = BurrowsWheeler.Encode(str);
-        Console.Write(encodedValue.Key);
+        Tuple<string, int> encodedValue = BurrowsWheeler.Encode(str);
+        if (string.Compare(encodedValue.Item1, "NNBAAA") != 0)
+        {
+            throw new Exception("Tests failed");
+        }
+
+        string finalString = BurrowsWheeler.Decode(encodedValue.Item1, 3);
+        Console.WriteLine(finalString);
     }
 }
 
