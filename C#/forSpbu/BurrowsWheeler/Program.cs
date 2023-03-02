@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Security.Principal;
-
-namespace BurrowsWheeler;
+﻿namespace BurrowsWheeler;
 
 public static class BurrowsWheeler 
 {
@@ -120,16 +117,17 @@ public static class Test
 {
     public static void TestBurrowsWheeler()
     {
-        string str = "BANANA";
-        
-        Tuple<string, int> encodedValue = BurrowsWheeler.Encode(str);
-        if (string.Compare(encodedValue.Item1, "NNBAAA") != 0)
+        Tuple<string, int> encodedValue = BurrowsWheeler.Encode("BANANA");
+        if (string.Compare(encodedValue.Item1, "NNBAAA") != 0 || encodedValue.Item2 != 3)
         {
             throw new Exception("Tests failed");
         }
 
-        string finalString = BurrowsWheeler.Decode(encodedValue.Item1, 3);
-        Console.WriteLine(finalString);
+        string decodedString = BurrowsWheeler.Decode(encodedValue.Item1, encodedValue.Item2);
+        if (string.Compare(decodedString, "BANANA") != 0)
+        {
+            throw new Exception("Tests failed");
+        }
     }
 }
 
@@ -138,5 +136,14 @@ public static class Program
     static void Main(string[] args)
     {
         Test.TestBurrowsWheeler();
+        
+        Console.WriteLine("Введите строку, которую хотите трансформировать с помощью преобразования Барроуза-Уилера");
+        var line = Console.ReadLine();
+
+        var encodedValue = BurrowsWheeler.Encode(line);
+        Console.WriteLine("Вот закодированная строка и позиция конца строки в ней: " + encodedValue.Item1 + ", " + encodedValue.Item2);
+
+        var decodedValue = BurrowsWheeler.Decode(encodedValue.Item1, encodedValue.Item2);
+        Console.WriteLine("Вот строка получившаяся после декодировки: " + decodedValue);
     }
 }
