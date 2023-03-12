@@ -7,7 +7,7 @@ public class FloatStackTest
     {
     }
     
-    private static IEnumerable<TestCaseData> AddRealisations()
+    private static IEnumerable<TestCaseData> StackRealisations()
     {
         var listStack = new ListStack<float>();
         var arrayStack = new ArrayStack<float>();
@@ -15,13 +15,13 @@ public class FloatStackTest
         yield return new TestCaseData(arrayStack);
     }
     
-    [Test, TestCaseSource(nameof(AddRealisations))]
+    [Test, TestCaseSource(nameof(StackRealisations))]
     public void PopFromEmptyStackShouldThrowException(Stack<float> stack)
     {
         Assert.Throws<Exception>(stack.Pop, "Trying to pop from empty stack");
     }
 
-    [Test, TestCaseSource(nameof(AddRealisations))]
+    [Test, TestCaseSource(nameof(StackRealisations))]
     public void PushAndTopShouldReturnTheSameValue(Stack<float> stack)
     {
         stack.Push(239);
@@ -29,7 +29,7 @@ public class FloatStackTest
         Assert.That(stack.Top(), Is.InRange(238.99, 239.01));
     }
 
-    [Test, TestCaseSource(nameof(AddRealisations))]
+    [Test, TestCaseSource(nameof(StackRealisations))]
     public void PushAndPushAndPopAndTopShouldReturnTheFirstValue(Stack<float> stack)
     {
         stack.Push(239);
@@ -39,7 +39,7 @@ public class FloatStackTest
         Assert.That(stack.Top(), Is.InRange(238.99, 239.01));
     }
     
-    [Test, TestCaseSource(nameof(AddRealisations))]
+    [Test, TestCaseSource(nameof(StackRealisations))]
     public void PushAndPushAndTopShouldReturnTheSecondValue(Stack<float> stack)
     {
         stack.Push(239);
@@ -48,7 +48,7 @@ public class FloatStackTest
         Assert.That(stack.Top(), Is.InRange(237.99, 238.01));
     }
     
-    [Test, TestCaseSource(nameof(AddRealisations))]
+    [Test, TestCaseSource(nameof(StackRealisations))]
     public void TopFromEmptyStackShouldThrowException(Stack<float> stack)
     {
         Assert.Throws<Exception>(stack.Pop, "Trying to top from empty stack");
