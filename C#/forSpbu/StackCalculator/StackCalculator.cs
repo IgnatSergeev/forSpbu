@@ -16,19 +16,15 @@ public static class StackCalculator
         Div
     }
     
-    private static int EmitOperation(BinaryOperations operation, int firstArgument, int secondArgument)
+    private static float EmitOperation(BinaryOperations operation, float firstArgument, float secondArgument)
     {
-        switch (operation)
+        return operation switch
         {
-            case BinaryOperations.Add:
-                return firstArgument + secondArgument;
-            case BinaryOperations.Sub:
-                return firstArgument - secondArgument;
-            case BinaryOperations.Div:
-                return firstArgument / secondArgument;
-            default:
-                return firstArgument * secondArgument;
-        }
+            BinaryOperations.Add => firstArgument + secondArgument,
+            BinaryOperations.Sub => firstArgument - secondArgument,
+            BinaryOperations.Div => firstArgument / secondArgument,
+            _ => firstArgument * secondArgument
+        };
     }
     
     private class Node
@@ -42,7 +38,7 @@ public static class StackCalculator
             }
             else
             {
-                if (!int.TryParse(inputString, out var value))
+                if (!float.TryParse(inputString, out var value))
                 {
                     throw new Exception("Error in parsing number, wrong input");
                 }
@@ -70,33 +66,38 @@ public static class StackCalculator
         
         public NodeKind Kind { get; }
         
-        public int NumberValue { get; }
+        public float NumberValue { get; }
 
         public BinaryOperations OperationType { get; }
     }
-    public static int Evaluate(string? inputString, Stack evaluationStack)
+    public static float Evaluate(string? inputString, Stack<float>? evaluationStack)
     {
+        if (evaluationStack == null)
+        {
+            throw new Exception("Cannot evaluate using null stack");
+        }
+        
         if (inputString == null)
         {
             throw new Exception("Cannot evaluate null string");
         }
         
-        var splitedString = inputString.Split();
+        var splittedString = inputString.Split();
 
-        var size = splitedString.Length;
+        var size = splittedString.Length;
         evaluationStack.Clear();
         for (var i = 0; i < size; i++)
         {
-            var currentNode = new Node(splitedString[i]);
+            var currentNode = new Node(splittedString[i]);
             if (currentNode.Kind == NodeKind.Number)
             {
                 evaluationStack.Push(currentNode.NumberValue);
             }
             else
             {
-                int secondArgument = evaluationStack.Top();
+                var secondArgument = evaluationStack.Top();
                 evaluationStack.Pop();
-                int firstArgument = evaluationStack.Top();
+                var firstArgument = evaluationStack.Top();
                 evaluationStack.Pop();
 
                 var result = EmitOperation(currentNode.OperationType, firstArgument, secondArgument);

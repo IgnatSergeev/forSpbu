@@ -1,17 +1,19 @@
-﻿namespace StackCalculator;
+﻿using System.Dynamic;
+
+namespace StackCalculator;
 
 /// <summary>
 /// LIFO container
 /// </summary>
-public class Stack
+public class Stack<T>
 {
     public virtual void Pop() {}
     
-    public virtual void Push(int value) {}
+    public virtual void Push(T value) {}
 
-    public virtual int Top()
+    public virtual T Top()
     {
-        return 0;
+        return (T)Convert.ChangeType(0, typeof(T));
     }
 
     public virtual void Clear() {}

@@ -3,22 +3,22 @@
 /// <summary>
 /// LIFO container
 /// </summary>
-public class ListStack : Stack
+public class ListStack<T> : Stack<T>
 {
     private class StackElement
     {
-        public StackElement(int value, StackElement next)
+        public StackElement(T value, StackElement next)
         {
             Value = value;
             Next = next;
         }
         
-        public StackElement(int value)
+        public StackElement(T value)
         {
             Value = value;
         }
         
-        public int Value { get; }
+        public T Value { get; }
 
         public StackElement? Next { get; }
     }
@@ -29,7 +29,7 @@ public class ListStack : Stack
     /// Adds an element to the stack head
     /// </summary>
     /// <param name="value">Value to add</param>
-    public override void Push(int value)
+    public override void Push(T value)
     {
         head = (head == null)
             ? new StackElement(value) 
@@ -50,11 +50,11 @@ public class ListStack : Stack
     /// </summary>
     /// <returns>Head value</returns>
     /// <exception cref="Exception">If stack is empty</exception>
-    public override int Top()
+    public override T Top()
     {
         if (head == null)
         {
-            throw new Exception();
+            throw new Exception("Trying to top from empty stack");
         }
         
         return head.Value;

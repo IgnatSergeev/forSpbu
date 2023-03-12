@@ -2,14 +2,12 @@
 
 public static class Program
 {
-    static int Main(string[] args)
+    static void Main(string[] args)
     {
-        Console.WriteLine("Введите арифметическое выражения в постфиксной форме");
+        Console.WriteLine("Введите арифметическое выражения в постфиксной форме(Не целые числа вводятся с использованием запятой)");
         var line = Console.ReadLine();
 
-        var expressionResult = StackCalculator.Evaluate(line, new ListStack());
+        var expressionResult = StackCalculator.Evaluate(line, new ListStack<float>());
         Console.WriteLine("Результат выражения = " + expressionResult);
-
-        return 0;
     }
 }

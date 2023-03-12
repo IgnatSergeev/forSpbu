@@ -1,6 +1,6 @@
 namespace StackCalculator.Tests;
 
-public class StackTest
+public class FloatStackTest
 {
     [SetUp]
     public void Setup()
@@ -9,42 +9,48 @@ public class StackTest
     
     private static IEnumerable<TestCaseData> AddRealisations()
     {
-        var listStack = new ListStack();
-        var arrayStack = new Stack<int>();
+        var listStack = new ListStack<float>();
+        var arrayStack = new Stack<float>();
         yield return new TestCaseData(listStack);
         yield return new TestCaseData(arrayStack);
     }
     
     [Test, TestCaseSource(nameof(AddRealisations))]
-    public void PopFromEmptyStackShouldThrowException(Stack stack)
+    public void PopFromEmptyStackShouldThrowException(Stack<float> stack)
     {
-        Assert.Throws<Exception>(stack.Pop);
+        Assert.Throws<Exception>(stack.Pop, "Trying to pop from empty stack");
     }
 
     [Test, TestCaseSource(nameof(AddRealisations))]
-    public void PushAndTopShouldReturnTheSameValue(Stack stack)
+    public void PushAndTopShouldReturnTheSameValue(Stack<float> stack)
     {
         stack.Push(239);
         
-        Assert.That(stack.Top(), Is.EqualTo(239));
+        Assert.That(stack.Top(), Is.InRange(238.99, 239.01));
     }
 
     [Test, TestCaseSource(nameof(AddRealisations))]
-    public void PushAndPushAndPopAndTopShouldReturnTheFirstValue(Stack stack)
+    public void PushAndPushAndPopAndTopShouldReturnTheFirstValue(Stack<float> stack)
     {
         stack.Push(239);
         stack.Push(238);
         stack.Pop();
         
-        Assert.That(stack.Top(), Is.EqualTo(239));
+        Assert.That(stack.Top(), Is.InRange(238.99, 239.01));
     }
     
     [Test, TestCaseSource(nameof(AddRealisations))]
-    public void PushAndPushAndTopShouldReturnTheFirstValue(Stack stack)
+    public void PushAndPushAndTopShouldReturnTheSecondValue(Stack<float> stack)
     {
         stack.Push(239);
         stack.Push(238);
 
-        Assert.That(stack.Top(), Is.EqualTo(238));
+        Assert.That(stack.Top(), Is.InRange(237.99, 238.01));
+    }
+    
+    [Test, TestCaseSource(nameof(AddRealisations))]
+    public void TopFromEmptyStackShouldThrowException(Stack<float> stack)
+    {
+        Assert.Throws<Exception>(stack.Pop, "Trying to top from empty stack");
     }
 }
