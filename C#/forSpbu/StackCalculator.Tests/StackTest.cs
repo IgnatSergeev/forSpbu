@@ -10,7 +10,7 @@ public class FloatStackTest
     private static IEnumerable<TestCaseData> AddRealisations()
     {
         var listStack = new ListStack<float>();
-        var arrayStack = new Stack<float>();
+        var arrayStack = new ArrayStack<float>();
         yield return new TestCaseData(listStack);
         yield return new TestCaseData(arrayStack);
     }
