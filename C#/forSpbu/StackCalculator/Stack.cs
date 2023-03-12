@@ -1,6 +1,4 @@
-﻿using System.Dynamic;
-
-namespace StackCalculator;
+﻿namespace StackCalculator;
 
 /// <summary>
 /// LIFO container

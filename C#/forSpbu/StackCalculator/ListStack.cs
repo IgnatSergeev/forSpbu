@@ -23,7 +23,7 @@ public class ListStack<T> : Stack<T>
         public StackElement? Next { get; }
     }
 
-    private StackElement? head;
+    private StackElement? _head;
 
     /// <summary>
     /// Adds an element to the stack head
@@ -31,9 +31,9 @@ public class ListStack<T> : Stack<T>
     /// <param name="value">Value to add</param>
     public override void Push(T value)
     {
-        head = (head == null)
+        _head = (_head == null)
             ? new StackElement(value) 
-            : new StackElement(value, head);
+            : new StackElement(value, _head);
     }
 
     /// <summary>
@@ -42,7 +42,7 @@ public class ListStack<T> : Stack<T>
     /// <exception cref="Exception">If pops from empty stack</exception>
     public override void Pop()
     {
-        head = (head == null) ? throw new Exception("Trying to pop from empty stack") : head.Next;
+        _head = (_head == null) ? throw new Exception("Trying to pop from empty stack") : _head.Next;
     }
 
     /// <summary>
@@ -52,12 +52,12 @@ public class ListStack<T> : Stack<T>
     /// <exception cref="Exception">If stack is empty</exception>
     public override T Top()
     {
-        if (head == null)
+        if (_head == null)
         {
             throw new Exception("Trying to top from empty stack");
         }
         
-        return head.Value;
+        return _head.Value;
     }
 
     /// <summary>
@@ -65,6 +65,6 @@ public class ListStack<T> : Stack<T>
     /// </summary>
     public override void Clear()
     {
-        head = null;
+        _head = null;
     }
 }

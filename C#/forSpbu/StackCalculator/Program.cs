@@ -2,7 +2,7 @@
 
 public static class Program
 {
-    static void Main(string[] args)
+    public static void Main(string[] args)
     {
         Console.WriteLine("Введите арифметическое выражения в постфиксной форме(Не целые числа вводятся с использованием запятой)");
         var line = Console.ReadLine();
