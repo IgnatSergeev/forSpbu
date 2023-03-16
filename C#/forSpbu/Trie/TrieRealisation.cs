@@ -161,7 +161,7 @@ public class TrieRealisation : Trie
         {
             var nodeToRemove = currentNode;
             while (nodeToRemove.PreviousNode != _head && nodeToRemove.PreviousNode != null && nodeToRemove.PreviousNode.IsTheEndOfTheString != true 
-                   && nodeToRemove.PreviousNode.GetNextDictionarySize() > 1)
+                   && nodeToRemove.PreviousNode.GetNextDictionarySize() <= 1)
             {
                 nodeToRemove = nodeToRemove.PreviousNode;
             }
@@ -173,6 +173,10 @@ public class TrieRealisation : Trie
         currentNode.NumberOfUpStrings -= 1;
         for (var i = 0; i < size; i++)
         {
+            if (!currentNode.HasNext(element[i]))
+            {
+                break;
+            }
             currentNode = currentNode.GetNext(element[i]);
             currentNode.NumberOfUpStrings -= 1;
         }
@@ -183,14 +187,9 @@ public class TrieRealisation : Trie
     {
         if (prefix == null)
         {
-            throw new Exception("Cannot count ho many string starts with null prefix");
+            throw new Exception("Cannot count how many string starts with null prefix");
         }
-        
-        if (prefix.Length == 0)
-        {
-            throw new Exception("Cannot count ho many string starts with empty prefix");
-        }
-        
+
         var size = prefix.Length;
         var currentNode = _head;
         for (var i = 0; i < size; i++)
