@@ -3,7 +3,7 @@ namespace BurrowsWheeler;
 public static class BurrowsWheeler 
 {
     //returns 1 if first string is greater than second, -1 if first is less than second, 0 if they are equal
-    private static int Compare(int firstStartPosition, int secondStartPosition)
+    private static int Compare(int firstStartPosition, int secondStartPosition, string str)
     {
         int size = str.Length;
         for (int i = 0; i < size; i++)
@@ -30,20 +30,22 @@ public static class BurrowsWheeler
         {
             throw new Exception("Cannot encode null string");
         }
-
+        if (stringToEncode.Length == 0)
+        {
+            throw new Exception("Cannot encode empty string");
+        }
+        
         int size = stringToEncode.Length;
-        str = stringToEncode;
-        int[] indexArray = new int[size];
+        var indexArray = new int[size];
         for (int i = 0; i < size; i++)
         {
             indexArray[i] = i;
         }
 
-        Compare(3, 1);
-        int initialStringIndex = 0;
-        Array.Sort(indexArray, Compare);
+        Array.Sort(indexArray, (x, y) => Compare(x, y, stringToEncode));
 
-        char[] encodedCharArray = new char[size];
+        int initialStringIndex = 0;
+        var encodedCharArray = new char[size];
         for (int i = 0; i < size; i++)
         {
             encodedCharArray[i] = stringToEncode[(indexArray[i] - 1 + size) % size];
@@ -63,17 +65,25 @@ public static class BurrowsWheeler
         {
             throw new Exception("Cannot decode null string");
         }
+        if (stringToDecode.Length == 0)
+        {
+            throw new Exception("Cannot decode empty string");
+        }
+        if (indexOfInitialString < 0 || indexOfInitialString > stringToDecode.Length)
+        {
+            throw new Exception("Wrong index");
+        }
         
         int size = stringToDecode.Length;
         
-        char[] sortedString = new char[size];
+        var sortedString = new char[size];
         for (int i = 0; i < size; i++)
         {
             sortedString[i] = stringToDecode[i];
         }
         Array.Sort(sortedString);
 
-        Dictionary<char, int> numOfSymbols = new Dictionary<char, int>();
+        var numOfSymbols = new Dictionary<char, int>();
         for (int i = 0; i < size; i++)
         {
             if (numOfSymbols.ContainsKey(stringToDecode[i]))
@@ -86,20 +96,20 @@ public static class BurrowsWheeler
             }
         }
         
-        Dictionary<char, int> indexesOfSymbols = new Dictionary<char, int>();
+        var indexesOfSymbols = new Dictionary<char, int>();
         for (int indexOfFirstSymbol = 0; indexOfFirstSymbol < size; indexOfFirstSymbol += numOfSymbols[sortedString[indexOfFirstSymbol]])
         {
             indexesOfSymbols.Add(sortedString[indexOfFirstSymbol], indexOfFirstSymbol);
         }
 
-        int[] reverseBwtVector = new int[size];
+        var reverseBwtVector = new int[size];
         for (int i = 0; i < size; i++)
         {
             reverseBwtVector[indexesOfSymbols[stringToDecode[i]]] = i;
             ++indexesOfSymbols[stringToDecode[i]];
         }
 
-        char[] decodedArray = new char[size];
+        var decodedArray = new char[size];
         int j = reverseBwtVector[indexOfInitialString];
         for (int i = 0; i < size; i++)
         {
@@ -109,6 +119,4 @@ public static class BurrowsWheeler
 
         return new string(decodedArray);
     }
-    
-    private static string str;
 }

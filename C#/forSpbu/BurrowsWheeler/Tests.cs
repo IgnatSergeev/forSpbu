@@ -1,8 +1,8 @@
 namespace BurrowsWheeler;
 
-public static class Test
+public static class Tests
 {
-    public static void TestBurrowsWheeler()
+    public static void BurrowsWheelerTest()
     {
         Tuple<string, int> encodedValue = BurrowsWheeler.Encode("BANANA");
         if (string.Compare(encodedValue.Item1, "NNBAAA") != 0 || encodedValue.Item2 != 3)
