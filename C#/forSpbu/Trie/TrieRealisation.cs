@@ -45,73 +45,72 @@ public class TrieRealisation : Trie
         public bool IsTheEndOfTheString { get; set; }
         private readonly Dictionary<char, Node> _nextDictionary;
         public int NumberOfUpStrings { get; set; }
+        public int Code { get; set; } = -1;
     }
     
     public TrieRealisation()
     {
         _head = new Node('0', null);
     }
-    
-    public override bool Add(string element)
+
+    public override bool AddChar(IEnumerable<char> prefix, char symbol, int code)
     {
-        if (element == null)
+        if (prefix == null)
         {
-            throw new Exception("Cannot add null string");
+            throw new ArgumentNullException(nameof(prefix));
         }
 
-        if (element.Length == 0)
-        {
-            throw new Exception("Cannot add empty string");
-        }
-
-        var size = element.Length;
         var currentNode = _head;
-        for (var i = 0; i < size; i++)
+        foreach (var element in prefix)
         {
-            if (currentNode.HasNext(element[i]))
+            if (currentNode.HasNext(element))
             {
-                currentNode = currentNode.GetNext(element[i]);
+                currentNode = currentNode.GetNext(element);
             }
             else
             {
-                currentNode.AddNext(element[i]);
-                currentNode = currentNode.GetNext(element[i]);
+                return false;
             }
         }
 
-        if (currentNode.IsTheEndOfTheString) return false;
+        if (currentNode.HasNext(symbol))
+        {
+            return false;
+        }
+        currentNode.AddNext(symbol);
         currentNode.IsTheEndOfTheString = true;
+        currentNode.Code = code;
 
         currentNode = _head;
         currentNode.NumberOfUpStrings += 1;
-        for (var i = 0; i < size; i++)
+        foreach (var element in prefix)
         {
-            currentNode = currentNode.GetNext(element[i]);
+            currentNode = currentNode.GetNext(element);
             currentNode.NumberOfUpStrings += 1;
         }
 
+        currentNode.GetNext(symbol);
+        currentNode.NumberOfUpStrings += 1;
         return true;
     }
     
-    public override bool Contains(string element)
+    public override bool Contains(IEnumerable<char> element)
     {
         if (element == null)
         {
-            throw new Exception("Cannot check of containing null string");
+            throw new ArgumentNullException(nameof(element));
         }
-
-        if (element.Length == 0)
+        if (!element.Any())
         {
-            throw new Exception("Cannot check of containing empty string");
+            throw new ArgumentException("Empty string: " + nameof(element));
         }
         
-        var size = element.Length;
-        var currentNode = _head;
-        for (var i = 0; i < size; i++)
+        Node currentNode = _head;
+        foreach (var symbol in element)
         {
-            if (currentNode.HasNext(element[i]))
+            if (currentNode.HasNext(symbol))
             {
-                currentNode = currentNode.GetNext(element[i]);
+                currentNode = currentNode.GetNext(symbol);
             }
             else
             {
@@ -122,25 +121,23 @@ public class TrieRealisation : Trie
         return currentNode.IsTheEndOfTheString;
     }
     
-    public override bool Remove(string element)
+    public override bool Remove(IEnumerable<char> element)
     {
         if (element == null)
         {
-            throw new Exception("Cannot remove null string");
+            throw new ArgumentNullException(nameof(element));
+        }
+        if (!element.Any())
+        {
+            throw new ArgumentException("Empty string: " + nameof(element));
         }
         
-        if (element.Length == 0)
+        Node currentNode = _head;
+        foreach (var symbol in element)
         {
-            throw new Exception("Cannot remove empty string");
-        }
-        
-        var size = element.Length;
-        var currentNode = _head;
-        for (var i = 0; i < size; i++)
-        {
-            if (currentNode.HasNext(element[i]))
+            if (currentNode.HasNext(symbol))
             {
-                currentNode = currentNode.GetNext(element[i]);
+                currentNode = currentNode.GetNext(symbol);
             }
             else
             {
@@ -171,32 +168,31 @@ public class TrieRealisation : Trie
         
         currentNode = _head;
         currentNode.NumberOfUpStrings -= 1;
-        for (var i = 0; i < size; i++)
+        foreach (var symbol in element)
         {
-            if (!currentNode.HasNext(element[i]))
+            if (!currentNode.HasNext(symbol))
             {
                 break;
             }
-            currentNode = currentNode.GetNext(element[i]);
+            currentNode = currentNode.GetNext(symbol);
             currentNode.NumberOfUpStrings -= 1;
         }
         return true;
     }
     
-    public override int HowManyStartsWithPrefix(string prefix)
+    public override int HowManyStartsWithPrefix(IEnumerable<char> prefix)
     {
         if (prefix == null)
         {
-            throw new Exception("Cannot count how many string starts with null prefix");
+            throw new ArgumentNullException(nameof(prefix));
         }
 
-        var size = prefix.Length;
-        var currentNode = _head;
-        for (var i = 0; i < size; i++)
+        Node currentNode = _head;
+        foreach (var symbol in prefix)
         {
-            if (currentNode.HasNext(prefix[i]))
+            if (currentNode.HasNext(symbol))
             {
-                currentNode = currentNode.GetNext(prefix[i]);
+                currentNode = currentNode.GetNext(symbol);
             }
             else
             {
@@ -205,6 +201,33 @@ public class TrieRealisation : Trie
         }
 
         return currentNode.NumberOfUpStrings;
+    }
+
+    public override int GetCode(IEnumerable<char> element)
+    {
+        if (element == null)
+        {
+            throw new ArgumentNullException(nameof(element));
+        }
+        if (!element.Any())
+        {
+            throw new ArgumentException("Empty string: " + nameof(element));
+        }
+        
+        Node currentNode = _head;
+        foreach (var symbol in element)
+        {
+            if (currentNode.HasNext(symbol))
+            {
+                currentNode = currentNode.GetNext(symbol);
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        return currentNode.Code;
     }
     
     private readonly Node _head;
