@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using LZW;
 
 if (args.Length != 2)
 {
@@ -17,7 +18,7 @@ if (string.IsNullOrEmpty(pathToFile) || string.IsNullOrEmpty(key))
 try
 {
     using var fileStream = File.Open(pathToFile, FileMode.Open);
-    using var outFile = File.Create(pathToFile + ".zip");
+    using var outFile = BufferedFileStream.Create(pathToFile + ".zipped");
     var trie = new Trie.TrieRealisation();
     
     switch (key)
@@ -26,7 +27,7 @@ try
             LZW.Lzw.Encode(fileStream, outFile, trie);
             break;
         case "-u":
-            LZW.Lzw.Decode(fileStream, outFile, trie);
+            //LZW.Lzw.Decode(fileStream, outFile, trie);
             break;
         default:
             Console.WriteLine("Wrong key argument");

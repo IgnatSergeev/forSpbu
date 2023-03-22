@@ -78,6 +78,7 @@ public class TrieRealisation : Trie
             return false;
         }
         currentNode.AddNext(symbol);
+        currentNode = currentNode.GetNext(symbol);
         currentNode.IsTheEndOfTheString = true;
         currentNode.Code = code;
 
@@ -89,7 +90,7 @@ public class TrieRealisation : Trie
             currentNode.NumberOfUpStrings += 1;
         }
 
-        currentNode.GetNext(symbol);
+        currentNode = currentNode.GetNext(symbol);
         currentNode.NumberOfUpStrings += 1;
         return true;
     }

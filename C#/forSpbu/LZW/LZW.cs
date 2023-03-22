@@ -1,11 +1,26 @@
-﻿using System;
-using System.Runtime.InteropServices.JavaScript;
-
-namespace LZW;
+﻿namespace LZW;
 
 public static class Lzw
 {
-    public static void Encode(FileStream fileStream, FileStream outFile, Trie.Trie trie)
+    private static void WriteCode(BufferedFileStream outFile, int code, int codeSize)
+    {
+        if (code >= (1 << codeSize))
+        {
+            throw new ArgumentOutOfRangeException(nameof(code));
+        }
+        
+        bool[] codeBits = new bool[codeSize];
+        int codeIndex = 0;
+        while (code != 0)
+        {
+            codeBits[codeSize - codeIndex++ - 1] = code % 2 != 0;
+            code >>= 1;
+        }
+
+        outFile.WriteBits(codeBits);
+    }
+    
+    public static void Encode(FileStream fileStream, BufferedFileStream outFile, Trie.Trie trie)
     {
         if (fileStream == null)
         {
@@ -16,42 +31,47 @@ public static class Lzw
             throw new ArgumentNullException(nameof(trie));
         }
 
-        const int maxByte = (2 << (sizeof(byte) * 8 - 1)) - 1;
+        const int maxByte = (1 << (sizeof(byte) * 8)) - 1;
         for (int i = 0; i <= maxByte; i++)
         {
-            char symbol = (char)i;
-            trie.AddChar("", symbol, i);
+            trie.AddChar("", (char)i, i);
         }
-
+        
+        int codeSize = 8;
         int code = maxByte + 1;
-        var stack = new Stack<char>();
+        
+        var phrase = new Queue<char>();
         int fileByte = fileStream.ReadByte();
         while (fileByte != -1)
         {
-            var symbol = (char)fileByte;
+            var oldPhrase = phrase.ToArray();
             
-            var phrase = stack.ToArray();
-            if (!trie.Contains(phrase + symbol))
+            var symbol = (char)fileByte;
+            phrase.Enqueue(symbol);
+
+            if (!trie.Contains(phrase))
             {
-                var byteArray = BitConverter.GetBytes(trie.GetCode(phrase));
-                outFile.Write(byteArray);
-                trie.AddChar(phrase, symbol, code++);
-                stack = new Stack<char>();
-                stack.Push(symbol);
+                WriteCode(outFile, trie.GetCode(oldPhrase), codeSize);
+                
+                if (code >= (1 << codeSize))
+                {
+                    ++codeSize;
+                }
+                trie.AddChar(oldPhrase, symbol, code++);
+                phrase = new Queue<char>();
+                phrase.Enqueue(symbol);
             }
 
             fileByte = fileStream.ReadByte();
         }
 
-        if (stack.Count <= 0) return;
+        if (phrase.Count > 0)
         {
-            var phrase = new string(stack.ToArray());
-            var byteArray = BitConverter.GetBytes(trie.GetCode(phrase));
-            outFile.Write(byteArray);
+            WriteCode(outFile, trie.GetCode(phrase), codeSize);
         }
     }
     
-    public static void Decode(FileStream fileStream, FileStream outFile, Trie.Trie trie)
+    public static void Decode(FileStream fileStream, BufferedFileStream outFile, Trie.Trie trie)
     {
         if (fileStream == null)
         {
