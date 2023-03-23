@@ -17,18 +17,29 @@ if (string.IsNullOrEmpty(pathToFile) || string.IsNullOrEmpty(key))
 
 try
 {
-    using var fileStream = File.Open(pathToFile, FileMode.Open);
-    using var outFile = BufferedFileStream.Create(pathToFile + ".zipped");
     var trie = new Trie.TrieRealisation();
     
     switch (key)
     {
         case "-c":
-            LZW.Lzw.Encode(fileStream, outFile, trie);
+        {
+            using var fileStream = File.Open(pathToFile, FileMode.Open);
+            using var outFile = BufferedFileStream.Create(pathToFile + ".zipped");
+            Lzw.Encode(fileStream, outFile, trie);
             break;
+        }
         case "-u":
-            //LZW.Lzw.Decode(fileStream, outFile, trie);
+        {
+            if (!pathToFile.EndsWith(".zipped"))
+            {
+                Console.WriteLine("Wrong file extension");
+                break;
+            }
+            using var fileStream = BufferedFileStream.Open(pathToFile, FileMode.Open);
+            using var outFile = File.Create(pathToFile.Remove(pathToFile.Length - 7).Insert(pathToFile.Length - 11, "1"));
+            Lzw.Decode(fileStream, outFile, trie);
             break;
+        }
         default:
             Console.WriteLine("Wrong key argument");
             break;
