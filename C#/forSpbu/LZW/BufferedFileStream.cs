@@ -64,7 +64,7 @@ public class BufferedFileStream : IDisposable
         }
 
         int numOfBitsToRead = numOfBits - numOfAlreadyReadBits;
-        int numbOfBytesToRead = numOfBitsToRead / 8;
+        int numbOfBytesToRead = numOfBitsToRead / byteSize;
         for (int i = 0; i < numbOfBytesToRead; i++)
         {
             var currentByte = _fileStream?.ReadByte();
@@ -73,14 +73,14 @@ public class BufferedFileStream : IDisposable
                 return (bits, true);
             }
 
-            for (int j = 0; j < 8; j++)
+            for (int j = 0; j < byteSize; j++)
             {
-                int index = numOfAlreadyReadBits + (i + 1) * 8 - j - 1;
+                int index = numOfAlreadyReadBits + (i + 1) * byteSize - j - 1;
                 bits[index] = (currentByte >> j) % 2 != 0;
             }
         }
 
-        if (numOfBitsToRead % 8 != 0)
+        if (numOfBitsToRead % byteSize != 0)
         {
             var currentByte = _fileStream?.ReadByte();
             if (currentByte == -1)
@@ -88,16 +88,16 @@ public class BufferedFileStream : IDisposable
                 return (bits, true);
             }
 
-            for (int i = 0; i < numOfBitsToRead % 8; i++)
+            for (int i = 0; i < numOfBitsToRead % byteSize; i++)
             {
-                int index = bits.Length - 1 - numOfBitsToRead % 8 + 1 + i;
-                bits[index] = (currentByte >> (7 - i)) % 2 != 0;
+                int index = bits.Length - numOfBitsToRead % byteSize + i;
+                bits[index] = (currentByte >> (byteSize - 1 - i)) % 2 != 0;
             }
 
-            _readBufferSize = 8 - (numOfBitsToRead % 8);
+            _readBufferSize = byteSize - (numOfBitsToRead % byteSize);
             for (int i = 0; i < _readBufferSize; i++)
             {
-                _readBuffer[i] = (currentByte >> (7 - numOfBitsToRead % 8 - i)) % 2 != 0;
+                _readBuffer[i] = (currentByte >> (byteSize - 1 - numOfBitsToRead % byteSize - i)) % 2 != 0;
             }
         }
         return (bits, false);
@@ -119,7 +119,8 @@ public class BufferedFileStream : IDisposable
 
     private void WriteBit(bool b)
     {
-        if (_firstFreeWriteBufferIndex < 7)
+        
+        if (_firstFreeWriteBufferIndex < byteSize - 1)
         {
             _writeBuffer[_firstFreeWriteBufferIndex++] = b;
         }
@@ -131,9 +132,10 @@ public class BufferedFileStream : IDisposable
         }
     }
 
+    private const int byteSize = 8;
     private FileStream? _fileStream;
-    private readonly bool[] _writeBuffer = new bool[8];
-    private readonly bool[] _readBuffer = new bool[8];
+    private readonly bool[] _writeBuffer = new bool[byteSize];
+    private readonly bool[] _readBuffer = new bool[byteSize];
     private int _readBufferSize;
     private int _firstFreeWriteBufferIndex;
 }
