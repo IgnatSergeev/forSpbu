@@ -63,7 +63,7 @@ public class TrieRealisation : Trie
         }
         if (!element.Any())
         {
-            throw new ArgumentOutOfRangeException(nameof(element));
+            throw new ArgumentOutOfRangeException("Empty container: " + nameof(element));
         }
 
         var currentNode = _head;
@@ -145,7 +145,7 @@ public class TrieRealisation : Trie
         }
         if (!element.Any())
         {
-            throw new ArgumentException("Empty string: " + nameof(element));
+            throw new ArgumentOutOfRangeException("Empty container: " + nameof(element));
         }
         
         Node currentNode = _head;
@@ -172,7 +172,7 @@ public class TrieRealisation : Trie
         }
         if (!element.Any())
         {
-            throw new ArgumentException("Empty string: " + nameof(element));
+            throw new ArgumentOutOfRangeException("Empty container: " + nameof(element));
         }
         
         Node currentNode = _head;

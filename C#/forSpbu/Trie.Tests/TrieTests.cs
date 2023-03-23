@@ -31,37 +31,37 @@ public class TrieTests
     [Test, TestCaseSource(nameof(TrieRealisations))]
     public void AddEmptyStringShouldThrowException(Trie trie)
     {
-        Assert.Throws<Exception>(() => trie.Add(""), "Cannot add empty string");
+        Assert.Throws<ArgumentOutOfRangeException>(() => trie.Add(""), "Empty container: element");
     }
     
     [Test, TestCaseSource(nameof(TrieRealisations))]
     public void AddNullStringShouldThrowException(Trie trie)
     {
-        Assert.Throws<Exception>(() => trie.Add(null), "Cannot add null string");
+        Assert.Throws<ArgumentNullException>(() => trie.Add(null), "element");
     }
     
     [Test, TestCaseSource(nameof(TrieRealisations))]
     public void RemoveNullStringShouldThrowException(Trie trie)
     {
-        Assert.Throws<Exception>(() => trie.Remove(null), "Cannot remove null string");
+        Assert.Throws<ArgumentNullException>(() => trie.Remove(null), "element");
     }
     
     [Test, TestCaseSource(nameof(TrieRealisations))]
     public void RemoveEmptyStringShouldThrowException(Trie trie)
     {
-        Assert.Throws<Exception>(() => trie.Remove(""), "Cannot remove empty string");
+        Assert.Throws<ArgumentOutOfRangeException>(() => trie.Remove(""), "Empty container: element");
     }
     
     [Test, TestCaseSource(nameof(TrieRealisations))]
     public void ContainsEmptyStringShouldThrowException(Trie trie)
     {
-        Assert.Throws<Exception>(() => trie.Contains(""), "Cannot check of containing empty string");
+        Assert.Throws<ArgumentOutOfRangeException>(() => trie.Contains(""), "Empty container: element");
     }
     
     [Test, TestCaseSource(nameof(TrieRealisations))]
     public void ContainsNullStringShouldThrowException(Trie trie)
     {
-        Assert.Throws<Exception>(() => trie.Contains(null), "Cannot check of containing null string");
+        Assert.Throws<ArgumentNullException>(() => trie.Contains(null), "element");
     }
     
     [Test, TestCaseSource(nameof(TrieRealisations))]
