@@ -1,5 +1,5 @@
-﻿using System.Text;
-using LZW;
+﻿using LZW;
+using BurrowsWheeler;
 
 if (args.Length != 2)
 {
