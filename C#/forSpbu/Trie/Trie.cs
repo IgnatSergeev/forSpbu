@@ -59,16 +59,31 @@ public class Trie
         return 0;
     }
 
+    /// <summary>
+    /// Gets code associated with the string value
+    /// </summary>
+    /// <param name="element">string to get code from</param>
+    /// <returns>code of the string</returns>
     public virtual int GetCode(IEnumerable<char> element)
     {
         return -1;
     }
     
+    /// <summary>
+    /// Gets string associated with the code value
+    /// </summary>
+    /// <param name="code">code to get the string from</param>
+    /// <returns>string with given code</returns>
     public virtual char[]? GetString(int code)
     {
         return null;
     }
 
+    /// <summary>
+    /// Checks if the trie contain the string with the given code
+    /// </summary>
+    /// <param name="code">code to check with</param>
+    /// <returns>true if the code contains, false if not</returns>
     public virtual bool ContainsCode(int code)
     {
         return false;

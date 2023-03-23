@@ -242,12 +242,8 @@ public class TrieRealisation : Trie
             throw new ArgumentOutOfRangeException(nameof(code));
         }
 
-        if (_stringCodes.ContainsKey(code))
-        {
-            return _stringCodes[code];
-        }
-
-        return null;
+        _stringCodes.TryGetValue(code, out var value);
+        return value;
     }
 
     public override bool ContainsCode(int code)
@@ -256,6 +252,6 @@ public class TrieRealisation : Trie
     }
     
     private readonly Node _head;
-    private readonly Dictionary<int, char[]> _stringCodes = new Dictionary<int, char[]>();
+    private readonly Dictionary<int, char[]> _stringCodes = new ();
     public override int Size => _head.NumberOfUpStrings;
 }
