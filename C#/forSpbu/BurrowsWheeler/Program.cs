@@ -8,7 +8,7 @@ if (string.IsNullOrEmpty(line))
     return;
 }
 
-var encodedValue = BurrowsWheeler.BurrowsWheeler.Encode(line);
+var encodedValue = BurrowsWheeler.BurrowsWheeler.Encode(line.ToArray());
 Console.WriteLine("Вот закодированная строка и позиция конца строки в ней: " + encodedValue.Item1 + ", " + encodedValue.Item2);
 
 var decodedValue = BurrowsWheeler.BurrowsWheeler.Decode(encodedValue.Item1, encodedValue.Item2);

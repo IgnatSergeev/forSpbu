@@ -3,7 +3,7 @@ namespace BurrowsWheeler;
 public static class BurrowsWheeler 
 {
     //returns 1 if first string is greater than second, -1 if first is less than second, 0 if they are equal
-    private static int Compare(int firstStartPosition, int secondStartPosition, string str)
+    private static int Compare(int firstStartPosition, int secondStartPosition, char[] str)
     {
         int size = str.Length;
         for (int i = 0; i < size; i++)
@@ -24,7 +24,7 @@ public static class BurrowsWheeler
         return 0;
     }
 
-    public static Tuple<string, int> Encode(string stringToEncode)
+    public static Tuple<char[], int> Encode(char[] stringToEncode)
     {
         if (stringToEncode == null)
         {
@@ -55,11 +55,10 @@ public static class BurrowsWheeler
             }
         }
         
-        string encodedString = new string(encodedCharArray);
-        return new Tuple<string, int>(encodedString, initialStringIndex);
+        return new Tuple<char[], int>(encodedCharArray, initialStringIndex);
     }
     
-    public static string Decode(string stringToDecode, int indexOfInitialString)
+    public static char[] Decode(char[] stringToDecode, int indexOfInitialString)
     {
         if (stringToDecode == null)
         {
@@ -117,6 +116,6 @@ public static class BurrowsWheeler
             j = reverseBwtVector[j];
         }
 
-        return new string(decodedArray);
+        return decodedArray;
     }
 }
