@@ -64,5 +64,15 @@ public class Trie
         return -1;
     }
     
+    public virtual char[]? GetString(int code)
+    {
+        return null;
+    }
+
+    public virtual bool ContainsCode(int code)
+    {
+        return false;
+    }
+    
     public virtual int Size { get; }
  }

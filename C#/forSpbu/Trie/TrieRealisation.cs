@@ -1,4 +1,6 @@
-﻿namespace Trie;
+﻿using System.Runtime.InteropServices.JavaScript;
+
+namespace Trie;
 
 public class TrieRealisation : Trie
 {
@@ -81,6 +83,7 @@ public class TrieRealisation : Trie
         currentNode = currentNode.GetNext(symbol);
         currentNode.IsTheEndOfTheString = true;
         currentNode.Code = code;
+        _stringCodes.Add(code, prefix.Append(symbol).ToArray());
 
         currentNode = _head;
         currentNode.NumberOfUpStrings += 1;
@@ -150,7 +153,8 @@ public class TrieRealisation : Trie
         {
             return false;
         }
-
+        _stringCodes.Remove(currentNode.Code);
+        
         if (currentNode.GetNextDictionarySize() > 0)
         {
             currentNode.IsTheEndOfTheString = false;
@@ -230,7 +234,28 @@ public class TrieRealisation : Trie
 
         return currentNode.Code;
     }
+
+    public override char[]? GetString(int code)
+    {
+        if (code < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(code));
+        }
+
+        if (_stringCodes.ContainsKey(code))
+        {
+            return _stringCodes[code];
+        }
+
+        return null;
+    }
+
+    public override bool ContainsCode(int code)
+    {
+        return _stringCodes.ContainsKey(code);
+    }
     
     private readonly Node _head;
+    private readonly Dictionary<int, char[]> _stringCodes = new Dictionary<int, char[]>();
     public override int Size => _head.NumberOfUpStrings;
 }
