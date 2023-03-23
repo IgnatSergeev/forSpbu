@@ -248,6 +248,11 @@ public class TrieRealisation : Trie
 
     public override bool ContainsCode(int code)
     {
+        if (code < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(code));
+        }
+        
         return _stringCodes.ContainsKey(code);
     }
     
