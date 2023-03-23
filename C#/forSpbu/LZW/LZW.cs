@@ -2,7 +2,7 @@
 
 public static class Lzw
 {
-    private static void WriteCode(BufferedFileStream outFile, int code, int codeSize)
+    private static void WriteCode(BufferedFileStream outputFileStream, int code, int codeSize)
     {
         var codeBits = new bool[codeSize];
         int codeIndex = 0;
@@ -12,22 +12,22 @@ public static class Lzw
             code >>= 1;
         }
 
-        outFile.WriteBits(codeBits);
+        outputFileStream.WriteBits(codeBits);
     }
     
-    public static void Encode(FileStream fileStream, BufferedFileStream outFile, Trie.Trie trie)
+    public static void Encode(FileStream inputFileStream, BufferedFileStream outputFileStream, Trie.Trie trie)
     {
-        if (fileStream == null)
+        if (inputFileStream == null)
         {
-            throw new ArgumentNullException(nameof(fileStream));
+            throw new ArgumentNullException(nameof(inputFileStream));
         }
         if (trie == null)
         {
             throw new ArgumentNullException(nameof(trie));
         }
-        if (outFile == null)
+        if (outputFileStream == null)
         {
-            throw new ArgumentNullException(nameof(outFile));
+            throw new ArgumentNullException(nameof(outputFileStream));
         }
 
         const int byteSize = 8;
@@ -41,7 +41,7 @@ public static class Lzw
         int code = maxByte + 1;
         
         var phrase = new Queue<char>();
-        int fileByte = fileStream.ReadByte();
+        int fileByte = inputFileStream.ReadByte();
         while (fileByte != -1)
         {
             var oldPhrase = phrase.ToArray();
@@ -51,7 +51,7 @@ public static class Lzw
 
             if (!trie.Contains(phrase))
             {
-                WriteCode(outFile, trie.GetCode(oldPhrase), codeSize);
+                WriteCode(outputFileStream, trie.GetCode(oldPhrase), codeSize);
                 
                 if (code >= (1 << codeSize))
                 {
@@ -62,28 +62,28 @@ public static class Lzw
                 phrase.Enqueue(symbol);
             }
 
-            fileByte = fileStream.ReadByte();
+            fileByte = inputFileStream.ReadByte();
         }
 
         if (phrase.Count > 0)
         {
-            WriteCode(outFile, trie.GetCode(phrase), codeSize);
+            WriteCode(outputFileStream, trie.GetCode(phrase), codeSize);
         }
     }
     
-    public static void Decode(BufferedFileStream fileStream, FileStream outFile, Trie.Trie trie)
+    public static void Decode(BufferedFileStream inputFileStream, FileStream outputFileStream, Trie.Trie trie)
     {
-        if (fileStream == null)
+        if (inputFileStream == null)
         {
-            throw new ArgumentNullException(nameof(fileStream));
+            throw new ArgumentNullException(nameof(inputFileStream));
         }
         if (trie == null)
         {
             throw new ArgumentNullException(nameof(trie));
         }
-        if (outFile == null)
+        if (outputFileStream == null)
         {
-            throw new ArgumentNullException(nameof(outFile));
+            throw new ArgumentNullException(nameof(outputFileStream));
         }
         
         const int byteSize = 8;
@@ -95,7 +95,7 @@ public static class Lzw
         
         int codeSize = byteSize;
         int nextCode = maxByte + 1;
-        var (phraseCodeArray, isTheEndOfFile) = fileStream.ReadBits(codeSize);
+        var (phraseCodeArray, isTheEndOfFile) = inputFileStream.ReadBits(codeSize);
         char[]? oldPhrase = null;
 
         while (!isTheEndOfFile)
@@ -136,7 +136,7 @@ public static class Lzw
             
             foreach (var symbol in phrase)
             {
-                outFile.WriteByte((byte)symbol);
+                outputFileStream.WriteByte((byte)symbol);
             }
             oldPhrase = phrase;
             
@@ -145,7 +145,7 @@ public static class Lzw
                 ++codeSize;
             }
             
-            (phraseCodeArray, isTheEndOfFile) = fileStream.ReadBits(codeSize);
+            (phraseCodeArray, isTheEndOfFile) = inputFileStream.ReadBits(codeSize);
         }
         
         

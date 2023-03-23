@@ -23,9 +23,18 @@ try
     {
         case "-c":
         {
-            using var fileStream = File.Open(pathToFile, FileMode.Open);
-            using var outFile = BufferedFileStream.Create(pathToFile + ".zipped");
-            Lzw.Encode(fileStream, outFile, trie);
+            {
+                using var inputFileStream = File.Open(pathToFile, FileMode.Open);
+                using var outputFileStream = BufferedFileStream.Create(pathToFile + ".zipped");
+                Lzw.Encode(inputFileStream, outputFileStream, trie);
+            }
+            
+            var inputFileInfo = new FileInfo(pathToFile);
+            var outputFileInfo = new FileInfo(pathToFile + ".zipped");
+            var inputFileSize = inputFileInfo.Length;
+            var outputFileSize = outputFileInfo.Length;
+            var compressionRatio = (float)inputFileSize / (float)outputFileSize;
+            Console.WriteLine("Compression ratio = " + compressionRatio);
             break;
         }
         case "-u":
@@ -35,14 +44,16 @@ try
                 Console.WriteLine("Wrong file extension");
                 break;
             }
-            using var fileStream = BufferedFileStream.Open(pathToFile, FileMode.Open);
-            using var outFile = File.Create(pathToFile.Remove(pathToFile.Length - 7).Insert(pathToFile.Length - 11, "1"));
-            Lzw.Decode(fileStream, outFile, trie);
+            using var inputFileStream = BufferedFileStream.Open(pathToFile, FileMode.Open);
+            using var outputFileStream = File.Create(pathToFile.Remove(pathToFile.Length - 7).Insert(pathToFile.Length - 11, "(decoded)"));
+            Lzw.Decode(inputFileStream, outputFileStream, trie);
             break;
         }
         default:
+        {
             Console.WriteLine("Wrong key argument");
             break;
+        }
     }
 }
 catch (IOException)
