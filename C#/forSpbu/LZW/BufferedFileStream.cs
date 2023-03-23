@@ -4,6 +4,11 @@ public class BufferedFileStream : IDisposable
 {
     public static BufferedFileStream Create(string path)
     {
+        if (path == null)
+        {
+            throw new ArgumentNullException(nameof(path));
+        }
+        
         var result = new BufferedFileStream();
         result._fileStream = File.Create(path);
 
@@ -12,6 +17,11 @@ public class BufferedFileStream : IDisposable
     
     public static BufferedFileStream Open(string path, FileMode mode)
     {
+        if (path == null)
+        {
+            throw new ArgumentNullException(nameof(path));
+        }
+
         var result = new BufferedFileStream();
         result._fileStream = File.Open(path, mode);
 
@@ -119,7 +129,6 @@ public class BufferedFileStream : IDisposable
 
     private void WriteBit(bool b)
     {
-        
         if (_firstFreeWriteBufferIndex < byteSize - 1)
         {
             _writeBuffer[_firstFreeWriteBufferIndex++] = b;
