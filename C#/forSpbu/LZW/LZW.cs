@@ -4,12 +4,7 @@ public static class Lzw
 {
     private static void WriteCode(BufferedFileStream outFile, int code, int codeSize)
     {
-        if (code >= (1 << codeSize))
-        {
-            throw new ArgumentOutOfRangeException(nameof(code));
-        }
-        
-        bool[] codeBits = new bool[codeSize];
+        var codeBits = new bool[codeSize];
         int codeIndex = 0;
         while (code != 0)
         {
@@ -35,13 +30,14 @@ public static class Lzw
             throw new ArgumentNullException(nameof(outFile));
         }
 
-        const int maxByte = (1 << (sizeof(byte) * 8)) - 1;
+        const int byteSize = 8;
+        const int maxByte = (1 << (byteSize)) - 1;
         for (int i = 0; i <= maxByte; i++)
         {
             trie.AddChar("", (char)i, i);
         }
         
-        int codeSize = 8;
+        int codeSize = byteSize;
         int code = maxByte + 1;
         
         var phrase = new Queue<char>();
@@ -90,78 +86,63 @@ public static class Lzw
             throw new ArgumentNullException(nameof(outFile));
         }
         
-        const int maxByte = (1 << (sizeof(byte) * 8)) - 1;
+        const int byteSize = 8;
+        const int maxByte = (1 << (byteSize)) - 1;
         for (int i = 0; i <= maxByte; i++)
         {
             trie.AddChar("", (char)i, i);
         }
         
-        int codeSize = 8;
+        int codeSize = byteSize;
         int nextCode = maxByte + 1;
         var (phraseCodeArray, isTheEndOfFile) = fileStream.ReadBits(codeSize);
         char[]? oldPhrase = null;
-        
+
         while (!isTheEndOfFile)
         {
             int phraseCode = GetIntFromBoolArray(phraseCodeArray);
+            char[]? phrase;
+
             if (trie.ContainsCode(phraseCode))
             {
-                var phrase = trie.GetString(phraseCode);
+                phrase = trie.GetString(phraseCode);
                 if (phrase == null)
                 {
-                    throw new ArgumentException();
-                }
-
-                for (int i = 0; i < phrase.Length; i++)
-                {
-                    outFile.WriteByte((byte)phrase[i]);
+                    throw new UnexpectedBranchingException("Missing phrase code in trie");
                 }
                 
-                if (oldPhrase == null)
-                {
-                    oldPhrase = phrase;
-                }
-                else
+                if (oldPhrase != null)
                 {
                     trie.AddChar(oldPhrase, phrase[0], nextCode++);
-                    oldPhrase = phrase;
                 }
-                
-                if (nextCode >= (1 << codeSize))
-                {
-                    ++codeSize;
-                }
-                
             }
             else
             {
-                // Только если phrase == oldPhrase + новый символ
-                if (phraseCode != nextCode)
+                if (oldPhrase != null)
                 {
-                    throw new ArgumentException();
+                    trie.AddChar(oldPhrase, oldPhrase[0], nextCode++);
                 }
-                if (oldPhrase == null)
+                else
                 {
-                    throw new ArgumentException();
+                    throw new UnexpectedBranchingException("Missing first phrase code in trie");
                 }
-                trie.AddChar(oldPhrase, oldPhrase[0], nextCode++);
-                var phrase = trie.GetString(phraseCode);
                 
+                phrase = trie.GetString(phraseCode);
                 if (phrase == null)
                 {
-                    throw new ArgumentException();
+                    throw new UnexpectedBranchingException("Missing phrase code in trie");
                 }
-                
-                for (int i = 0; i < phrase.Length; i++)
-                {
-                    outFile.WriteByte((byte)phrase[i]);
-                }
-                
-                oldPhrase = phrase;
-                if (nextCode >= (1 << codeSize))
-                {
-                    ++codeSize;
-                }
+            }
+            
+            foreach (var symbol in phrase)
+            {
+                outFile.WriteByte((byte)symbol);
+            }
+            oldPhrase = phrase;
+            
+            if (nextCode >= (1 << codeSize))
+            {
+                ++codeSize;
             }
             
             (phraseCodeArray, isTheEndOfFile) = fileStream.ReadBits(codeSize);
