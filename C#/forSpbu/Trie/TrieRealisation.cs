@@ -54,6 +54,45 @@ public class TrieRealisation : Trie
     {
         _head = new Node('0', null);
     }
+    
+    public override bool Add(IEnumerable<char> element)
+    {
+        if (element == null)
+        {
+            throw new ArgumentNullException(nameof(element));
+        }
+        if (!element.Any())
+        {
+            throw new ArgumentOutOfRangeException(nameof(element));
+        }
+
+        var currentNode = _head;
+        foreach (var symbol in element)
+        {
+            if (currentNode.HasNext(symbol))
+            {
+                currentNode = currentNode.GetNext(symbol);
+            }
+            else
+            {
+                currentNode.AddNext(symbol);
+                currentNode = currentNode.GetNext(symbol);
+            }
+        }
+
+        if (currentNode.IsTheEndOfTheString) return false;
+        currentNode.IsTheEndOfTheString = true;
+
+        currentNode = _head;
+        currentNode.NumberOfUpStrings += 1;
+        foreach (var symbol in element)
+        {
+            currentNode = currentNode.GetNext(symbol);
+            currentNode.NumberOfUpStrings += 1;
+        }
+        
+        return true;
+    }
 
     public override bool AddChar(IEnumerable<char> prefix, char symbol, int code)
     {

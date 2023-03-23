@@ -9,10 +9,9 @@ public class Trie
     /// Adds a string element into the container works in O(|element|)
     /// </summary>
     /// <param name="element">String to add</param>
-    /// <param name="code">Code of this phrase for lzw</param>
     /// <returns>true if the element wasn't in the container,
     /// false if it was</returns>
-    public virtual bool Add(IEnumerable<char> element, int code)
+    public virtual bool Add(IEnumerable<char> element)
     {
         return false;
     }
