@@ -8,7 +8,8 @@ if (line == null)
 
 try
 {
-    var (expressionResult, expressionWasCorrect) = StackCalculator.StackCalculator.Evaluate(line, new StackCalculator.ListStack<float>());
+    var (expressionResult, expressionWasCorrect) =
+        StackCalculator.StackCalculator.Evaluate(line, new StackCalculator.ListStack<float>());
     if (expressionWasCorrect)
     {
         Console.WriteLine("Результат выражения = " + expressionResult);
@@ -21,4 +22,8 @@ try
 catch (DivideByZeroException)
 {
     Console.WriteLine("Происходит деление на 0, выражение невозможно посчитать");
+}
+catch (StackCalculator.ParseException)
+{
+    Console.WriteLine("Проблемы с парсингом числа, неправильный ввод");
 }

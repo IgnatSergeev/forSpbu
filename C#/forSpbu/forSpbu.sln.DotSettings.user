@@ -1,4 +1,10 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=162533af_002Dd6e1_002D4e77_002Daf5a_002Db39ab79584c2/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TrieTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::E7DD9988-E5D4-4EBE-B269-2D5E49E1E779::net7.0::StackCalculator.Tests.FloatStackTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::E7DD9988-E5D4-4EBE-B269-2D5E49E1E779::net7.0::StackCalculator.Tests.StackCalculatorTest&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=71f9a362_002D13dd_002D4c90_002Dad0f_002D7dea57fed155/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="PopFromEmptyStackShouldThrowException" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;NUnit3x::E7DD9988-E5D4-4EBE-B269-2D5E49E1E779::net7.0::StackCalculator.Tests.StackCalculatorTest&lt;/TestId&gt;&#xD;

@@ -18,6 +18,11 @@ public static class StackCalculator
     
     private static float EmitOperation(BinaryOperators @operator, float firstArgument, float secondArgument)
     {
+        if (secondArgument >= -0.0001 && secondArgument <= 0.0001 && @operator == BinaryOperators.Div)
+        {
+            throw new DivideByZeroException();
+        }
+        
         return @operator switch
         {
             BinaryOperators.Add => firstArgument + secondArgument,
@@ -40,7 +45,7 @@ public static class StackCalculator
             {
                 if (!float.TryParse(inputString, out var value))
                 {
-                    throw new Exception("Error in parsing number, wrong input");
+                    throw new ParseException();
                 }
 
                 Kind = NodeKind.Number;
@@ -117,6 +122,6 @@ public static class StackCalculator
 
         var evaluationResult = evaluationStack.Top();
         evaluationStack.Pop();
-        return evaluationStack.IsEmpty() ? (0, false) : (evaluationResult, true);
+        return !evaluationStack.IsEmpty() ? (0, false) : (evaluationResult, true);
     }
 }
