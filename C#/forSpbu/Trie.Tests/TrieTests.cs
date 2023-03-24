@@ -2,11 +2,6 @@ namespace Trie.Tests;
 
 public class TrieTests
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
-
     private static IEnumerable<TestCaseData> TrieRealisations()
     {
         var trie = new TrieRealisation();
@@ -211,5 +206,78 @@ public class TrieTests
         trie.Add("%str");
         trie.Remove("%str");
         Assert.That(trie.HowManyStartsWithPrefix("%stri"), Is.EqualTo(2));
+    }
+    
+    [Test, TestCaseSource(nameof(TrieRealisations))]
+    public void AddCharContainsShouldReturnTrue(Trie trie)
+    {
+        trie.AddChar("", 's', 1);
+        Assert.That(trie.Contains("s"));
+    }
+    
+    [Test, TestCaseSource(nameof(TrieRealisations))]
+    public void AddCharContainsCodeShouldReturnTrue(Trie trie)
+    {
+        trie.AddChar("", 's', 1);
+        Assert.That(trie.ContainsCode(1));
+    }
+    
+    [Test, TestCaseSource(nameof(TrieRealisations))]
+    public void AddCharGetCodeShouldReturnCorrectCode(Trie trie)
+    {
+        trie.AddChar("", 's', 1);
+        Assert.That(trie.GetCode("s"), Is.EqualTo(1));
+    }
+    
+    [Test, TestCaseSource(nameof(TrieRealisations))]
+    public void AddCharGetStringShouldReturnChar(Trie trie)
+    {
+        trie.AddChar("", 's', 1);
+        Assert.That(trie.GetString(1), Is.EqualTo("s"));
+    }
+    
+    [Test, TestCaseSource(nameof(TrieRealisations))]
+    public void AddCharGetStringShouldReturnNull(Trie trie)
+    {
+        trie.AddChar("", 's', 1);
+        Assert.That(trie.GetString(2), Is.EqualTo(null));
+    }
+    
+    [Test, TestCaseSource(nameof(TrieRealisations))]
+    public void AddCharGetCodeShouldReturnMinusOne(Trie trie)
+    {
+        trie.AddChar("", 's', 1);
+        Assert.That(trie.GetCode("sa"), Is.EqualTo(-1));
+    }
+    
+    [Test, TestCaseSource(nameof(TrieRealisations))]
+    public void AddCharContainsCodeShouldReturnFalse(Trie trie)
+    {
+        trie.AddChar("", 's', 1);
+        Assert.That(!trie.ContainsCode(2));
+    }
+    
+    [Test, TestCaseSource(nameof(TrieRealisations))]
+    public void ContainsCodeMinusOneShouldThrowArgumentOutOfRangeException(Trie trie)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => trie.ContainsCode(-1), "code");
+    }
+    
+    [Test, TestCaseSource(nameof(TrieRealisations))]
+    public void GetStringMinusOneShouldThrowArgumentOutOfRangeException(Trie trie)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => trie.GetString(-1), "code");
+    }
+    
+    [Test, TestCaseSource(nameof(TrieRealisations))]
+    public void GetCodeNullShouldThrowArgumentNullException(Trie trie)
+    {
+        Assert.Throws<ArgumentNullException>(() => trie.GetCode(null), "element");
+    }
+    
+    [Test, TestCaseSource(nameof(TrieRealisations))]
+    public void GetCodeEmptyStringShouldThrowArgumentOutOfRangeException(Trie trie)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => trie.GetCode(""), "Empty container: element");
     }
 }

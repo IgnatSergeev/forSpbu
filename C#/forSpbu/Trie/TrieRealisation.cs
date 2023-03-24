@@ -253,7 +253,7 @@ public class TrieRealisation : Trie
         }
         if (!element.Any())
         {
-            throw new ArgumentException("Empty string: " + nameof(element));
+            throw new ArgumentOutOfRangeException("Empty container: " + nameof(element));
         }
         
         Node currentNode = _head;
