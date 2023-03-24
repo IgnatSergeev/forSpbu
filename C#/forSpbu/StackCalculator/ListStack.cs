@@ -48,4 +48,9 @@ public class ListStack<T> : IStack<T>
     {
         _head = null;
     }
+
+    public bool IsEmpty()
+    {
+        return _head == null;
+    }
 }

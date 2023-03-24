@@ -28,4 +28,10 @@ public interface IStack<T>
     /// Clears the stack
     /// </summary>
     public void Clear();
+
+    /// <summary>
+    /// Check's if the stack is empty
+    /// </summary>
+    /// <returns>true if its empty, false if not</returns>
+    public bool IsEmpty();
 }

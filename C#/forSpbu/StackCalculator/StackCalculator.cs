@@ -8,7 +8,7 @@ public static class StackCalculator
         Number
     }
     
-    private enum BinaryOperations
+    private enum BinaryOperators
     {
         Mul,
         Add,
@@ -16,13 +16,13 @@ public static class StackCalculator
         Div
     }
     
-    private static float EmitOperation(BinaryOperations operation, float firstArgument, float secondArgument)
+    private static float EmitOperation(BinaryOperators @operator, float firstArgument, float secondArgument)
     {
-        return operation switch
+        return @operator switch
         {
-            BinaryOperations.Add => firstArgument + secondArgument,
-            BinaryOperations.Sub => firstArgument - secondArgument,
-            BinaryOperations.Div => firstArgument / secondArgument,
+            BinaryOperators.Add => firstArgument + secondArgument,
+            BinaryOperators.Sub => firstArgument - secondArgument,
+            BinaryOperators.Div => firstArgument / secondArgument,
             _ => firstArgument * secondArgument
         };
     }
@@ -31,10 +31,10 @@ public static class StackCalculator
     {
         public Node(string inputString)
         {
-            if (IsBinOperation(inputString))
+            if (IsBinOperator(inputString))
             {
                 Kind = NodeKind.Operation;
-                OperationType = GetOperation(inputString);
+                _operatorType = GetOperator(inputString);
             }
             else
             {
@@ -44,42 +44,45 @@ public static class StackCalculator
                 }
 
                 Kind = NodeKind.Number;
-                NumberValue = value;
+                _numberValue = value;
             }
         }
         
-        private static bool IsBinOperation(string str)
+        private static bool IsBinOperator(string str)
         {
             return (str.Length == 1) && (str[0] == '-' || str[0] == '+' || str[0] == '/' || str[0] == '*');
         }
 
-        private static BinaryOperations GetOperation(string str)
+        private static BinaryOperators GetOperator(string str)
         {
-            return (str[0] == '-')
-                ? BinaryOperations.Sub
-                : (str[0] == '+')
-                    ? BinaryOperations.Add
-                    : (str[0] == '/')
-                        ? BinaryOperations.Div
-                        : BinaryOperations.Mul;
+            return str[0] switch
+            {
+                '-' => BinaryOperators.Sub,
+                '+' => BinaryOperators.Add,
+                '/' => BinaryOperators.Div,
+                _ => BinaryOperators.Mul
+            };
         }
         
+        private readonly float _numberValue;
+        private readonly BinaryOperators _operatorType;
         public NodeKind Kind { get; }
-        
-        public float NumberValue { get; }
-
-        public BinaryOperations OperationType { get; }
+        public float NumberValue => 
+            (Kind == NodeKind.Operation) ? throw new FieldException(nameof(NumberValue)) : _numberValue;
+        public BinaryOperators OperatorType =>
+            (Kind == NodeKind.Number) ? throw new FieldException(nameof(OperatorType)) : _operatorType;
     }
-    public static float Evaluate(string? inputString, Stack<float>? evaluationStack)
+    
+    public static (float, bool) Evaluate(string inputString, IStack<float> evaluationStack)
     {
         if (evaluationStack == null)
         {
-            throw new Exception("Cannot evaluate using null stack");
+            throw new ArgumentNullException(nameof(evaluationStack));
         }
         
         if (inputString == null)
         {
-            throw new Exception("Cannot evaluate null string");
+            throw new ArgumentNullException(nameof(inputString));
         }
         
         var splittedString = inputString.Split();
@@ -95,16 +98,25 @@ public static class StackCalculator
             }
             else
             {
-                var secondArgument = evaluationStack.Top();
-                evaluationStack.Pop();
-                var firstArgument = evaluationStack.Top();
-                evaluationStack.Pop();
-
-                var result = EmitOperation(currentNode.OperationType, firstArgument, secondArgument);
-                evaluationStack.Push(result);
+                try
+                {
+                    var secondArgument = evaluationStack.Top();
+                    evaluationStack.Pop();
+                    var firstArgument = evaluationStack.Top();
+                    evaluationStack.Pop();
+                    
+                    var result = EmitOperation(currentNode.OperatorType, firstArgument, secondArgument);
+                    evaluationStack.Push(result);
+                }
+                catch (ArgumentNullException)
+                {
+                    return (0, false);
+                }
             }
         }
-        
-        return evaluationStack.Top();
+
+        var evaluationResult = evaluationStack.Top();
+        evaluationStack.Pop();
+        return evaluationStack.IsEmpty() ? (0, false) : (evaluationResult, true);
     }
 }

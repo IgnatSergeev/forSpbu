@@ -49,6 +49,11 @@ public class ArrayStack<T> : IStack<T>
         _array = newArray;
     }
 
+    public bool IsEmpty()
+    {
+        return _headIndex == -1;
+    }
+
     private T[] _array;
     private int _headIndex;
 }

@@ -1,13 +1,24 @@
-﻿namespace StackCalculator;
-
-public static class Program
+﻿Console.WriteLine("Введите арифметическое выражения в постфиксной форме(Не целые числа вводятся с использованием запятой)");
+var line = Console.ReadLine();
+if (line == null)
 {
-    public static void Main(string[] args)
-    {
-        Console.WriteLine("Введите арифметическое выражения в постфиксной форме(Не целые числа вводятся с использованием запятой)");
-        var line = Console.ReadLine();
+    Console.WriteLine("Неправильный ввод");
+    return;
+}
 
-        var expressionResult = StackCalculator.Evaluate(line, new ListStack<float>());
+try
+{
+    var (expressionResult, expressionWasCorrect) = StackCalculator.StackCalculator.Evaluate(line, new StackCalculator.ListStack<float>());
+    if (expressionWasCorrect)
+    {
         Console.WriteLine("Результат выражения = " + expressionResult);
     }
+    else
+    {
+        Console.WriteLine("Выражение записано неправильно, его невозможно посчитать");
+    }
+}
+catch (DivideByZeroException)
+{
+    Console.WriteLine("Происходит деление на 0, выражение невозможно посчитать");
 }
