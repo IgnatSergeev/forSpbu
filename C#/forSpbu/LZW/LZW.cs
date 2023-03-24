@@ -1,5 +1,8 @@
 ﻿namespace LZW;
 
+/// <summary>
+/// Class for compressing and decompressing files
+/// </summary>
 public static class Lzw
 {
     private static void WriteCode(BufferedFileStream outputFileStream, int code, int codeSize)
@@ -15,6 +18,13 @@ public static class Lzw
         outputFileStream.WriteBits(codeBits);
     }
     
+    /// <summary>
+    /// Compress file using lzw algorithm
+    /// </summary>
+    /// <param name="inputFileStream">file stream with file to compress</param>
+    /// <param name="outputFileStream">buffered file stream for compressed file</param>
+    /// <param name="trie">trie structure used in algorithm</param>
+    /// <exception cref="ArgumentNullException">if either of given arguments is null</exception>
     public static void Encode(FileStream inputFileStream, BufferedFileStream outputFileStream, Trie.Trie trie)
     {
         if (inputFileStream == null)
@@ -71,6 +81,14 @@ public static class Lzw
         }
     }
     
+    /// <summary>
+    /// Decompress the file compressed with lzw algorithm
+    /// </summary>
+    /// <param name="inputFileStream">buffered file stream with file to decompress</param>
+    /// <param name="outputFileStream">file stream for decompressed file</param>
+    /// <param name="trie">trie structure used in algorithm</param>
+    /// <exception cref="ArgumentNullException">if either of arguments is null</exception>
+    /// <exception cref="UnexpectedBranchingException">if file wasn't correctly compressed(there is an unknown phrase code)</exception>
     public static void Decode(BufferedFileStream inputFileStream, FileStream outputFileStream, Trie.Trie trie)
     {
         if (inputFileStream == null)
