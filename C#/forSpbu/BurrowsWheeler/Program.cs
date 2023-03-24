@@ -1,6 +1,4 @@
-﻿BurrowsWheeler.Tests.BurrowsWheelerTest();
-        
-Console.WriteLine("Введите строку, которую хотите трансформировать с помощью преобразования Барроуза-Уилера");
+﻿Console.WriteLine("Введите строку, которую хотите трансформировать с помощью преобразования Барроуза-Уилера");
 var line = Console.ReadLine();
 if (string.IsNullOrEmpty(line))
 {

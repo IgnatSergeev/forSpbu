@@ -28,11 +28,11 @@ public static class BurrowsWheeler
     {
         if (stringToEncode == null)
         {
-            throw new Exception("Cannot encode null string");
+            throw new ArgumentNullException(nameof(stringToEncode));
         }
         if (stringToEncode.Length == 0)
         {
-            throw new Exception("Cannot encode empty string");
+            throw new ArgumentOutOfRangeException("Empty string: " + nameof(stringToEncode));
         }
         
         int size = stringToEncode.Length;
@@ -62,15 +62,15 @@ public static class BurrowsWheeler
     {
         if (stringToDecode == null)
         {
-            throw new Exception("Cannot decode null string");
+            throw new ArgumentNullException(nameof(stringToDecode));
         }
         if (stringToDecode.Length == 0)
         {
-            throw new Exception("Cannot decode empty string");
+            throw new ArgumentOutOfRangeException("Empty string: " + nameof(stringToDecode));
         }
-        if (indexOfInitialString < 0 || indexOfInitialString > stringToDecode.Length)
+        if (indexOfInitialString < 0 || indexOfInitialString >= stringToDecode.Length)
         {
-            throw new Exception("Wrong index");
+            throw new ArgumentOutOfRangeException(nameof(indexOfInitialString));
         }
         
         int size = stringToDecode.Length;
