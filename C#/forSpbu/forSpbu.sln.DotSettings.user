@@ -3,5 +3,7 @@
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;NUnit3x::26A7B0EE-5650-4009-9124-0F860122B515::net7.0::Trie.Tests.TrieTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;NUnit3x::2FB0E537-0E00-4BF1-A460-6A16A334227B::net7.0::BurrowsWheeler.Tests.BwtTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::F04173B3-6EFE-4FE2-BF17-7FD1C2EC3C46::net7.0::LZW.Tests.LzwTests.SmallTxtFileTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::F04173B3-6EFE-4FE2-BF17-7FD1C2EC3C46::net7.0::LZW.Tests.LzwTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
