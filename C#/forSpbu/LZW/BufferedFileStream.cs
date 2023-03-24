@@ -1,12 +1,12 @@
 ﻿namespace LZW;
 
 /// <summary>
-/// Class for working with file stream using buffered output
+/// Class for working with file stream with buffered input and output
 /// </summary>
 public class BufferedFileStream : IDisposable
 {
     /// <summary>
-    /// Creates buffered file stream with creating a new file by the path
+    /// Creates buffered file stream with creating a new file in the specified path
     /// </summary>
     /// <param name="path">path of the file</param>
     /// <returns>buffered file stream object</returns>
@@ -25,7 +25,7 @@ public class BufferedFileStream : IDisposable
     }
     
     /// <summary>
-    /// Creates buffered file stream using file by the path
+    /// Creates buffered file stream using file in the specified path
     /// </summary>
     /// <param name="path">path of the file</param>
     /// <param name="mode">FileMode of working with file</param>

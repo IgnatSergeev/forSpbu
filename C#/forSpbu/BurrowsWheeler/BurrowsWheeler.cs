@@ -34,7 +34,7 @@ public static class BurrowsWheeler
     /// <returns>tuple of encoded array of chars and index of the end of the string needed for decoding</returns>
     /// <exception cref="ArgumentNullException">if given string is null</exception>
     /// <exception cref="ArgumentOutOfRangeException">if given string is empty</exception>
-    public static Tuple<char[], int> Encode(char[] stringToEncode)
+    public static Tuple<char[], long> Encode(char[] stringToEncode)
     {
         if (stringToEncode == null)
         {
@@ -54,7 +54,7 @@ public static class BurrowsWheeler
 
         Array.Sort(indexArray, (x, y) => Compare(x, y, stringToEncode));
 
-        int initialStringIndex = 0;
+        long initialStringIndex = 0;
         var encodedCharArray = new char[size];
         for (int i = 0; i < size; i++)
         {
@@ -65,7 +65,7 @@ public static class BurrowsWheeler
             }
         }
         
-        return new Tuple<char[], int>(encodedCharArray, initialStringIndex);
+        return new Tuple<char[], long>(encodedCharArray, initialStringIndex);
     }
     
     /// <summary>
@@ -76,7 +76,7 @@ public static class BurrowsWheeler
     /// <returns>decoded array of chars</returns>
     /// <exception cref="ArgumentNullException">if given array is null</exception>
     /// <exception cref="ArgumentOutOfRangeException">if given array is empty or index is out of range</exception>
-    public static char[] Decode(char[] stringToDecode, int indexOfInitialString)
+    public static char[] Decode(char[] stringToDecode, long indexOfInitialString)
     {
         if (stringToDecode == null)
         {
