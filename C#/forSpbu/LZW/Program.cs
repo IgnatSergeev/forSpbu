@@ -33,7 +33,7 @@ try
             var outputFileInfo = new FileInfo(pathToFile + ".zipped");
             var inputFileSize = inputFileInfo.Length;
             var outputFileSize = outputFileInfo.Length;
-            var compressionRatio = (float)inputFileSize / (float)outputFileSize;
+            var compressionRatio = (double)inputFileSize / (double)outputFileSize;
             Console.WriteLine("Compression ratio = " + compressionRatio);
             break;
         }
