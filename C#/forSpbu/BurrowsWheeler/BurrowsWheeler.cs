@@ -1,5 +1,8 @@
 namespace BurrowsWheeler;
 
+/// <summary>
+/// Class for encoding and decoding a string(increases compression rates of some algorithms)
+/// </summary>
 public static class BurrowsWheeler 
 {
     //returns 1 if first string is greater than second, -1 if first is less than second, 0 if they are equal
@@ -24,6 +27,13 @@ public static class BurrowsWheeler
         return 0;
     }
 
+    /// <summary>
+    /// Encodes string using bwt algorithm
+    /// </summary>
+    /// <param name="stringToEncode">array of chars to encode</param>
+    /// <returns>tuple of encoded array of chars and index of the end of the string needed for decoding</returns>
+    /// <exception cref="ArgumentNullException">if given string is null</exception>
+    /// <exception cref="ArgumentOutOfRangeException">if given string is empty</exception>
     public static Tuple<char[], int> Encode(char[] stringToEncode)
     {
         if (stringToEncode == null)
@@ -58,6 +68,14 @@ public static class BurrowsWheeler
         return new Tuple<char[], int>(encodedCharArray, initialStringIndex);
     }
     
+    /// <summary>
+    /// Decodes string using bwt algorithm
+    /// </summary>
+    /// <param name="stringToDecode">array of chars to decode</param>
+    /// <param name="indexOfInitialString">index of the end of the string in encoded string</param>
+    /// <returns>decoded array of chars</returns>
+    /// <exception cref="ArgumentNullException">if given array is null</exception>
+    /// <exception cref="ArgumentOutOfRangeException">if given array is empty or index is out of range</exception>
     public static char[] Decode(char[] stringToDecode, int indexOfInitialString)
     {
         if (stringToDecode == null)
