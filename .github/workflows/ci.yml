@@ -1,0 +1,29 @@
+name: dotnet build
+
+on: [push, pull-request]
+
+jobs:
+  build-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.x'
+      - name: build
+        run: for f in $(find . -name "*.sln"); do dotnet build $f; done
+      - name: build
+        run: for f in $(find . -name "*.sln"); do dotnet test $f; done
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.x'
+      - name: build
+        run: For /R %%I in (*.sln) do dotnet build %%I
+        shell: cmd
+      - name: build
+        run: For /R %%I in (*.sln) do dotnet build %%I
+        shell: cmd
