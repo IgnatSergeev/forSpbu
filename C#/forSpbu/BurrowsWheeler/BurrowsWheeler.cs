@@ -1,9 +1,12 @@
 namespace BurrowsWheeler;
 
+/// <summary>
+/// Class for encoding and decoding a string(increases compression rates of some algorithms)
+/// </summary>
 public static class BurrowsWheeler 
 {
     //returns 1 if first string is greater than second, -1 if first is less than second, 0 if they are equal
-    private static int Compare(int firstStartPosition, int secondStartPosition, string str)
+    private static int Compare(int firstStartPosition, int secondStartPosition, char[] str)
     {
         int size = str.Length;
         for (int i = 0; i < size; i++)
@@ -24,15 +27,22 @@ public static class BurrowsWheeler
         return 0;
     }
 
-    public static Tuple<string, int> Encode(string stringToEncode)
+    /// <summary>
+    /// Encodes string using bwt algorithm
+    /// </summary>
+    /// <param name="stringToEncode">array of chars to encode</param>
+    /// <returns>tuple of encoded array of chars and index of the end of the string needed for decoding</returns>
+    /// <exception cref="ArgumentNullException">if given string is null</exception>
+    /// <exception cref="ArgumentOutOfRangeException">if given string is empty</exception>
+    public static Tuple<char[], long> Encode(char[] stringToEncode)
     {
         if (stringToEncode == null)
         {
-            throw new Exception("Cannot encode null string");
+            throw new ArgumentNullException(nameof(stringToEncode));
         }
         if (stringToEncode.Length == 0)
         {
-            throw new Exception("Cannot encode empty string");
+            throw new ArgumentOutOfRangeException("Empty string: " + nameof(stringToEncode));
         }
         
         int size = stringToEncode.Length;
@@ -44,7 +54,7 @@ public static class BurrowsWheeler
 
         Array.Sort(indexArray, (x, y) => Compare(x, y, stringToEncode));
 
-        int initialStringIndex = 0;
+        long initialStringIndex = 0;
         var encodedCharArray = new char[size];
         for (int i = 0; i < size; i++)
         {
@@ -55,23 +65,30 @@ public static class BurrowsWheeler
             }
         }
         
-        string encodedString = new string(encodedCharArray);
-        return new Tuple<string, int>(encodedString, initialStringIndex);
+        return new Tuple<char[], long>(encodedCharArray, initialStringIndex);
     }
     
-    public static string Decode(string stringToDecode, int indexOfInitialString)
+    /// <summary>
+    /// Decodes string using bwt algorithm
+    /// </summary>
+    /// <param name="stringToDecode">array of chars to decode</param>
+    /// <param name="indexOfInitialString">index of the end of the string in encoded string</param>
+    /// <returns>decoded array of chars</returns>
+    /// <exception cref="ArgumentNullException">if given array is null</exception>
+    /// <exception cref="ArgumentOutOfRangeException">if given array is empty or index is out of range</exception>
+    public static char[] Decode(char[] stringToDecode, long indexOfInitialString)
     {
         if (stringToDecode == null)
         {
-            throw new Exception("Cannot decode null string");
+            throw new ArgumentNullException(nameof(stringToDecode));
         }
         if (stringToDecode.Length == 0)
         {
-            throw new Exception("Cannot decode empty string");
+            throw new ArgumentOutOfRangeException("Empty string: " + nameof(stringToDecode));
         }
-        if (indexOfInitialString < 0 || indexOfInitialString > stringToDecode.Length)
+        if (indexOfInitialString < 0 || indexOfInitialString >= stringToDecode.Length)
         {
-            throw new Exception("Wrong index");
+            throw new ArgumentOutOfRangeException(nameof(indexOfInitialString));
         }
         
         int size = stringToDecode.Length;
@@ -117,6 +134,6 @@ public static class BurrowsWheeler
             j = reverseBwtVector[j];
         }
 
-        return new string(decodedArray);
+        return decodedArray;
     }
 }
