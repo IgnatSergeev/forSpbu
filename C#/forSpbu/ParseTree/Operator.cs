@@ -35,6 +35,12 @@ public class Operator : ParseTree.Node
         };
     }
 
+    public Operator(string[] expression, int startIndex, int endIndex)
+    {
+        
+        
+        
+    }
     public Operator(char @operator, ParseTree.Node firstOperand, ParseTree.Node secondOperand)
     {
         _operator = GetOperator(@operator);
