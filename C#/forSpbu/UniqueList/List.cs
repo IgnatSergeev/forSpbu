@@ -30,7 +30,7 @@ public class List<T>
     /// <param name="position">index where to insert element</param>
     /// <exception cref="ArgumentNullException">if given value is null</exception>
     /// <exception cref="ArgumentOutOfRangeException">if given index out of range</exception>
-    public void Add(T valueToAdd, int position)
+    public virtual void Add(T valueToAdd, int position)
     {
         if (valueToAdd == null)
         {

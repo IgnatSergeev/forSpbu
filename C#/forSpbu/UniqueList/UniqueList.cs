@@ -15,7 +15,7 @@ public class UniqueList<T> : List<T>
     /// <exception cref="ArgumentNullException">if given value is null</exception>
     /// <exception cref="ArgumentOutOfRangeException">if given index out of range</exception>
     /// <exception cref="ValueAlreadyExistException">if give value already exist in the list</exception>
-    public new void Add(T valueToAdd, int position)
+    public override void Add(T valueToAdd, int position)
     {
         if (_valuesSet.Contains(valueToAdd))
         {
