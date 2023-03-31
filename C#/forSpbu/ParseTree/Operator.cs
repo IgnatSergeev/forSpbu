@@ -42,10 +42,24 @@ public class Operator : ParseTree.Node
             Operators.Add => firstOperand + secondOperand,
             Operators.Sub => firstOperand - secondOperand,
             Operators.Mul => firstOperand * secondOperand,
-            _ => !IsZero(secondOperand) ? firstOperand / secondOperand : throw new DivideByZeroException()
+            Operators.Div => !IsZero(secondOperand) ? firstOperand / secondOperand : throw new DivideByZeroException(),
+            _ => throw new ArgumentOutOfRangeException(nameof(@operator), @operator, null)
         };
     }
 
+    private static void PrintOperator(Operators @operator)
+    {
+        Console.Write(
+            @operator switch
+        {
+            Operators.Add => '+',
+            Operators.Sub => '-',
+            Operators.Mul => '*',
+            Operators.Div => '/',
+            _ => throw new ArgumentOutOfRangeException(nameof(@operator), @operator, null)
+        });
+    }
+    
     public Operator(string[] expression, int startIndex, int endIndex)
     {
         if (expression == null || expression.Length == 0)
@@ -56,7 +70,7 @@ public class Operator : ParseTree.Node
         {
             throw new ParseErrorException("Null operand");
         }
-        if (expression.Length > endIndex)
+        if (expression.Length < endIndex)
         {
             throw new ParseErrorException("Wrong index");
         }
@@ -69,7 +83,7 @@ public class Operator : ParseTree.Node
         {
             _operator = GetOperator(expression[startIndex][0]);
             
-            int newEndIndex = 0;
+            int firstOperandEndIndex = 0;
             int expectedNumOfValues = 1;
             for (int currentIndex = startIndex + 1; currentIndex < endIndex; currentIndex++)
             {
@@ -91,7 +105,8 @@ public class Operator : ParseTree.Node
                 --expectedNumOfValues;
                 if (expectedNumOfValues == 0)
                 {
-                    newEndIndex = currentIndex + 1;
+                    firstOperandEndIndex = currentIndex + 1;
+                    break;
                 }
             }
 
@@ -99,23 +114,26 @@ public class Operator : ParseTree.Node
             {
                 throw new ParseErrorException("Wrong expression construction(not enough operands)"); 
             }
-            
-            if (startIndex + 1 == newEndIndex)
+
+            int firstOperandStartIndex = startIndex + 1;
+            if (firstOperandStartIndex + 1 == firstOperandEndIndex)
             {
-                _firstOperand = new Operand(expression, startIndex + 1);
+                _firstOperand = new Operand(expression, firstOperandStartIndex);
             }
             else
             {
-                _firstOperand = new Operator(expression, startIndex + 1, newEndIndex);
+                _firstOperand = new Operator(expression, firstOperandStartIndex, firstOperandEndIndex);
             }
 
-            if (newEndIndex + 1 == endIndex)
+            int secondOperandStartIndex = firstOperandEndIndex;
+            int secondOperandEndIndex = endIndex;
+            if (secondOperandStartIndex + 1 == secondOperandEndIndex)
             {
-                _secondOperand = new Operand(expression, newEndIndex);
+                _secondOperand = new Operand(expression, secondOperandStartIndex);
             }
             else
             {
-                _secondOperand = new Operator(expression, newEndIndex, endIndex);
+                _secondOperand = new Operator(expression, secondOperandStartIndex, secondOperandEndIndex);
             }
         }
         else
@@ -133,7 +151,9 @@ public class Operator : ParseTree.Node
 
     public override void Print()
     {
-        Console.Write("(" + _operator + " ");
+        Console.Write("(");
+        PrintOperator(_operator);
+        Console.Write(" ");
         _firstOperand.Print();
         Console.Write(" ");
         _secondOperand.Print();

@@ -1,3 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-Console.WriteLine("Hello, World!");
+﻿
+var tree = new ParseTree.ParseTree("(* (+ 1 1) 2)");
+tree.Print();
+Console.WriteLine(tree.Evaluate());

@@ -4,7 +4,7 @@ public class Operand : ParseTree.Node
 {
     public Operand(string[] expression, int index)
     {
-        if (expression == null || expression.Length <= index)
+        if (expression == null)
         {
             throw new ParseErrorException("Null expression");
         }
@@ -18,7 +18,6 @@ public class Operand : ParseTree.Node
             throw new ParseErrorException("Error in parsing int");
         }
         _value = value;
-        
     }
     
     public override double Evaluate()

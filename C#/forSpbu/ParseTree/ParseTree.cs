@@ -8,20 +8,34 @@ public class ParseTree
         public abstract void Print();
     }
 
-    private static bool IsParentheses(string str)
+    private static bool IsParentheses(char str)
     {
-        return str.Length == 1 && (str[0] == '(' || str[0] == ')');
+        return str is '(' or ')';
     }
     
     public ParseTree(string expression)
     {
-        var splitExpression = expression.Split();
-        var expressionList = new List<string>(splitExpression);
+        var expressionList = new List<char>(expression.ToArray());
         expressionList.RemoveAll(IsParentheses);
-        var expressionWithoutParentheses = expressionList.ToArray();
+        var expressionArrayWithoutParentheses = new string(expressionList.ToArray()).Split();
 
-        _head = new Operator(expressionWithoutParentheses, 0, expression.Length);
+        if (expressionArrayWithoutParentheses.Length > 1)
+        {
+            _head = new Operator(expressionArrayWithoutParentheses, 0, expressionArrayWithoutParentheses.Length);
+        }
+        else
+        {
+            _head = new Operand(expressionArrayWithoutParentheses, 0);
+        }
     }
-    
-    private Node _head;
+
+    public void Print()
+    {
+        _head.Print();
+        Console.WriteLine();
+    }
+
+    public double Evaluate() => _head.Evaluate();
+
+    private readonly Node _head;
 }
