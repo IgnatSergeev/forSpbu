@@ -24,7 +24,7 @@ catch (DivideByZeroException)
 {
     Console.WriteLine("В выражении происходит деление на ноль(с некоторой точностью)");
 }
-catch (ParseErrorException)
+catch (ParseErrorException e)
 {
-    Console.WriteLine("Ошибка в парсинге выражения, неверная структура выражения");
+    Console.WriteLine("Ошибка в парсинге выражения, неверная структура выражения" + e.Message);
 }

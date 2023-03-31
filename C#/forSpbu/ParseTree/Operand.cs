@@ -8,7 +8,7 @@ public class Operand : ParseTree.Node
         {
             throw new ParseErrorException("Null expression");
         }
-        if (expression.Length <= index)
+        if (expression.Length <= index || index < 0)
         {
             throw new ParseErrorException("Wrong expression index");
         }

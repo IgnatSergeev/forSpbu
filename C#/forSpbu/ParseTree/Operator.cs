@@ -70,7 +70,7 @@ public class Operator : ParseTree.Node
         {
             throw new ParseErrorException("Null operand");
         }
-        if (expression.Length < endIndex)
+        if (expression.Length < endIndex || startIndex < 0)
         {
             throw new ParseErrorException("Wrong index");
         }
