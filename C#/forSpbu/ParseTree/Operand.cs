@@ -1,5 +1,8 @@
 ﻿namespace ParseTree;
 
+/// <summary>
+/// Class for working with tree nodes as operands(numbers)
+/// </summary>
 public class Operand : ParseTree.Node
 {
     public Operand(string[] expression, int index)

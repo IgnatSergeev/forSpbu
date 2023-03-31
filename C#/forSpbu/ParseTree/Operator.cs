@@ -1,8 +1,8 @@
-﻿using System.Diagnostics;
-using System.Net;
+﻿namespace ParseTree;
 
-namespace ParseTree;
-
+/// <summary>
+/// Class for working with tree nodes as operators
+/// </summary>
 public class Operator : ParseTree.Node
 {
     private enum Operators
