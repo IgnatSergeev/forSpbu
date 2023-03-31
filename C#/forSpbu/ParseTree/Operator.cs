@@ -83,9 +83,9 @@ public class Operator : ParseTree.Node
         {
             _operator = GetOperator(expression[startIndex][0]);
             
-            int firstOperandEndIndex = 0;
-            int expectedNumOfValues = 1;
-            for (int currentIndex = startIndex + 1; currentIndex < endIndex; currentIndex++)
+            var firstOperandEndIndex = 0;
+            var expectedNumOfValues = 1;
+            for (var currentIndex = startIndex + 1; currentIndex < endIndex; currentIndex++)
             {
                 if (expression[currentIndex] == null)
                 {
@@ -115,7 +115,7 @@ public class Operator : ParseTree.Node
                 throw new ParseErrorException("Wrong expression construction(not enough operands)"); 
             }
 
-            int firstOperandStartIndex = startIndex + 1;
+            var firstOperandStartIndex = startIndex + 1;
             if (firstOperandStartIndex + 1 == firstOperandEndIndex)
             {
                 _firstOperand = new Operand(expression, firstOperandStartIndex);
@@ -125,8 +125,8 @@ public class Operator : ParseTree.Node
                 _firstOperand = new Operator(expression, firstOperandStartIndex, firstOperandEndIndex);
             }
 
-            int secondOperandStartIndex = firstOperandEndIndex;
-            int secondOperandEndIndex = endIndex;
+            var secondOperandStartIndex = firstOperandEndIndex;
+            var secondOperandEndIndex = endIndex;
             if (secondOperandStartIndex + 1 == secondOperandEndIndex)
             {
                 _secondOperand = new Operand(expression, secondOperandStartIndex);

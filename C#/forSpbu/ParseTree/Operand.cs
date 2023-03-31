@@ -4,7 +4,7 @@ public class Operand : ParseTree.Node
 {
     public Operand(string[] expression, int index)
     {
-        if (expression == null)
+        if (expression == null || expression.Length == 0)
         {
             throw new ParseErrorException("Null expression");
         }

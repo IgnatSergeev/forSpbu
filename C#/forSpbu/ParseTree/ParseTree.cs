@@ -15,6 +15,11 @@ public class ParseTree
     
     public ParseTree(string expression)
     {
+        if (expression == null)
+        {
+            throw new ParseErrorException("Null expression");
+        }
+        
         var expressionList = new List<char>(expression.ToArray());
         expressionList.RemoveAll(IsParentheses);
         var expressionArrayWithoutParentheses = new string(expressionList.ToArray()).Split();
