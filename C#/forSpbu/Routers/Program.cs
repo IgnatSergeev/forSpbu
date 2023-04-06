@@ -17,7 +17,8 @@ using Routers;
 
 if (args.Length != 2)
 {
-    Console.WriteLine("Невернные аргументы");
+    Console.Error.WriteLine("Невернные аргументы");
+    return 1;
 }
 
 var inputPath = args[0];
