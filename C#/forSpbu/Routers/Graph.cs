@@ -51,7 +51,7 @@ public class Graph
         private readonly Dictionary<int, int> _adjacentNodes = new ();
     }
     
-    public void AddNode(int nodeNum)
+    private void AddNode(int nodeNum)
     {
         if (!_nodes.ContainsKey(nodeNum))
         {
@@ -59,7 +59,7 @@ public class Graph
         }
     }
 
-    public void AddEdge(int firstNodeNum, int secondNodeNum, int length)
+    private void AddEdge(int firstNodeNum, int secondNodeNum, int length)
     {
         AddNode(firstNodeNum);
         AddNode(secondNodeNum);
@@ -68,7 +68,7 @@ public class Graph
         _nodes[secondNodeNum].AddEdge(firstNodeNum, length);
     }
 
-    public void RemoveNode(int nodeNum)
+    private void RemoveNode(int nodeNum)
     {
         if (!_nodes.ContainsKey(nodeNum)) { return; }
         
@@ -81,7 +81,7 @@ public class Graph
         
     }
 
-    public void RemoveEdge(int firstNodeNum, int secondNodeNum)
+    private void RemoveEdge(int firstNodeNum, int secondNodeNum)
     {
         if (!_nodes.ContainsKey(firstNodeNum) || !_nodes.ContainsKey(secondNodeNum))
         {
@@ -180,6 +180,10 @@ public class Graph
         }
 
         var lines = File.ReadLines(path).ToArray();
+        if (lines == null || lines.Length == 0)
+        {
+            throw new ParseException();
+        }
         var numOfLines = lines.Length;
         for (var i = 0; i < numOfLines; i++)
         {
