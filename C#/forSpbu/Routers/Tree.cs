@@ -164,7 +164,7 @@ public class Graph
         {
             var newLine = RemoveUnwantedChars(lines[i]);
             var splitLine = newLine.Split();
-            if (splitLine is not { Length: > 1 } || string.IsNullOrEmpty(splitLine[0]))
+            if (splitLine is not { Length: > 1  } || splitLine.Length % 2 == 0 || string.IsNullOrEmpty(splitLine[0]))
             {
                 throw new ParseException();
             }
@@ -194,7 +194,17 @@ public class Graph
 
     private static string RemoveUnwantedChars(string line)
     {
-        return new string(line.Select(x => x is '(' or ')' or ':' ? ' ' : x).ToArray());
+        var lineArray = line.ToArray();
+        var newLine = new Queue<char>();
+        foreach (var symbol in lineArray)
+        {
+            if (symbol is not ('(' or ')' or ':' or ','))
+            {
+                newLine.Enqueue(symbol);
+            }
+        }
+
+        return new string(newLine.ToArray());
     }
     
     private Dictionary<int, Node> _nodes = new ();
