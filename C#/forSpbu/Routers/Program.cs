@@ -1,12 +1,19 @@
 ﻿using Routers;
 
-if (args.Length != 1)
+if (args.Length != 2)
 {
     Console.WriteLine("Невернные аргументы");
 }
 
-var path = args[0];
-if (string.IsNullOrEmpty(path))
+var inputPath = args[0];
+if (string.IsNullOrEmpty(inputPath))
+{
+    Console.Error.WriteLine("Неверный путь");
+    return 1;
+}
+
+var outputPath = args[1];
+if (string.IsNullOrEmpty(outputPath))
 {
     Console.Error.WriteLine("Неверный путь");
     return 1;
@@ -15,10 +22,10 @@ if (string.IsNullOrEmpty(path))
 try
 {
     var graph = new Graph();
-    graph.Parse(path);
+    graph.Parse(inputPath);
 
     graph.TransformToMaximalWeightTree();
-    graph.Print();
+    graph.Print(outputPath);
 }
 catch (IOException)
 {

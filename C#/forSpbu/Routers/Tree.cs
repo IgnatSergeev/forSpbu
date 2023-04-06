@@ -1,4 +1,6 @@
-﻿namespace Routers;
+﻿using System.Net;
+
+namespace Routers;
 
 public class Graph
 {
@@ -115,8 +117,14 @@ public class Graph
         _nodes = newTree._nodes;
     }
 
-    public void Print()
+    public void Print(string path)
     {
+        if (string.IsNullOrEmpty(path))
+        {
+            throw new ArgumentNullException(nameof(path));
+        }
+        using var streamWriter = File.AppendText(path);
+        
         var numOfNodes = _nodes.Count;
         for (var nodeNum = 1; nodeNum <= numOfNodes; nodeNum++) 
         {
@@ -133,18 +141,18 @@ public class Graph
                 {
                     if (isFirstNeighbour)
                     {
-                        Console.Write(nodeNum + ": ");
+                        streamWriter.Write(nodeNum + ": ");
                         isFirstNeighbour = false;
                     }
 
-                    Console.Write(neighbourNodeNum + " (" + _nodes[nodeNum].GetLength(neighbourNodeNum) + ")");
+                    streamWriter.Write(neighbourNodeNum + " (" + _nodes[nodeNum].GetLength(neighbourNodeNum) + ")");
                     if (index < numOfNeighbours)
                     {
-                        Console.Write(", ");
+                        streamWriter.Write(", ");
                     }
                     else
                     {
-                        Console.WriteLine();
+                        streamWriter.WriteLine();
                     } 
                 }
             }
