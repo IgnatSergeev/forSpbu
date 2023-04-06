@@ -1,15 +1,41 @@
 ﻿using Routers;
 
-var graph = new Graph();
-graph.AddEdge(1, 2, 3);
-graph.AddEdge(1, 3, 4);
-graph.AddEdge(1, 5, 1);
-graph.AddEdge(2, 3, 5);
-graph.AddEdge(3, 4, 2);
-graph.AddEdge(3, 5, 6);
-graph.AddEdge(4, 5, 7);
+if (args.Length != 1)
+{
+    Console.WriteLine("Невернные аргументы");
+}
 
-graph.TransformToMaximalWeightTree();
-graph.Print();
+var path = args[0];
+if (string.IsNullOrEmpty(path))
+{
+    Console.Error.WriteLine("Неверный путь");
+    return 1;
+}
+
+try
+{
+    var graph = new Graph();
+    graph.Parse(path);
+
+    graph.TransformToMaximalWeightTree();
+    graph.Print();
+}
+catch (IOException)
+{
+    Console.Error.WriteLine("Файл не найден");
+    return 1;
+}
+catch (WrongGraphException e)
+{
+    Console.Error.WriteLine(e.Message);
+    return 1;
+}
+catch (ParseException)
+{
+    Console.Error.WriteLine("Ошибка в парсинге графа");
+    return 1;
+}
+
+return 0;
 
 

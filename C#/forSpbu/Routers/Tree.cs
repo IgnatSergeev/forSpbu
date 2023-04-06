@@ -1,6 +1,4 @@
-﻿using System.Xml;
-
-namespace Routers;
+﻿namespace Routers;
 
 public class Graph
 {
@@ -110,6 +108,10 @@ public class Graph
             }
         }
 
+        if (priority.Values.Any(nodePriority => nodePriority == -2))
+        {
+            throw new WrongGraphException("Граф не связен");
+        }
         _nodes = newTree._nodes;
     }
 
@@ -147,6 +149,52 @@ public class Graph
                 }
             }
         }
+    }
+    
+    public void Parse(string path)
+    {
+        if (string.IsNullOrEmpty(path))
+        {
+            throw new ArgumentNullException(nameof(path));
+        }
+
+        var lines = File.ReadLines(path).ToArray();
+        var numOfLines = lines.Length;
+        for (var i = 0; i < numOfLines; i++)
+        {
+            var newLine = RemoveUnwantedChars(lines[i]);
+            var splitLine = newLine.Split();
+            if (splitLine is not { Length: > 1 } || string.IsNullOrEmpty(splitLine[0]))
+            {
+                throw new ParseException();
+            }
+            
+            if (int.TryParse(splitLine[0], out var nodeNum))
+            {
+                AddNode(nodeNum);
+            }
+            else
+            {
+                throw new ParseException();
+            }
+
+            for (var j = 1; j < splitLine.Length; j += 2)
+            {
+                if (int.TryParse(splitLine[j], out var neighbourNodeNum) && int.TryParse(splitLine[j + 1], out var length))
+                {
+                    AddEdge(nodeNum, neighbourNodeNum, length);
+                }
+                else
+                {
+                    throw new ParseException();
+                }
+            }
+        }
+    }
+
+    private static string RemoveUnwantedChars(string line)
+    {
+        return new string(line.Select(x => x is '(' or ')' or ':' ? ' ' : x).ToArray());
     }
     
     private Dictionary<int, Node> _nodes = new ();
