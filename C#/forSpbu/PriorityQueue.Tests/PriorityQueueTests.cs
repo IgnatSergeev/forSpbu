@@ -14,7 +14,7 @@ public class PriorityQueueTests
     {
         var priorityQueue = new PriorityQueue<int>();
         priorityQueue.Enqueue(20, 5);
-        Assert.That(priorityQueue.Empty(), Is.False);
+        Assert.That(priorityQueue.Empty, Is.False);
     }
     
     [Test]

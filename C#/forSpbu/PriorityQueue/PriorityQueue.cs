@@ -32,7 +32,7 @@ public class PriorityQueue<T>
     /// <exception cref="EmptyQueueException">If trying to dequeue from empty queue</exception>
     public T Dequeue()
     {
-        if (Empty())
+        if (Empty)
         {
             throw new EmptyQueueException();
         }
@@ -49,14 +49,9 @@ public class PriorityQueue<T>
     }
 
     /// <summary>
-    /// Checks if the queue is empty
+    /// Stores if the priority queue is empty
     /// </summary>
-    /// <returns>True if the container is empty, false if not</returns>
-    public bool Empty()
-    {
-        return _priorities.Count == 0;
-    }
-    
+    public bool Empty => _priorities.Count == 0;
     private readonly Dictionary<int, Queue<T>> _priorityDictionary = new();
     private readonly SortedList<int, int> _priorities = new();
 }
