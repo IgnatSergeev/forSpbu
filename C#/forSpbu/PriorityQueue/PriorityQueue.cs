@@ -39,8 +39,9 @@ public class PriorityQueue<T>
     }
 
     /// <summary>
-    /// Removes and returns the value of an element with highest priority (if there are several of them, removes first added)
+    /// Removes an element with highest priority (if there are several of them, removes first added)
     /// </summary>
+    /// <returns>Removed element value</returns>
     /// <exception cref="EmptyQueueException">If trying to dequeue from empty queue</exception>
     public T Dequeue()
     {
