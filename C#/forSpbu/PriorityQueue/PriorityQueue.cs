@@ -24,8 +24,6 @@ public class PriorityQueue<T>
     /// <summary>
     /// Adds an element with given value and priority to the queue
     /// </summary>
-    /// <param name="value">Element value</param>
-    /// <param name="priority">Element priority</param>
     public void Enqueue(T value, int priority)
     {
         if (_priorityDictionary.ContainsKey(priority))
@@ -43,7 +41,7 @@ public class PriorityQueue<T>
     /// <summary>
     /// Removes an element with highest priority (if there are several of them, removes first added)
     /// </summary>
-    /// <returns>Remove element value</returns>
+    /// <returns>Removed element value</returns>
     /// <exception cref="EmptyQueueException">If trying to dequeue from empty queue</exception>
     public T Dequeue()
     {
