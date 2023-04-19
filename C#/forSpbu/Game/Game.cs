@@ -1,6 +1,4 @@
-﻿using System.Security.Principal;
-
-namespace Game;
+﻿namespace Game;
 
 public class Game
 {
