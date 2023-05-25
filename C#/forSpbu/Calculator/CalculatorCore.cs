@@ -90,21 +90,39 @@ public class CalculatorCore
     
     public void TakeOperationToken(string operationString)
     {
+        var operation = StringGetOperation(operationString);
         switch (_state)
         {
             case State.Error:
                 break;
             case State.FirstOperandComma:
                 _state = State.Operation;
+                if (operation == Operation.Clear)
+                {
+                    
+                }
                 _number = _number.Remove(_number.Length - 1);
+                if (!double.TryParse(_number, out firstOperand))
+                {
+                    throw new ArgumentOutOfRangeException(nameof(_number), _number, null);;
+                }
                 _expression += _number + operationString;
-                //?
                 break;
             case State.FirstOperandNumber:
                 _state = State.Operation;
                 _expression += _number + operationString;
+                if (!double.TryParse(_number, out firstOperand))
+                {
+                    throw new ArgumentOutOfRangeException(nameof(_number), _number, null);;
+                }
                 break;
-            case State.SecondOperandNumber:
+            case State.SecondOperandComma:
+                _state = State.Operation;
+                _number = _number.Remove(_number.Length - 1);
+                if (!double.TryParse(_number, out firstOperand))
+                {
+                    throw new ArgumentOutOfRangeException(nameof(_number), _number, null);;
+                }
                 
         }
     }
