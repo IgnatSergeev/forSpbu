@@ -34,15 +34,15 @@ partial class CalculatorForm
             numberLabel = new Label();
             buttonsTable = new TableLayoutPanel();
 
-            for (int i = 0; i <= 9; i++)
+            for (int i = 0; i <= 10; i++)
             {
                 numberButtons.Add(new Button());
             }
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 7; i++)
             {
                 operationButtons.Add(new Button());
             }
-            string[] operationsText = { "C", "+", "-", "mod", "*", "/", ",", "=" };
+            string[] operationsText = { "C", "+", "-", "mod", "*", "/", "=" };
 
 
             buttonsTable.SuspendLayout();
@@ -78,7 +78,7 @@ partial class CalculatorForm
             expression.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
             expression.TextAlign = ContentAlignment.MiddleRight;
             expression.Font = new Font("Segoe UI", 15F, FontStyle.Regular, GraphicsUnit.Pixel);
-            expression.Text = "2 * 10 + 2";
+            expression.Text = "";
             
             /*
              * Number label
@@ -86,7 +86,7 @@ partial class CalculatorForm
             numberLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
             numberLabel.TextAlign = ContentAlignment.MiddleRight;
             numberLabel.Font = new Font("Segoe UI", 30F, FontStyle.Regular, GraphicsUnit.Pixel);
-            numberLabel.Text = "22";
+            numberLabel.Text = "0";
             
             /*
              * Buttons table
@@ -120,8 +120,9 @@ partial class CalculatorForm
             buttonsTable.Controls.Add(operationButtons[3], 0, 1);
             buttonsTable.Controls.Add(operationButtons[4], 1, 1);
             buttonsTable.Controls.Add(operationButtons[5], 2, 1);
-            buttonsTable.Controls.Add(operationButtons[6], 0, 5);
-            buttonsTable.Controls.Add(operationButtons[7], 2, 5);
+            buttonsTable.Controls.Add(operationButtons[6], 2, 5);
+            
+            buttonsTable.Controls.Add(numberButtons[10], 0, 5);
 
             /*
              * Buttons
@@ -137,11 +138,19 @@ partial class CalculatorForm
                 button.Font = new Font("Segoe UI", 15F, FontStyle.Regular, GraphicsUnit.Pixel);
                 button.Click += NumberOnClick;
             }
+            var commaButton = numberButtons[10];
+            commaButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            commaButton.BackColor = Color.DimGray;
+            commaButton.TextAlign = ContentAlignment.MiddleCenter;
+            commaButton.Text = ",";
+            commaButton.ForeColor = Color.Azure;
+            commaButton.Font = new Font("Segoe UI", 15F, FontStyle.Regular, GraphicsUnit.Pixel);
+            commaButton.Click += NumberOnClick;
             
             /*
              * Operations
              */
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 7; i++)
             {
                 var button = operationButtons[i];
                 button.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;

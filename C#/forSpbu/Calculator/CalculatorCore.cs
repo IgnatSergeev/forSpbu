@@ -34,7 +34,7 @@ public class CalculatorCore
             "*" => Operation.Mul,
             "/" => Operation.Div,
             "mod" => Operation.Mod,
-            "CE" => Operation.Clear,
+            "C" => Operation.Clear,
             "=" => Operation.Equal,
             _ => throw new ArgumentOutOfRangeException(nameof(operationString), operationString, null)
         };
@@ -46,14 +46,14 @@ public class CalculatorCore
         {
             throw new ArgumentOutOfRangeException(nameof(numberString), numberString, null);
         }
-        /// запятая после числа с запятой, равно  это очищение
+        
         switch (_state)
         {
             case State.Error:
                 if (numberString != ",")
                 {
                     _number = numberString;
-                    _expression = "";
+                    Expression = "";
                     _state = State.FirstOperandNumber;
                 }
                 break;
@@ -68,13 +68,16 @@ public class CalculatorCore
                 _state = State.FirstOperandNumber;
                 break;
             case State.FirstOperandNumber:
-                if (hasComma && numberString == ",")
+                if (_hasComma && numberString == ",")
                 {
                     _state = State.Error;
                     break;
                 }
 
-                hasComma = numberString == ",";
+                if (numberString == ",")
+                {
+                    _hasComma = true;
+                }
                 _number += numberString;
                 break;
             case State.SecondOperandComma:
@@ -88,31 +91,56 @@ public class CalculatorCore
                 _state = State.SecondOperandNumber;
                 break;
             case State.SecondOperandNumber:
-                if (hasComma && numberString == ",")
+                if (_hasComma && numberString == ",")
                 {
                     _state = State.Error;
                     break;
                 }
                 
-                hasComma = numberString == ",";
+                _hasComma = numberString == ",";
                 _number += numberString;
                 break;
             case State.Operation:
+                if (numberString == ",")
+                {
+                    _state = State.Error;
+                    break;
+                }
+                
                 _number = numberString;
                 if (_operation == Operation.Equal)
                 {
                     _operation = Operation.None;
-                    _expression = "";
+                    Expression = "";
                     _state = State.FirstOperandNumber;
+                    break;
                 }
                 
                 _state = State.SecondOperandNumber;
                 break;
             case State.None:
-                _number = numberString;
-                _expression = "";
-                _state = State.FirstOperandNumber;
+                if (numberString == ",")
+                {
+                    _number += numberString;
+                    _state = State.FirstOperandComma;
+                    _hasComma = true;
+                }
+                else
+                {
+                    _number = numberString;
+                    _state = State.FirstOperandNumber;
+                }
+                
+                Expression = "";
+                
                 break;
+        }
+
+        if (_state == State.Error)
+        {
+            Expression = "";
+            _number = "Error";
+            _hasComma = false;
         }
     }
 
@@ -121,19 +149,29 @@ public class CalculatorCore
         switch (_operation)
         {
             case Operation.Add:
-                firstOperand += secondOperand;
+                _firstOperand += _secondOperand;
                 break;
             case Operation.Sub:
-                firstOperand -= secondOperand;
+                _firstOperand -= _secondOperand;
                 break;
             case Operation.Mul:
-                firstOperand *= secondOperand;
+                _firstOperand *= _secondOperand;
                 break;
             case Operation.Div:
-                firstOperand /= secondOperand;
+                if (_secondOperand is < Delta and > -Delta)
+                {
+                    _state = State.Error;
+                    break; // Можно как фишку оставить, будет бесконечность
+                }
+                _firstOperand /= _secondOperand;
                 break;
             case Operation.Mod:
-                firstOperand %= secondOperand;
+                if (_secondOperand is < Delta and > -Delta)
+                {
+                    _state = State.Error;
+                    break;
+                }
+                _firstOperand %= _secondOperand;
                 break;
         }
     }
@@ -145,6 +183,10 @@ public class CalculatorCore
         {
             _state = State.None;
             _operation = Operation.None;
+            Expression = "";
+            _number = "0";
+            _hasComma = false;
+            return;
         }
         
         switch (_state)
@@ -155,28 +197,28 @@ public class CalculatorCore
                 _state = State.Operation;
                 _number = _number.Remove(_number.Length - 1);
                 
-                if (!double.TryParse(_number, out firstOperand))
+                if (!double.TryParse(_number, out _firstOperand))
                 {
                     throw new ArgumentOutOfRangeException(nameof(_number), _number, null);;
                 }
                 
                 _operation = operation;
-                _expression = firstOperand + " " + operationString;
+                Expression = _firstOperand + " " + operationString;
                 break;
             case State.FirstOperandNumber:
                 _state = State.Operation;
-                if (!double.TryParse(_number, out firstOperand))
+                if (!double.TryParse(_number, out _firstOperand))
                 {
                     throw new ArgumentOutOfRangeException(nameof(_number), _number, null);;
                 }
                 
                 _operation = operation;
-                _expression = firstOperand + " " + operationString;
+                Expression = _firstOperand + " " + operationString;
                 break;
             case State.SecondOperandComma:
                 _state = State.Operation;
                 _number = _number.Remove(_number.Length - 1);
-                if (!double.TryParse(_number, out secondOperand))
+                if (!double.TryParse(_number, out _secondOperand))
                 {
                     throw new ArgumentOutOfRangeException(nameof(_number), _number, null);
                 }
@@ -184,13 +226,14 @@ public class CalculatorCore
                 ApplyOperation();
                 _operation = operation;
 
-                _expression = firstOperand + " " + operationString;
+                Expression = _firstOperand + " " + operationString;
+                _hasComma = false;
                 _number = "";
                 
                 break;
             case State.SecondOperandNumber:
                 _state = State.Operation;
-                if (!double.TryParse(_number, out secondOperand))
+                if (!double.TryParse(_number, out _secondOperand))
                 {
                     throw new ArgumentOutOfRangeException(nameof(_number), _number, null);
                 }
@@ -198,28 +241,37 @@ public class CalculatorCore
                 ApplyOperation();
                 _operation = operation;
 
-                _expression = firstOperand + " " + operationString;
+                Expression = _firstOperand + " " + operationString;
+                _hasComma = false;
                 _number = "";
                 
                 break;
             case State.Operation:
                 _operation = operation;
-                _expression = firstOperand + " " + operationString;
+                Expression = _firstOperand + " " + operationString;
                 break;
             case State.None:
                 _state = State.Operation;
                 _operation = operation;
-                _expression = "0 " + operationString;
+                Expression = "0 " + operationString;
                 break;
+        }
+        
+        if (_state == State.Error)
+        {
+            Expression = "";
+            _number = "Error";
         }
     }
 
-    private double firstOperand = 0;
-    private double secondOperand = 0;
+    private double _firstOperand = 0;
+    private double _secondOperand = 0;
     private Operation _operation = Operation.None;
     private State _state = State.None;
     private string _number = "0";
-    private bool hasComma = false;
-    private string _expression = "";
+    private bool _hasComma = false;
     private const double Delta = 0.0001;
+
+    public string Number => _number;
+    public string Expression { get; private set; } = "";
 }

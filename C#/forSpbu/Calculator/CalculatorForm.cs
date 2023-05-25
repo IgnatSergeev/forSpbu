@@ -14,6 +14,8 @@ public partial class CalculatorForm : Form
             return;
         }
         _calculatorCore.TakeOperationToken(senderButton.Text);
+        expression.Text = _calculatorCore.Expression;
+        numberLabel.Text = _calculatorCore.Number;
     }
     
     private void NumberOnClick(object sender, EventArgs args)
@@ -23,6 +25,8 @@ public partial class CalculatorForm : Form
             return;
         }
         _calculatorCore.TakeNumberToken(senderButton.Text);
+        expression.Text = _calculatorCore.Expression;
+        numberLabel.Text = _calculatorCore.Number;
     }
 
     private readonly CalculatorCore _calculatorCore = new ();
