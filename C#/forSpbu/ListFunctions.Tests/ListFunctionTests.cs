@@ -23,7 +23,7 @@ public static class ListFunctionsTests
     [Test]
     public static void FoldNullArgumentShouldThrowException()
     {
-        Assert.Throws<ArgumentNullException>(() => ListFunctions.Fold<int>(null, (x, y) => x * y));
+        Assert.Throws<ArgumentNullException>(() => ListFunctions.Fold<int, int>(null, 0,(x, y) => x * y));
     }
     
     [Test, TestCaseSource(nameof(IEnumerablesForTests))]
@@ -56,7 +56,7 @@ public static class ListFunctionsTests
     public static void Fold5ElementTest(IEnumerable<int> enumerable)
     {
         var enumerableArray = enumerable.ToArray();
-        var foldedValue = ListFunctions.Fold(enumerableArray, (previousFoldedValue, x) => previousFoldedValue * x);
+        var foldedValue = ListFunctions.Fold(enumerableArray, 1,(previousFoldedValue, x) => previousFoldedValue * x);
         Assert.That(foldedValue, Is.EqualTo(120));
     }
 }
