@@ -25,5 +25,5 @@ jobs:
         run: For /R %%I in (*.sln) do dotnet build %%I
         shell: cmd
       - name: test
-        run: For /R %%I in (*.sln) do dotnet build %%I
+        run: For /R %%I in (*.sln) do dotnet test %%I
         shell: cmd
