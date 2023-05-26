@@ -5,7 +5,10 @@
 /// </summary>
 public class Operator : ParseTree.Node
 {
-    private enum Operators
+    /// <summary>
+    /// Enum with possible operators
+    /// </summary>
+    public enum Operators
     {
         Sub,
         Add,
@@ -13,23 +16,13 @@ public class Operator : ParseTree.Node
         Div
     }
 
-    private static Operators GetOperator(char symbol)
+    public Operator(Operators @operator, ParseTree.Node firstOperand, ParseTree.Node secondOperand)
     {
-        return symbol switch
-        {
-            '-' => Operators.Sub,
-            '/' => Operators.Div,
-            '+' => Operators.Add,
-            '*' => Operators.Mul,
-            _ => throw new ParseErrorException("Unknown Operator")
-        };
+        _firstOperand = firstOperand;
+        _secondOperand = secondOperand;
+        _operator = @operator;
     }
-
-    private static bool IsOperator(string str)
-    {
-        return str is ['+' or '-' or '*' or '/'];
-    }
-
+    
     private static bool IsZero(double value)
     {
         return value is >= -0.00001 and <= 0.0001;
@@ -58,88 +51,6 @@ public class Operator : ParseTree.Node
             Operators.Div => '/',
             _ => throw new ArgumentOutOfRangeException(nameof(@operator), @operator, null)
         });
-    }
-    
-    public Operator(string[] expression, int startIndex, int endIndex)
-    {
-        if (expression == null || expression.Length == 0)
-        {
-            throw new ParseErrorException("Null expression");
-        }
-        if (startIndex >= endIndex)
-        {
-            throw new ParseErrorException("Null operand");
-        }
-        if (expression.Length < endIndex || startIndex < 0)
-        {
-            throw new ParseErrorException("Wrong index");
-        }
-        if (expression[startIndex] == null)
-        {
-            throw new ParseErrorException("Null operand");
-        }
-
-        if (IsOperator(expression[startIndex]))
-        {
-            _operator = GetOperator(expression[startIndex][0]);
-            
-            var firstOperandEndIndex = 0;
-            var expectedNumOfValues = 1;
-            for (var currentIndex = startIndex + 1; currentIndex < endIndex; currentIndex++)
-            {
-                if (expression[currentIndex] == null)
-                {
-                    throw new ParseErrorException("Null operand");
-                }
-                
-                if (IsOperator(expression[currentIndex]))
-                {
-                    ++expectedNumOfValues;
-                    continue;
-                }
-
-                if (!int.TryParse(expression[currentIndex], out _))
-                {
-                    throw new ParseErrorException("Expected int or operator given unknown entity");
-                }
-                --expectedNumOfValues;
-                if (expectedNumOfValues == 0)
-                {
-                    firstOperandEndIndex = currentIndex + 1;
-                    break;
-                }
-            }
-
-            if (expectedNumOfValues != 0)
-            {
-                throw new ParseErrorException("Wrong expression construction(not enough operands)"); 
-            }
-
-            var firstOperandStartIndex = startIndex + 1;
-            if (firstOperandStartIndex + 1 == firstOperandEndIndex)
-            {
-                _firstOperand = new Operand(expression, firstOperandStartIndex);
-            }
-            else
-            {
-                _firstOperand = new Operator(expression, firstOperandStartIndex, firstOperandEndIndex);
-            }
-
-            var secondOperandStartIndex = firstOperandEndIndex;
-            var secondOperandEndIndex = endIndex;
-            if (secondOperandStartIndex + 1 == secondOperandEndIndex)
-            {
-                _secondOperand = new Operand(expression, secondOperandStartIndex);
-            }
-            else
-            {
-                _secondOperand = new Operator(expression, secondOperandStartIndex, secondOperandEndIndex);
-            }
-        }
-        else
-        {
-            throw new ParseErrorException("Expected int or operator given unknown entity"); 
-        }
     }
 
     public override double Evaluate()

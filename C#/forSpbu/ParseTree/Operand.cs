@@ -5,21 +5,8 @@
 /// </summary>
 public class Operand : ParseTree.Node
 {
-    public Operand(string[] expression, int index)
+    public Operand(int value)
     {
-        if (expression == null || expression.Length == 0)
-        {
-            throw new ParseErrorException("Null expression");
-        }
-        if (expression.Length <= index || index < 0)
-        {
-            throw new ParseErrorException("Wrong expression index");
-        }
-
-        if (!int.TryParse(expression[index], out var value))
-        {
-            throw new ParseErrorException("Error in parsing int");
-        }
         _value = value;
     }
     
