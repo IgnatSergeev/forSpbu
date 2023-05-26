@@ -3,6 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "17.02", "17.02", "{D3FCB669-E93F-4F0B-B9C5-6592CE93AC7F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BurrowsWheeler", "BurrowsWheeler\BurrowsWheeler.csproj", "{E007586F-9760-4744-BB25-EDEFD6BA860C}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BubbleSort", "BubbleSort\BubbleSort.csproj", "{A4F6ADD5-85FD-4F67-8B29-549DDDF6F82E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03.03", "03.03", "{882A9B9C-D3DE-4CFF-9E2F-08AD177EE675}"

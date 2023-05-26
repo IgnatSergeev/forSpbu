@@ -12,7 +12,7 @@ jobs:
           dotnet-version: '7.x'
       - name: build
         run: for f in $(find . -name "*.sln"); do dotnet build $f; done
-      - name: build
+      - name: test
         run: for f in $(find . -name "*.sln"); do dotnet test $f; done
   build-windows:
     runs-on: windows-latest
@@ -24,6 +24,6 @@ jobs:
       - name: build
         run: For /R %%I in (*.sln) do dotnet build %%I
         shell: cmd
-      - name: build
-        run: For /R %%I in (*.sln) do dotnet build %%I
+      - name: test
+        run: For /R %%I in (*.sln) do dotnet test %%I
         shell: cmd
