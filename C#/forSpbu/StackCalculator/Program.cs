@@ -9,7 +9,7 @@ if (line == null)
 try
 {
     var (expressionResult, expressionWasCorrect) =
-        StackCalculator.StackCalculator.Evaluate(line, new StackCalculator.ListStack<float>());
+        StackCalculator.StackCalculator.Evaluate(line, new StackCalculator.ListStack<double>());
     if (expressionWasCorrect)
     {
         Console.WriteLine("Результат выражения = " + expressionResult);

@@ -16,9 +16,9 @@ public static class StackCalculator
         Div
     }
     
-    private static float EmitOperation(BinaryOperators @operator, float firstArgument, float secondArgument)
+    private static double EmitOperation(BinaryOperators @operator, double firstArgument, double secondArgument)
     {
-        if (secondArgument >= -0.0001 && secondArgument <= 0.0001 && @operator == BinaryOperators.Div)
+        if (secondArgument is >= -0.0001 and <= 0.0001 && @operator == BinaryOperators.Div)
         {
             throw new DivideByZeroException();
         }
@@ -43,7 +43,7 @@ public static class StackCalculator
             }
             else
             {
-                if (!float.TryParse(inputString, out var value))
+                if (!double.TryParse(inputString, out var value))
                 {
                     throw new ParseException();
                 }
@@ -69,16 +69,16 @@ public static class StackCalculator
             };
         }
         
-        private readonly float _numberValue;
+        private readonly double _numberValue;
         private readonly BinaryOperators _operatorType;
         public NodeKind Kind { get; }
-        public float NumberValue => 
+        public double NumberValue => 
             (Kind == NodeKind.Operation) ? throw new FieldException(nameof(NumberValue)) : _numberValue;
         public BinaryOperators OperatorType =>
             (Kind == NodeKind.Number) ? throw new FieldException(nameof(OperatorType)) : _operatorType;
     }
     
-    public static (float, bool) Evaluate(string inputString, IStack<float> evaluationStack)
+    public static (double, bool) Evaluate(string inputString, IStack<double> evaluationStack)
     {
         if (evaluationStack == null)
         {

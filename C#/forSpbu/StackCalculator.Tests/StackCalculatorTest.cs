@@ -4,14 +4,14 @@ public static class StackCalculatorTest
 {
     private static IEnumerable<TestCaseData> StackImplementations()
     {
-        var listStack = new ListStack<float>();
-        var arrayStack = new ArrayStack<float>();
+        var listStack = new ListStack<double>();
+        var arrayStack = new ArrayStack<double>();
         yield return new TestCaseData(listStack);
         yield return new TestCaseData(arrayStack);
     }
 
     [Test, TestCaseSource(nameof(StackImplementations))]
-    public static void MaxDigitsSum(IStack<float> stack)
+    public static void MaxDigitsSum(IStack<double> stack)
     {
         Assert.Multiple(() =>
         {
@@ -21,7 +21,7 @@ public static class StackCalculatorTest
     }
 
     [Test, TestCaseSource(nameof(StackImplementations))]
-    public static void MaxDigitsMul(IStack<float> stack)
+    public static void MaxDigitsMul(IStack<double> stack)
     {
         Assert.Multiple(() =>
         {
@@ -31,7 +31,7 @@ public static class StackCalculatorTest
     }
 
     [Test, TestCaseSource(nameof(StackImplementations))]
-    public static void MulOfPositiveAndNegativeFirstDigitIsNegativeShouldReturnNegative(IStack<float> stack)
+    public static void MulOfPositiveAndNegativeFirstDigitIsNegativeShouldReturnNegative(IStack<double> stack)
     {
         Assert.Multiple(() =>
         {
@@ -41,7 +41,7 @@ public static class StackCalculatorTest
     }
 
     [Test, TestCaseSource(nameof(StackImplementations))]
-    public static void MulOfPositiveAndNegativeSecondDigitIsNegativeShouldReturnNegative(IStack<float> stack)
+    public static void MulOfPositiveAndNegativeSecondDigitIsNegativeShouldReturnNegative(IStack<double> stack)
     {
         Assert.Multiple(() =>
         {
@@ -51,7 +51,7 @@ public static class StackCalculatorTest
     }
 
     [Test, TestCaseSource(nameof(StackImplementations))]
-    public static void MulOfNegativeAndNegativeShouldReturnPositive(IStack<float> stack)
+    public static void MulOfNegativeAndNegativeShouldReturnPositive(IStack<double> stack)
     {
         Assert.Multiple(() =>
         {
@@ -62,7 +62,7 @@ public static class StackCalculatorTest
     }
 
     [Test, TestCaseSource(nameof(StackImplementations))]
-    public static void SumOfNegativeAndPositiveShouldReturnZero(IStack<float> stack)
+    public static void SumOfNegativeAndPositiveShouldReturnZero(IStack<double> stack)
     {
         Assert.Multiple(() =>
         {
@@ -72,7 +72,7 @@ public static class StackCalculatorTest
     }
 
     [Test, TestCaseSource(nameof(StackImplementations))]
-    public static void MulByZeroZeroIsSecondShouldReturnZero(IStack<float> stack)
+    public static void MulByZeroZeroIsSecondShouldReturnZero(IStack<double> stack)
     {
         Assert.Multiple(() =>
         {
@@ -82,7 +82,7 @@ public static class StackCalculatorTest
     }
 
     [Test, TestCaseSource(nameof(StackImplementations))]
-    public static void MulByZeroZeroIsFirstShouldReturnZero(IStack<float> stack)
+    public static void MulByZeroZeroIsFirstShouldReturnZero(IStack<double> stack)
     {
         Assert.Multiple(() =>
         {
@@ -92,7 +92,7 @@ public static class StackCalculatorTest
     }
 
     [Test, TestCaseSource(nameof(StackImplementations))]
-    public static void SumByZeroZeroIsSecondShouldReturnTheFirstValue(IStack<float> stack)
+    public static void SumByZeroZeroIsSecondShouldReturnTheFirstValue(IStack<double> stack)
     {
         Assert.Multiple(() =>
         {
@@ -102,7 +102,7 @@ public static class StackCalculatorTest
     }
 
     [Test, TestCaseSource(nameof(StackImplementations))]
-    public static void SumByZeroZeroIsFirstShouldReturnTheFirstValue(IStack<float> stack)
+    public static void SumByZeroZeroIsFirstShouldReturnTheFirstValue(IStack<double> stack)
     {
         Assert.Multiple(() =>
         {
@@ -112,7 +112,7 @@ public static class StackCalculatorTest
     }
 
     [Test, TestCaseSource(nameof(StackImplementations))]
-    public static void NullStringShouldThrowException(IStack<float> stack)
+    public static void NullStringShouldThrowException(IStack<double> stack)
     {
         Assert.Throws<ArgumentNullException>(() => StackCalculator.Evaluate(null, stack), "inputString");
     }
@@ -124,25 +124,25 @@ public static class StackCalculatorTest
     }
     
     [Test, TestCaseSource(nameof(StackImplementations))]
-    public static void WrongOrderShouldReturnFalse(IStack<float> stack)
+    public static void WrongOrderShouldReturnFalse(IStack<double> stack)
     {
         Assert.That(!StackCalculator.Evaluate("1 - 2", stack).Item2);
     }
     
     [Test, TestCaseSource(nameof(StackImplementations))]
-    public static void WrongOrder2ShouldReturnFalse(IStack<float> stack)
+    public static void WrongOrder2ShouldReturnFalse(IStack<double> stack)
     {
         Assert.That(!StackCalculator.Evaluate("/ 2 -", stack).Item2);
     }
     
     [Test, TestCaseSource(nameof(StackImplementations))]
-    public static void WrongSymbolsShouldThrowParseException(IStack<float> stack)
+    public static void WrongSymbolsShouldThrowParseException(IStack<double> stack)
     {
         Assert.Throws<ParseException>(() => StackCalculator.Evaluate("2 2 %", stack));
     }
     
     [Test, TestCaseSource(nameof(StackImplementations))]
-    public static void TwoSignsInSequence(IStack<float> stack)
+    public static void TwoSignsInSequence(IStack<double> stack)
     {
         Assert.Multiple(() =>
         {
@@ -152,13 +152,13 @@ public static class StackCalculatorTest
     }
 
     [Test, TestCaseSource(nameof(StackImplementations))]
-    public static void EmptyStringShouldThrowParseException(IStack<float> stack)
+    public static void EmptyStringShouldThrowParseException(IStack<double> stack)
     {
         Assert.Throws<ParseException>(() => StackCalculator.Evaluate("", stack));
     }
     
     [Test, TestCaseSource(nameof(StackImplementations))]
-    public static void NotEmptyStackShouldWorkFine(IStack<float> stack)
+    public static void NotEmptyStackShouldWorkFine(IStack<double> stack)
     {
         stack.Push(22);
         Assert.Multiple(() =>
@@ -169,7 +169,7 @@ public static class StackCalculatorTest
     }
 
     [Test, TestCaseSource(nameof(StackImplementations))]
-    public static void DivisionByZeroShouldThrowDivideByZeroException(IStack<float> stack)
+    public static void DivisionByZeroShouldThrowDivideByZeroException(IStack<double> stack)
     {
         Assert.Throws<DivideByZeroException>(() => StackCalculator.Evaluate("2 10 -10 + /", stack));
     }
