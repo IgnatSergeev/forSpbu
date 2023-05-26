@@ -114,7 +114,7 @@ public static class StackCalculatorTest
     [Test, TestCaseSource(nameof(StackImplementations))]
     public static void NullStringShouldThrowException(IStack<double> stack)
     {
-        Assert.Throws<ArgumentNullException>(() => StackCalculator.Evaluate(null, stack), "inputString");
+        Assert.Throws<ArgumentNullException>(() => StackCalculator.Evaluate(null!, stack), "inputString");
     }
     
     [Test]

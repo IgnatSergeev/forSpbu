@@ -4,17 +4,12 @@ public class ListStack<T> : IStack<T>
 {
     private class StackElement
     {
-        public StackElement(T value, StackElement next)
+        public StackElement(T value, StackElement? next = null)
         {
             Value = value;
             Next = next;
         }
-        
-        public StackElement(T value)
-        {
-            Value = value;
-        }
-        
+
         public T Value { get; }
 
         public StackElement? Next { get; }
@@ -24,9 +19,7 @@ public class ListStack<T> : IStack<T>
     
     public void Push(T value)
     {
-        _head = (_head == null)
-            ? new StackElement(value) 
-            : new StackElement(value, _head);
+        _head = new StackElement(value, _head);
     }
     
     public void Pop()

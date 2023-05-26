@@ -15,14 +15,16 @@ public class ArrayStack<T> : IStack<T>
             throw new ArgumentNullException();
         }
 
+        _array[_headIndex] = default;
         --_headIndex;
     }
     
     public T Top()
     {
-        return (_headIndex == -1)
-            ? throw new ArgumentNullException()
-            : _array[_headIndex];
+        var tmpVar = _array[_headIndex];
+        return (_headIndex == -1 || tmpVar == null)
+            ? throw new InvalidOperationException("Topping from empty stack")
+            : tmpVar;
     }
     
     public void Push(T value)
@@ -54,6 +56,6 @@ public class ArrayStack<T> : IStack<T>
         return _headIndex == -1;
     }
 
-    private T[] _array;
+    private T?[] _array;
     private int _headIndex;
 }
