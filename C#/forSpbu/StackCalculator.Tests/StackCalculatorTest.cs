@@ -55,8 +55,10 @@ public static class StackCalculatorTest
     {
         Assert.Multiple(() =>
         {
-            Assert.That(StackCalculator.Evaluate("-99,9 -999,9 *", stack).Item1, Is.InRange(99890, 99890.02));
-            Assert.That(StackCalculator.Evaluate("-99,9 -999,9 *", stack).Item2);
+            var evaluationResult = StackCalculator.Evaluate("-99,9 -999,9 *", stack);
+            Assert.That(evaluationResult.Item1, Is.LessThan(99890.02));
+            Assert.That(evaluationResult.Item1, Is.GreaterThan(99890));
+            Assert.That(evaluationResult.Item2);
         });
     }
 
