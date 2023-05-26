@@ -45,7 +45,7 @@ public static class StackCalculator
             }
             else
             {
-                if (!double.TryParse(inputString, CultureInfo.InvariantCulture, out var value))
+                if (!double.TryParse(inputString, new CultureInfo(2), out var value))
                 {
                     throw new ParseException();
                 }
