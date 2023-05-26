@@ -5,4 +5,9 @@
     &lt;TestId&gt;NUnit3x::22B9206A-C822-420D-A102-BBE5B849122B::net7.0::ParseTree.Tests.OperatorTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;NUnit3x::22B9206A-C822-420D-A102-BBE5B849122B::net7.0::ParseTree.Tests.ParseTreeTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7d59106a_002D8ac9_002D4b75_002Da6b0_002De055f3da6f86/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="StackCalculatorTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::22B9206A-C822-420D-A102-BBE5B849122B::net7.0::ParseTree.Tests.ParseTreeTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

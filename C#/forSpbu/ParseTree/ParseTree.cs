@@ -28,14 +28,14 @@ public class ParseTree
         return value;
     }
 
-    private static Operators GetOperator(char symbol)
+    private static Operator.Operators GetOperator(char symbol)
     {
         return symbol switch
         {
-            '-' => Operators.Sub,
-            '/' => Operators.Div,
-            '+' => Operators.Add,
-            '*' => Operators.Mul,
+            '-' => Operator.Operators.Sub,
+            '/' => Operator.Operators.Div,
+            '+' => Operator.Operators.Add,
+            '*' => Operator.Operators.Mul,
             _ => throw new ParseErrorException("Unknown Operator")
         };
     }
@@ -45,7 +45,7 @@ public class ParseTree
         return str is ['+' or '-' or '*' or '/'];
     }
     
-    private static (Operators, Node, Node) ParseOperator(string[] expression, int startIndex, int endIndex)
+    private static (Operator.Operators, Node, Node) ParseOperator(string[] expression, int startIndex, int endIndex)
     {
         if (IsOperator(expression[startIndex]))
         {
@@ -92,24 +92,26 @@ public class ParseTree
             }
             else
             {
-                firstOperand = new Operator(expression, firstOperandStartIndex, firstOperandEndIndex);
+                var parsedOperator = ParseOperator(expression, firstOperandStartIndex, firstOperandEndIndex);
+                firstOperand = new Operator(parsedOperator.Item1, parsedOperator.Item2, parsedOperator.Item3);
             }
 
             var secondOperandStartIndex = firstOperandEndIndex;
             var secondOperandEndIndex = endIndex;
             if (secondOperandStartIndex + 1 == secondOperandEndIndex)
             {
-                secondOperand = new Operand(ParseOperand(expression, firstOperandStartIndex));
+                secondOperand = new Operand(ParseOperand(expression, secondOperandStartIndex));
             }
             else
             {
-                secondOperand = new Operator(expression, secondOperandStartIndex, secondOperandEndIndex);
+                var parsedOperator = ParseOperator(expression, secondOperandStartIndex, secondOperandEndIndex);
+                secondOperand = new Operator(parsedOperator.Item1, parsedOperator.Item2, parsedOperator.Item3);
             }
 
             return (@operator, firstOperand, secondOperand);
         }
         
-        throw new ParseErrorException("Expected int or operator given unknown entity");
+        throw new ParseErrorException("Expected operator given unknown entity");
     }
     
     private static bool IsParentheses(char str)
@@ -130,7 +132,8 @@ public class ParseTree
 
         if (expressionArrayWithoutParentheses.Length > 1)
         {
-            _head = new Operator(expressionArrayWithoutParentheses, 0, expressionArrayWithoutParentheses.Length);
+            var headOperator = ParseOperator(expressionArrayWithoutParentheses, 0, expressionArrayWithoutParentheses.Length);
+            _head = new Operator(headOperator.Item1, headOperator.Item2, headOperator.Item3);
         }
         else
         {

@@ -16,6 +16,12 @@ public class Operator : ParseTree.Node
         Div
     }
 
+    /// <summary>
+    /// Creates operator node with given parameters
+    /// </summary>
+    /// <param name="operator">Node operator</param>
+    /// <param name="firstOperand">First node`s operand</param>
+    /// <param name="secondOperand">Second node`s operand</param>
     public Operator(Operators @operator, ParseTree.Node firstOperand, ParseTree.Node secondOperand)
     {
         _firstOperand = firstOperand;
