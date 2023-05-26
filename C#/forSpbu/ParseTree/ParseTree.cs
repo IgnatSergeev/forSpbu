@@ -57,11 +57,6 @@ public class ParseTree
             var expectedNumOfValues = 1;
             for (var currentIndex = startIndex + 1; currentIndex < endIndex; currentIndex++)
             {
-                if (expression[currentIndex] == null)
-                {
-                    throw new ParseErrorException("Null operand");
-                }
-                
                 if (IsOperator(expression[currentIndex]))
                 {
                     ++expectedNumOfValues;
@@ -114,20 +109,29 @@ public class ParseTree
         throw new ParseErrorException("Expected operator given unknown entity");
     }
     
-    private static bool IsParentheses(char str)
+    private static bool IsParenthesis(char str)
     {
         return str is '(' or ')';
     }
-    
+
+    /// <summary>
+    /// Creates a parse tree with parsing expression
+    /// </summary>
+    /// <param name="expression">Expression to parse</param>
+    /// <exception cref="ParseErrorException">If exception is incorrect</exception>
     public ParseTree(string expression)
     {
         if (expression == null)
         {
             throw new ParseErrorException("Null expression");
         }
-        
+        if (expression.Length == 0)
+        {
+            throw new ParseErrorException("Empty expression");
+        }
+
         var expressionList = new List<char>(expression.ToArray());
-        expressionList.RemoveAll(IsParentheses);
+        expressionList.RemoveAll(IsParenthesis);
         var expressionArrayWithoutParentheses = new string(expressionList.ToArray()).Split();
 
         if (expressionArrayWithoutParentheses.Length > 1)

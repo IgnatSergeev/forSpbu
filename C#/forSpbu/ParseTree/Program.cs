@@ -2,7 +2,7 @@
 
 Console.WriteLine("Введите путь к файлу с бинарным выражением в префиксной форме (относительно exe)");
 var path = Console.ReadLine();
-if (path == null)
+if (path == null && File.Exists(path))
 {
     Console.WriteLine("Некорректный ввод");
     return;
