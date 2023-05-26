@@ -8,7 +8,6 @@ public class EventLoop
     public event EventHandler<EventArgs> DownHandler = (_, _) => { };
     public event EventHandler<EventArgs> EndHandler = (_, _) => { };
     public event EventHandler<EventArgs> StartHandler = (_, _) => { };
-    public event EventHandler<EventArgs> LoopStartHandler = (_, _) => { };
 
     public void Run()
     {
@@ -20,10 +19,8 @@ public class EventLoop
             {
                 break;
             }
-            
-            LoopStartHandler(this, EventArgs.Empty);
-            
-            switch (Console.ReadKey().Key)
+
+            switch (Console.ReadKey(true).Key)
             {
                 case ConsoleKey.LeftArrow:
                     LeftHandler(this, EventArgs.Empty);
