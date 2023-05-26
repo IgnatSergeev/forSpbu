@@ -1,4 +1,6 @@
-﻿namespace StackCalculator;
+﻿using System.Globalization;
+
+namespace StackCalculator;
 
 public static class StackCalculator
 {
@@ -43,7 +45,7 @@ public static class StackCalculator
             }
             else
             {
-                if (!double.TryParse(inputString, out var value))
+                if (!double.TryParse(inputString, CultureInfo.InvariantCulture, out var value))
                 {
                     throw new ParseException();
                 }
