@@ -1,7 +1,7 @@
 ﻿using Game;
 
 var eventLoop = new EventLoop();
-var game = new Game.Game();
+var game = new Game.Game("../../../map.txt");
 
 eventLoop.StartHandler += game.OnStart;
 eventLoop.EndHandler += Game.Game.OnEnd;

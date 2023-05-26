@@ -2,102 +2,34 @@
 
 public class Game
 {
-    private int _mapWidth;
-    private int _mapHeight;
+    private Map _map;
     private int _xPosition;
     private int _yPosition;
-    private const string MapPath = "../../../map.txt";
-    
-    private static void DrawMap()
+
+    public Game(string path)
     {
-        Console.Write(File.ReadAllText(MapPath));
-    }
-
-    private bool CheckMap()
-    {
-        using var fileStream = new StreamReader(MapPath);
-
-        var isLastLine = false;
-        while (!fileStream.EndOfStream)
-        {
-            if (isLastLine)
-            {
-                return false;
-            }
-            
-            var line = fileStream.ReadLine();
-            if (string.IsNullOrEmpty(line))
-            {
-                return false;
-            }
-
-            _mapHeight++;
-            if (_mapWidth == 0)
-            {
-                _mapWidth = line.Length;
-            }
-            else if (_mapWidth != line.Length)
-            {
-                return false;
-            }
-
-            if (_mapHeight != 1 && line[1] == '_')
-            {
-                isLastLine = true;
-            } 
-            
-            for (var i = 1; i <= _mapWidth; i++)
-            {
-                var correctSymbol = GetCorrectSymbolByCoordinates(i, _mapHeight, isLastLine);
-                if (correctSymbol != line[i - 1])
-                {
-                    return false;
-                }
-            }
-        }
-
-        _mapHeight -= 2;
-        _mapWidth -= 2;
-        return true;
-    }
-
-    private char GetCorrectSymbolByCoordinates(int xCoordinate, int yCoordinate, bool isLastLine)
-    {
-        return !isLastLine
-            ? yCoordinate == 1
-                ? (xCoordinate == 1 || xCoordinate == _mapWidth)
-                    ? ' '
-                    : '_'
-                : (xCoordinate == 1 || xCoordinate == _mapWidth)
-                    ? '|'
-                    : ' '
-            : (xCoordinate == 1 || xCoordinate == _mapWidth)
-                ? '|'
-                : '_';
-
+        _map = new Map(path);
+        _xPosition = _map._playerMapWidth / 2;
+        _yPosition = _map._playerMapHeight / 2;
     }
 
     public void OnStart(object? sender, EventArgs args)
     {
-        if (!CheckMap())
-        {
-            throw new InvalidMapException();
-        }
-        DrawMap();
-        _xPosition = _mapWidth / 2;
-        _yPosition = _mapHeight / 2;
+        _map.DrawMap();
+        Console.SetCursorPosition(0, 0);
     }
 
     public void OnLoopStart(object? sender, EventArgs args)
     {
-        Console.SetCursorPosition(_xPosition, _yPosition);
+        
+        Console.SetCursorPosition(_xPosition + 1, _yPosition + 1);
         Console.Write('@');
-        Console.SetCursorPosition(_xPosition, _yPosition);
+        Console.SetCursorPosition(_xPosition + 1, _yPosition + 1);
     }
     
     public void OnLeft(object? sender, EventArgs args)
     {
-        if (_xPosition > 1)
+        if (_xPosition > 0 && _map._playerMap[_yPosition][_xPosition - 1])
         {
             _xPosition--;
         }
@@ -105,7 +37,7 @@ public class Game
     
     public void OnRight(object? sender, EventArgs args)
     {
-        if (_xPosition < _mapWidth)
+        if (_xPosition + 1 < _map._playerMapWidth && _map._playerMap[_yPosition][_xPosition + 1])
         {
             _xPosition++;
         }
@@ -113,7 +45,7 @@ public class Game
     
     public void OnDown(object? sender, EventArgs args)
     {
-        if (_yPosition < _mapHeight)
+        if (_yPosition + 1 < _map._playerMapHeight && _map._playerMap[_yPosition + 1][_xPosition])
         {
             _yPosition++;
         }
@@ -121,7 +53,7 @@ public class Game
     
     public void OnUp(object? sender, EventArgs args)
     {
-        if (_yPosition - 1 > 0)
+        if (_yPosition > 0 && _map._playerMap[_yPosition - 1][_xPosition])
         {
             _yPosition--;
         }
