@@ -1,13 +1,19 @@
 namespace RunningButton;
 
+/// <summary>
+/// Form class for the running button game
+/// </summary>
 public partial class RunningButtonForm : Form
 {
+    /// <summary>
+    /// Creates form and initializes the button
+    /// </summary>
     public RunningButtonForm()
     {
         InitializeComponent();
     }
 
-    enum Position
+    private enum Position
     {
         TopLeft,
         TopRight,
@@ -49,7 +55,7 @@ public partial class RunningButtonForm : Form
     
     private void OnClick(object? sender, EventArgs eventArgs)
     {
-        if (sender is not Button senderButton)
+        if (sender is not Button)
         {
             return;
         }
