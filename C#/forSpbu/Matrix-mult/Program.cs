@@ -1,3 +1,9 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using Matrix_mult;
 
-Console.WriteLine("Hello, World!");
+var matrixLines = new string[] { "1 2", "2 3" };
+var firMatrix = new Matrix();
+firMatrix.Parse(matrixLines);
+var secMatrix = new Matrix();
+secMatrix.Parse(matrixLines);
+var result = MatrixMultiplier.MultiThreaded(firMatrix, secMatrix);
+result.Print();
