@@ -34,24 +34,22 @@ public static class MatrixMultiplier
     public static Matrix MultiThreaded(Matrix first, Matrix second)
     {
         var threadsAmount = Math.Min(Environment.ProcessorCount, first.Height);
-
+        var rowsForThread = first.Height / threadsAmount;
+        
         var threads = new Thread[threadsAmount];
         var newElements = new int[first.Height, second.Width];
         for (int i = 0; i < threadsAmount; i++)
         {
-            var rows = new List<int>{};
-            for (int row = i; row < first.Height; row += threadsAmount)
-            {
-                rows.Add(row);
-            }
+            var startRow = i * rowsForThread;
+            var endRow = (i == threadsAmount - 1) ? first.Height : (i + 1) * rowsForThread;
 
             threads[i] = new Thread(() =>
             {
-                foreach (var row in rows)
+                for (var row = startRow; row < endRow; row++)
                 {
                     for (int j = 0; j < second.Width; j++)
                     {
-                        for (int k = 0; j < second.Height; k++)
+                        for (int k = 0; k < second.Height; k++)
                         {
                             newElements[row, j] += first.GetElement(row, k) * second.GetElement(j, k);
                         }
