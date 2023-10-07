@@ -1,9 +1,12 @@
-namespace Matrix_mult;
+namespace MatrixMult;
 
+/// <summary>
+/// Class for matrix multiplication
+/// </summary>
 public static class MatrixMultiplier
 {
     /// <summary>
-    /// Performs matrix multiplication in single thread
+    /// Performs matrix multiplication in single threaded mode
     /// </summary>
     /// <param name="first">First matrix in multiplication</param>
     /// <param name="second">Second matrix in multiplication</param>
@@ -28,9 +31,16 @@ public static class MatrixMultiplier
             }
         }
 
-        return new Matrix(newElements, first.Height, second.Width);
+        return new Matrix(newElements);
     }
 
+    /// <summary>
+    /// Performs matrix multiplication in multi threaded mode
+    /// </summary>
+    /// <param name="first">First matrix in multiplication</param>
+    /// <param name="second">Second matrix in multiplication</param>
+    /// <returns>Result matrix</returns>
+    /// <exception cref="MatrixMultiplierException">If matrices are incompatible(width of first and height of second are not equal)</exception>
     public static Matrix MultiThreaded(Matrix first, Matrix second)
     {
         var threadsAmount = Math.Min(Environment.ProcessorCount, first.Height);
@@ -51,7 +61,7 @@ public static class MatrixMultiplier
                     {
                         for (int k = 0; k < second.Height; k++)
                         {
-                            newElements[row, j] += first.GetElement(row, k) * second.GetElement(j, k);
+                            newElements[row, j] += first.GetElement(row, k) * second.GetElement(k, j);
                         }
                     }
                 }
@@ -68,6 +78,6 @@ public static class MatrixMultiplier
             thread.Join();
         }
 
-        return new Matrix(newElements, first.Height, second.Width);
+        return new Matrix(newElements);
     }
 }
