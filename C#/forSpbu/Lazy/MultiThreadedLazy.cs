@@ -19,28 +19,38 @@ public class MultiThreadedLazy<T> : ILazy<T>
     /// <exception cref="Exception">If delegate threw exception</exception>
     public T? Get()
     {
-        _mutex.WaitOne();
-        if (!_isCalculated)
+        if (!this._isCalculated)
         {
-            _mutex.Close();
-            _isCalculated = true;
+            this.CalculateMonitor();
+        }
+
+        if (this._threwException)
+        {
+            throw this._resultException;
+        }
+        return this._result;
+    }
+
+    private void CalculateMonitor()
+    {
+        lock (this._supplier)
+        {
+            if (this._isCalculated) return;
             try
             {
-                _result = _supplier();
+                this._result = this._supplier();
             }
             catch (Exception e)
             {
-                _threwException = true;
-                _resultException = e;
+                this._threwException = true;
+                this._resultException = e;
             }
-            _mutex.ReleaseMutex();
+            finally
+            {
+                this._isCalculated = true;
+            }
         }
-
-        if (_threwException)
-        {
-            throw _resultException;
-        }
-        return _result;
+        
     }
 
     /// <summary>
@@ -56,20 +66,15 @@ public class MultiThreadedLazy<T> : ILazy<T>
     /// <summary>
     /// Was function calculated
     /// </summary>
-    private bool _isCalculated;
+    private volatile bool _isCalculated;
     
     /// <summary>
     /// If the function threw exception
     /// </summary>
-    private bool _threwException;
+    private volatile bool _threwException;
     
     /// <summary>
     /// Delegate defining the lazy
     /// </summary>
     private readonly Func<T> _supplier;
-
-    /// <summary>
-    /// Mutex for holding threads while delegate is calculated
-    /// </summary>
-    private readonly Mutex _mutex = new Mutex();
 }
