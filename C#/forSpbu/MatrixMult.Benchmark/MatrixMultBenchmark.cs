@@ -3,23 +3,28 @@ namespace MatrixMult.Benchmark;
 
 public class MatrixMultBenchmark
 {
-    [Params(16, 32, 64, 128, 256, 512, 1024, 2048)]
-    private int _size;
+    [Params(12, 24, 48, 96, 192, 384, 768, 1536)]
+    public int Size;
     private Matrix _fst;
     private Matrix _sec;
     
     [GlobalSetup]
-    public void GenerateRandomMatrix(int size)
+    public void GenerateRandomMatrix()
     {
         var random = new Random();
-        for (int i = 0; i < size; i++)
+        var fstElements = new int[Size, Size];
+        var secElements = new int[Size, Size];
+        for (int i = 0; i < Size; i++)
         {
-            for (int j = 0; j < size; j++)
+            for (int j = 0; j < Size; j++)
             {
-                _fst.SetElement(random.Next(), i, j);
-                _sec.SetElement(random.Next(), i, j);
+                fstElements[i, j] = random.Next();
+                secElements[i, j] = random.Next();
             }
         }
+
+        _fst = new Matrix(fstElements);
+        _sec = new Matrix(secElements);
     }
     
     [Benchmark]
