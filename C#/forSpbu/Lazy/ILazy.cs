@@ -2,5 +2,5 @@
 
 public interface ILazy<T>
 {
-    public T? Get();
+    public T Get();
 }

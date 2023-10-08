@@ -1,3 +1,5 @@
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+
 namespace Lazy.Tests;
 
 public class Tests
@@ -32,11 +34,23 @@ public class Tests
         }
     }
 
-    [Test]
-    public void SingleThreadGetTest()
+    private static IEnumerable<TestCaseData> IntLazyImpl()
+    {
+        yield return new TestCaseData((Func<int> lazyDelegate) => new SingleThreadedLazy<int>(lazyDelegate));
+        yield return new TestCaseData((Func<int> lazyDelegate) => new MultiThreadedLazy<int>(lazyDelegate));
+    }
+
+    private static IEnumerable<TestCaseData> NullableIntLazyImpl()
+    {
+        yield return new TestCaseData((Func<int?> lazyDelegate) => new SingleThreadedLazy<int?>(lazyDelegate));
+        yield return new TestCaseData((Func<int?> lazyDelegate) => new MultiThreadedLazy<int?>(lazyDelegate));
+    }
+
+    [Test, TestCaseSource(nameof(IntLazyImpl))]
+    public void GetTest(Func<Func<int>, ILazy<int>> lazyCreator)
     {
         var tester = new LazyTester();
-        var lazy = new SingleThreadedLazy<int>(tester.FstTest);
+        var lazy = lazyCreator(tester.FstTest);
         Assert.Multiple(() =>
         {
             Assert.That(tester.CallCounter, Is.EqualTo(0));
@@ -51,11 +65,11 @@ public class Tests
         });
     }
     
-    [Test]
-    public void SingleThreadGetNullTest()
+    [Test, TestCaseSource(nameof(NullableIntLazyImpl))]
+    public void GetNullTest(Func<Func<int?>, ILazy<int?>> lazyCreator)
     {
         var tester = new LazyTester();
-        var lazy = new SingleThreadedLazy<int?>(tester.SecTest);
+        var lazy = lazyCreator(tester.SecTest);
         Assert.Multiple(() =>
         {
             Assert.That(tester.CallCounter, Is.EqualTo(0));
@@ -70,11 +84,11 @@ public class Tests
         });
     }
     
-    [Test]
-    public void SingleThreadGetExceptionTest()
+    [Test, TestCaseSource(nameof(IntLazyImpl))]
+    public void GetExceptionTest(Func<Func<int>, ILazy<int>> lazyCreator)
     {
         var tester = new LazyTester();
-        var lazy = new SingleThreadedLazy<int>(tester.TrdTest);
+        var lazy = lazyCreator(tester.TrdTest);
         Assert.Multiple(() =>
         {
             Assert.That(tester.CallCounter, Is.EqualTo(0));
@@ -88,64 +102,7 @@ public class Tests
             Assert.That(tester.CallCounter, Is.EqualTo(1));
         });
     }
-    
-    [Test]
-    public void MultiThreadGetTest()
-    {
-        var tester = new LazyTester();
-        var lazy = new MultiThreadedLazy<int>(tester.FstTest);
-        Assert.Multiple(() =>
-        {
-            Assert.That(tester.CallCounter, Is.EqualTo(0));
-            Assert.That(lazy.Get(), Is.EqualTo(1));
-            Assert.That(tester.CallCounter, Is.EqualTo(1));
-            
-            Assert.That(lazy.Get(), Is.EqualTo(1));
-            Assert.That(tester.CallCounter, Is.EqualTo(1));
 
-            Assert.That(lazy.Get(), Is.EqualTo(1));
-            Assert.That(tester.CallCounter, Is.EqualTo(1));
-        });
-    }
-    
-    [Test]
-    public void MultiThreadGetNullTest()
-    {
-        var tester = new LazyTester();
-        var lazy = new MultiThreadedLazy<int?>(tester.SecTest);
-        Assert.Multiple(() =>
-        {
-            Assert.That(tester.CallCounter, Is.EqualTo(0));
-            Assert.That(lazy.Get(), Is.EqualTo(null));
-            Assert.That(tester.CallCounter, Is.EqualTo(1));
-            
-            Assert.That(lazy.Get(), Is.EqualTo(null));
-            Assert.That(tester.CallCounter, Is.EqualTo(1));
-
-            Assert.That(lazy.Get(), Is.EqualTo(null));
-            Assert.That(tester.CallCounter, Is.EqualTo(1));
-        });
-    }
-    
-    [Test]
-    public void MultiThreadGetExceptionTest()
-    {
-        var tester = new LazyTester();
-        var lazy = new MultiThreadedLazy<int>(tester.TrdTest);
-        Assert.Multiple(() =>
-        {
-            Assert.That(tester.CallCounter, Is.EqualTo(0));
-            Assert.Throws<TestException>(() => lazy.Get());
-            Assert.That(tester.CallCounter, Is.EqualTo(1));
-            
-            Assert.Throws<TestException>(() => lazy.Get());
-            Assert.That(tester.CallCounter, Is.EqualTo(1));
-
-            Assert.Throws<TestException>(() => lazy.Get());
-            Assert.That(tester.CallCounter, Is.EqualTo(1));
-        });
-    }
-    
     [Test]
     public void MultiThreadMultiGetTest()
     {
