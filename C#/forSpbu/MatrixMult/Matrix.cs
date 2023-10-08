@@ -6,7 +6,15 @@ namespace MatrixMult;
 public class Matrix
 {
     /// <summary>
-    /// Matrix constructor with given elements
+    /// Constructs empty matrix
+    /// </summary>
+    public Matrix()
+    {
+        this._elements = new int[0, 0];
+    }
+    
+    /// <summary>
+    /// Constructs matrix with given elements
     /// </summary>
     /// <param name="newElements">Matrix elements</param>
     public Matrix(int [,] newElements)
@@ -46,7 +54,7 @@ public class Matrix
     }
 
     /// <summary>
-    /// Get element by index
+    /// Returns element by index
     /// </summary>
     /// <param name="firstInd">First index</param>
     /// <param name="secondInd">Second index</param>
@@ -57,7 +65,7 @@ public class Matrix
             ? throw new ArgumentOutOfRangeException(nameof(firstInd))
             : secondInd < 0 || secondInd >= this.Width 
                 ? throw new ArgumentOutOfRangeException(nameof(secondInd))
-                : _elements[firstInd, secondInd];
+                : this._elements[firstInd, secondInd];
 
     /// <summary>
     /// Number of matrix rows
@@ -70,18 +78,21 @@ public class Matrix
     public int Width => this._elements.GetLength(1);
 
     /// <summary>
-    /// Prints matrix into console
+    /// Returns matrix as array of string
     /// </summary>
-    public void Print()
+    /// <returns>String array matrix representation</returns>
+    public string[] GetStringRepresentation()
     {
-        for (int i = 0; i < Height; i++)
+        var lines = new string[this.Height];
+        for (int i = 0; i < this.Height; i++)
         {
-            for (int j = 0; j < Width; j++)
+            for (int j = 0; j < this.Width; j++)
             {
-                Console.Write($"{_elements[i, j]} ");
+                lines[i] += _elements[i, j] + " ";
             }
-            Console.WriteLine();
         }
+
+        return lines;
     }
     
     /// <summary>
