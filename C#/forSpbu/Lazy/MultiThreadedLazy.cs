@@ -64,7 +64,7 @@ public class MultiThreadedLazy<T> : ILazy<T>
     /// <summary>
     /// Function exception holder
     /// </summary>
-    private Exception? _resultException;
+    private Exception _resultException = new();
     
     /// <summary>
     /// Was function calculated
