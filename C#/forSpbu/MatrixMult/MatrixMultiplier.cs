@@ -43,6 +43,11 @@ public static class MatrixMultiplier
     /// <exception cref="MatrixMultiplierException">If matrices are incompatible(width of first and height of second are not equal)</exception>
     public static Matrix MultiThreaded(Matrix first, Matrix second)
     {
+        if (first.Width != second.Height)
+        {
+            throw new MatrixMultiplierException("Incompatible matrices");
+        }
+        
         var threadsAmount = Math.Min(Environment.ProcessorCount, first.Height);
         var rowsForThread = first.Height / threadsAmount;
         

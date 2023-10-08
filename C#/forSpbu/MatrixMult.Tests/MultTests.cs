@@ -20,8 +20,8 @@ public static class MultTests
             new Matrix(
                 new int[,]
                 {
-                    { 1, 2 },
-                    { 4, 5 }
+                    { 10, 13 },
+                    { 22, 29 }
                 })
         ),
         (
@@ -61,16 +61,14 @@ public static class MultTests
                 }) 
         )
     };
-    
-    private static IEnumerable<TestCaseData> MultImplementations()
-    {
-        yield return new TestCaseData(MatrixMultiplier.MultiThreaded);
-        yield return new TestCaseData(MatrixMultiplier.SingleThreaded);
-    }
-    
+
     private static IEnumerable<TestCaseData> TestCases()
     {
-        return Tests.Select(test => new TestCaseData(test));
+        foreach (var test in Tests)
+        {
+            yield return new TestCaseData(MatrixMultiplier.MultiThreaded, test);
+            yield return new TestCaseData(MatrixMultiplier.SingleThreaded, test);
+        }
     }
 
     private static bool AreMatricesEqual(Matrix fst, Matrix sec)
@@ -94,7 +92,7 @@ public static class MultTests
         return true;
     }
 
-    [Test, TestCaseSource(nameof(MultImplementations)), TestCaseSource(nameof(TestCases))]
+    [Test, TestCaseSource(nameof(TestCases))]
     public static void MultiplyMatricesTest(Func<Matrix, Matrix, Matrix> matrixMultImpl, (Matrix, Matrix, Matrix?) test)
     {
         if (test.Item3 == null)

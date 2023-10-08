@@ -58,6 +58,21 @@ public class Matrix
             : secondInd < 0 || secondInd >= this.Width 
                 ? throw new ArgumentOutOfRangeException(nameof(secondInd))
                 : _elements[firstInd, secondInd];
+    
+    /// <summary>
+    /// Set element by index
+    /// </summary>
+    /// <param name="value">Element value</param>
+    /// <param name="firstInd">First index</param>
+    /// <param name="secondInd">Second index</param>
+    /// <returns>Value of matrix element in given position</returns>
+    /// <exception cref="IndexOutOfRangeException">If some index is out of range</exception>
+    public int SetElement(int value, int firstInd, int secondInd) =>
+        firstInd < 0 || firstInd >= this.Height
+            ? throw new ArgumentOutOfRangeException(nameof(firstInd))
+            : secondInd < 0 || secondInd >= this.Width 
+                ? throw new ArgumentOutOfRangeException(nameof(secondInd))
+                : _elements[firstInd, secondInd] = value;
 
     /// <summary>
     /// Number of matrix rows
@@ -84,5 +99,8 @@ public class Matrix
         }
     }
     
-    private int[,] _elements;
+    /// <summary>
+    /// Matrix elements
+    /// </summary>
+    private readonly int[,] _elements;
 }
