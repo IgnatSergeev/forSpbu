@@ -5,6 +5,10 @@ namespace MatrixMult;
 /// </summary>
 public class MatrixMultiplierException : Exception
 {
+    public MatrixMultiplierException() : base()
+    {
+    }
+    
     public MatrixMultiplierException(string message) : base(message)
     {
     }

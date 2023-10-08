@@ -5,6 +5,10 @@
 /// </summary>
 public class MatrixCreationException : Exception
 {
+    public MatrixCreationException() : base()
+    {
+    }
+    
     public MatrixCreationException(string message) : base(message)
     {
     }

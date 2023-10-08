@@ -30,12 +30,12 @@ public class MatrixMultBenchmark
     [Benchmark]
     public void MultiThreaded()
     {
-        MatrixMultiplier.MultiThreaded(_fst, _sec);
+        MatrixMultiplier.MultiThreadedMultiply(_fst, _sec);
     }
     
     [Benchmark]
     public void SingleThreaded()
     {
-        MatrixMultiplier.SingleThreaded(_fst, _sec);
+        MatrixMultiplier.SingleThreadedMultiply(_fst, _sec);
     }
 }

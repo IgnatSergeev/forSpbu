@@ -66,8 +66,8 @@ public static class MultTests
     {
         foreach (var test in Tests)
         {
-            yield return new TestCaseData(MatrixMultiplier.MultiThreaded, test);
-            yield return new TestCaseData(MatrixMultiplier.SingleThreaded, test);
+            yield return new TestCaseData(MatrixMultiplier.MultiThreadedMultiply, test);
+            yield return new TestCaseData(MatrixMultiplier.SingleThreadedMultiply, test);
         }
     }
 

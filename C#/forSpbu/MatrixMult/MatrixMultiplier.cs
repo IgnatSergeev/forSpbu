@@ -12,7 +12,7 @@ public static class MatrixMultiplier
     /// <param name="second">Second matrix in multiplication</param>
     /// <returns>Result matrix</returns>
     /// <exception cref="MatrixMultiplierException">If matrices are incompatible(width of first and height of second are not equal)</exception>
-    public static Matrix SingleThreaded(Matrix first, Matrix second)
+    public static Matrix SingleThreadedMultiply(Matrix first, Matrix second)
     {
         if (first.Width != second.Height)
         {
@@ -41,7 +41,7 @@ public static class MatrixMultiplier
     /// <param name="second">Second matrix in multiplication</param>
     /// <returns>Result matrix</returns>
     /// <exception cref="MatrixMultiplierException">If matrices are incompatible(width of first and height of second are not equal)</exception>
-    public static Matrix MultiThreaded(Matrix first, Matrix second)
+    public static Matrix MultiThreadedMultiply(Matrix first, Matrix second)
     {
         if (first.Width != second.Height)
         {
