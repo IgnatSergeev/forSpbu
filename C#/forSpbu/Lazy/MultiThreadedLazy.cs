@@ -13,11 +13,11 @@ public class MultiThreadedLazy<T> : ILazy<T>
     public MultiThreadedLazy(Func<T> supplier) => this._supplier = supplier;
 
     /// <summary>
-    /// Calculates given function
+    /// Lazily calculates given function
     /// </summary>
     /// <returns>Function result</returns>
     /// <exception cref="Exception">If delegate threw exception</exception>
-    public T? Get()
+    public T Get()
     {
         if (!this._isCalculated)
         {
@@ -31,6 +31,9 @@ public class MultiThreadedLazy<T> : ILazy<T>
         return this._result;
     }
 
+    /// <summary>
+    /// Asynchronously calculates given function and stores its value
+    /// </summary>
     private void CalculateMonitor()
     {
         lock (this._supplier)

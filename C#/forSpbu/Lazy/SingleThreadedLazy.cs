@@ -13,31 +13,31 @@ public class SingleThreadedLazy<T> : ILazy<T>
     public SingleThreadedLazy(Func<T> supplier) => this._supplier = supplier;
 
     /// <summary>
-    /// Calculates given function
+    /// Lazily calculates given function
     /// </summary>
     /// <returns>Function result</returns>
     /// <exception cref="Exception">If delegate threw exception</exception>
-    public T? Get()
+    public T Get()
     {
-        if (!_isCalculated)
+        if (!this._isCalculated)
         {
-            _isCalculated = true;
+            this._isCalculated = true;
             try
             {
-                _result = _supplier();
+                this._result = this._supplier();
             }
             catch (Exception e)
             {
-                _threwException = true;
-                _resultException = e;
+                this._threwException = true;
+                this._resultException = e;
             }
         }
 
         if (_threwException)
         {
-            throw _resultException;
+            throw this._resultException;
         }
-        return _result;
+        return this._result;
     }
 
     /// <summary>

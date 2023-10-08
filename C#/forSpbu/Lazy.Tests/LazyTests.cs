@@ -13,7 +13,7 @@ public class Tests
     
     private class LazyTester
     {
-        public int CallCounter = 0;
+        public int CallCounter;
 
         public int FstTest()
         {
