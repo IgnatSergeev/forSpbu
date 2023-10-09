@@ -1,4 +1,6 @@
-﻿namespace MyThreadPool;
+﻿using System.Collections.Concurrent;
+
+namespace MyThreadPool;
 
 public class MyThreadPool
 {
@@ -9,20 +11,53 @@ public class MyThreadPool
             throw new MyThreadCreationException();
         }
         
-       this._threads = new Thread[size];
-       this._semaphore = new Semaphore(0, size);
+        this._threads = new Thread[size];
+        for (int i = 0; i < size; i++)
+        {
+            this._threads[i] = new Thread(() =>
+            {
+                while (true)
+                {
+                    this._functions.TryDequeue(out var func);
+                    func?.Invoke();
+                }
+            });
+        }
     }
 
     public IMyTask<TResult> Submit<TResult>(Func<TResult> func)
     {
-        _semaphore.WaitOne();
-        
-        
+        var finishEvent = new ManualResetEvent(false);
+        var task = new MyTask<TResult>();
+        this._functions.Enqueue((() =>
+        {
+            lock(task)
+            {
+                try
+                {
+                    var result = func();
+                    task.FuncFinished(result);
+                }
+                catch (Exception e)
+                {
+                    task.FuncFinished(e);
+                }
+                finally
+                {
+                    finishEvent.Set();
+                }
+            }
+        }, finishEvent));
+        return task;
+    }
+
+    public void Shutdown()
+    {
+        _isTerminated = true;
     }
     
-    public int Size => this._threads.Length;
-
-    private Semaphore _semaphore;
-    private I[] _mutexes;
-    private Thread[] _threads;
+    private readonly ConcurrentQueue<(Action action, ManualResetEvent finishEvent)> _functions = new ();
+    private readonly Thread[] _threads;
+    private Semaphore stop;
+    private bool _isTerminated;
 }
