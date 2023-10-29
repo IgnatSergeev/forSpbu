@@ -57,7 +57,7 @@ public class MyThreadPool : IDisposable
 
         public IMyTask<TNewResult> ContinueWith<TNewResult>(Func<TResult, TNewResult> nextDelegate)
         {
-            lock (Volatile.Read(ref this.NextTasks))
+            lock (this.NextTasks)
             {
                 if (Volatile.Read(ref this._isCompleted))
                 {
@@ -65,7 +65,7 @@ public class MyThreadPool : IDisposable
                 }
 
                 var nextTask = new MyTask<TNewResult>(() => nextDelegate(this._result!), this._threadPool);
-                Volatile.Read(ref this.NextTasks).Add(nextTask.Execute);
+                this.NextTasks.Add(nextTask.Execute);
             
                 return nextTask;
             }
@@ -80,7 +80,7 @@ public class MyThreadPool : IDisposable
         private bool _isCompleted;
 
         public bool IsCompleted => this._isCompleted;
-        public ConcurrentBag<Action> NextTasks = new ();
+        public readonly ConcurrentBag<Action> NextTasks = new ();
     }
     
     /// <summary>
@@ -125,9 +125,9 @@ public class MyThreadPool : IDisposable
         this._functions.Enqueue(() =>
         {
             task.Execute();
-            lock (Volatile.Read(ref task.NextTasks))
+            lock (task.NextTasks)
             {
-                foreach (var taskDelegate in Volatile.Read(ref task.NextTasks))
+                foreach (var taskDelegate in task.NextTasks)
                 {
                     this._functions.Enqueue(taskDelegate);
                 }
