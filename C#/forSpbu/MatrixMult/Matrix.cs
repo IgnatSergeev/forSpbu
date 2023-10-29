@@ -6,6 +6,21 @@ namespace MatrixMult;
 public class Matrix
 {
     /// <summary>
+    /// Matrix elements
+    /// </summary>
+    private readonly int[,] _elements;
+    
+    /// <summary>
+    /// Number of matrix rows
+    /// </summary>
+    public int Height => this._elements.GetLength(0);
+
+    /// <summary>
+    /// Number of matrix columns
+    /// </summary>
+    public int Width => this._elements.GetLength(1);
+    
+    /// <summary>
     /// Constructs empty matrix
     /// </summary>
     public Matrix()
@@ -83,19 +98,4 @@ public class Matrix
 
         return lines;
     }
-    
-    /// <summary>
-    /// Matrix elements
-    /// </summary>
-    private readonly int[,] _elements;
-    
-    /// <summary>
-    /// Number of matrix rows
-    /// </summary>
-    public int Height => this._elements.GetLength(0);
-
-    /// <summary>
-    /// Number of matrix columns
-    /// </summary>
-    public int Width => this._elements.GetLength(1);
 }
