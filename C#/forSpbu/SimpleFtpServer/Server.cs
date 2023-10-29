@@ -4,38 +4,25 @@ using System.Net.Sockets;
 using System.Text.RegularExpressions;
 
 namespace SimpleFtp;
-
-public class RequestParseException : ApplicationException
-{
-    public RequestParseException(string message) : base(message)
-    {
-    }
-
-    public RequestParseException()
-    {
-    }
-}
 public class FtpServer
 {
     private const int Port = 21;
     private readonly TcpListener _listener = new (IPAddress.Any, Port);
 
-    public async Task  Listen()
+    public async Task Listen()
     {
         _listener.Start();
         while (true)
         {
-            var socket = await _listener.AcceptSocketAsync();
-            Task.Run(async () => HandleClient(socket));
+            var client = await _listener.AcceptTcpClientAsync();
+            Task.Run(() => HandleClient(client.GetStream()));
         }
     }
 
-    private void HandleClient(Socket socket)
+    private static void HandleClient(NetworkStream stream)
     {
-        var reader = new StreamReader(new NetworkStream(socket));
-        var data = reader.ReadLineAsync().Result;
+        var reader = new StreamReader(stream);
+        var data = reader.ReadToEnd();
         Console.WriteLine($"Received {data}");
     }
-    
-    
 }

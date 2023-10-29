@@ -6,10 +6,10 @@ public static class Factory
 {
     public static IResponse Create(string request)
     {
-        if (Regex.IsMatch(request, GetRequest.Pattern))
+        if (Regex.IsMatch(request, GetResponse.Pattern))
         {
-            var match = Regex.Match(request, GetRequest.Pattern);
-            return new GetRequest(match.Groups["path"].Value);
+            var match = Regex.Match(request, GetResponse.Pattern);
+            return new GetResponse(match.Groups["path"].Value);
         }
         if (Regex.IsMatch(request, ListRequest.Pattern))
         {

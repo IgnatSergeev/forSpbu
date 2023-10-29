@@ -2,5 +2,5 @@
 
 using SimpleFtp;
 
-var server = new Request("2 ./Test/Files\n");
-Console.WriteLine("1");
+var server = new FtpServer();
+await server.Listen();
