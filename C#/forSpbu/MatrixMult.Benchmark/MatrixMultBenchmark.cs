@@ -5,8 +5,8 @@ public class MatrixMultBenchmark
 {
     [Params(12, 24, 48, 96, 192, 384, 768, 1536)]
     public int Size;
-    private Matrix _fst;
-    private Matrix _sec;
+    private Matrix _fst = new Matrix();
+    private Matrix _sec = new Matrix();
     
     [GlobalSetup]
     public void GenerateRandomMatrix()

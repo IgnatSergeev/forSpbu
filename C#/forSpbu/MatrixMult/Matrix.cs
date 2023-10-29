@@ -68,16 +68,6 @@ public class Matrix
                 : this._elements[firstInd, secondInd];
 
     /// <summary>
-    /// Number of matrix rows
-    /// </summary>
-    public int Height => this._elements.GetLength(0);
-
-    /// <summary>
-    /// Number of matrix columns
-    /// </summary>
-    public int Width => this._elements.GetLength(1);
-
-    /// <summary>
     /// Returns matrix as array of string
     /// </summary>
     /// <returns>String array matrix representation</returns>
@@ -99,4 +89,14 @@ public class Matrix
     /// Matrix elements
     /// </summary>
     private readonly int[,] _elements;
+    
+    /// <summary>
+    /// Number of matrix rows
+    /// </summary>
+    public int Height => this._elements.GetLength(0);
+
+    /// <summary>
+    /// Number of matrix columns
+    /// </summary>
+    public int Width => this._elements.GetLength(1);
 }
