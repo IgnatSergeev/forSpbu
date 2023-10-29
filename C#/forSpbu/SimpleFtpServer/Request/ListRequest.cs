@@ -1,4 +1,4 @@
-﻿namespace SimpleFtp;
+﻿namespace SimpleFtp.Request;
 
 public class ListRequest : IRequest
 {

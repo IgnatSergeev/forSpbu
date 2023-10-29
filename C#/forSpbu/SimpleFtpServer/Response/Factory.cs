@@ -1,10 +1,10 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace SimpleFtp;
+namespace SimpleFtp.Response;
 
-public static class RequestFactory
+public static class Factory
 {
-    public static IRequest Create(string request)
+    public static IResponse Create(string request)
     {
         if (Regex.IsMatch(request, GetRequest.Pattern))
         {
