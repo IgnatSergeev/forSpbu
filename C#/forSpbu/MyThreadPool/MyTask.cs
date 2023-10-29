@@ -1,6 +1,6 @@
 ﻿namespace MyThreadPool;
 
-public class MyTask<TResult> : IMyTask<TResult>
+internal class MyTask<TResult> : IMyTask<TResult>
 {
     public MyTask(Func<TResult> func, MyThreadPool threadPool)
     {
