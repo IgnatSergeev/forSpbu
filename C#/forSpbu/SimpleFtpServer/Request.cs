@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 namespace SimpleFtp;
 
-public abstract class Request
+public class Request
 {
     public RequestType Type { get; private set; }
     public string Path { get; private set; }
