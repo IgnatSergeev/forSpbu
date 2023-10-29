@@ -38,6 +38,7 @@ public class MyThreadPoolTests
     public void Setup()
     {
         this._threadsAmount = 4;
+        System.Diagnostics.Process.GetCurrentProcess().Refresh();
         this._procAmount = System.Diagnostics.Process.GetCurrentProcess().Threads.Count;
         this._pool = new MyThreadPool(this._threadsAmount);
     }
@@ -114,6 +115,7 @@ public class MyThreadPoolTests
         var fstTask = _pool!.Submit(TestFunc);
         var secTask = _pool!.Submit(TestFunc);
         _pool!.Shutdown();
+        System.Diagnostics.Process.GetCurrentProcess().Refresh();
         Assert.That(System.Diagnostics.Process.GetCurrentProcess().Threads, Has.Count.EqualTo(_procAmount));
         
         Assert.Multiple(() =>
@@ -124,6 +126,7 @@ public class MyThreadPoolTests
 
         _pool!.Submit(TestFunc);
         fstTask.ContinueWith((int result) => result + 1);
+        System.Diagnostics.Process.GetCurrentProcess().Refresh();
         Assert.That(System.Diagnostics.Process.GetCurrentProcess().Threads, Has.Count.EqualTo(_procAmount));
     }
     
@@ -144,6 +147,7 @@ public class MyThreadPoolTests
     [Test]
     public void ThreadsCountTest()
     {
+        System.Diagnostics.Process.GetCurrentProcess().Refresh();
         Assert.That(System.Diagnostics.Process.GetCurrentProcess().Threads, Has.Count.EqualTo(_procAmount + 4));
     }
 }
