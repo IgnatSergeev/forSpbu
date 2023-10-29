@@ -7,40 +7,6 @@
 public class SingleThreadedLazy<T> : ILazy<T>
 {
     /// <summary>
-    /// Creates single threaded lazy with given delegate
-    /// </summary>
-    /// <param name="supplier">Delegate to use</param>
-    public SingleThreadedLazy(Func<T> supplier) => this._supplier = supplier;
-
-    /// <summary>
-    /// Lazily calculates given function
-    /// </summary>
-    /// <returns>Function result</returns>
-    /// <exception cref="Exception">If delegate threw exception</exception>
-    public T Get()
-    {
-        if (!this._isCalculated)
-        {
-            this._isCalculated = true;
-            try
-            {
-                this._result = this._supplier();
-            }
-            catch (Exception e)
-            {
-                this._threwException = true;
-                this._resultException = e;
-            }
-        }
-
-        if (_threwException)
-        {
-            throw this._resultException;
-        }
-        return this._result;
-    }
-
-    /// <summary>
     /// Function result holder
     /// </summary>
     private T? _result;
@@ -63,5 +29,43 @@ public class SingleThreadedLazy<T> : ILazy<T>
     /// <summary>
     /// Delegate defining the lazy
     /// </summary>
-    private readonly Func<T> _supplier;
+    private Func<T>? _supplier;
+    
+    /// <summary>
+    /// Creates single threaded lazy with given delegate
+    /// </summary>
+    /// <param name="supplier">Delegate to use</param>
+    public SingleThreadedLazy(Func<T> supplier) => this._supplier = supplier;
+
+    /// <summary>
+    /// Lazily calculates given function
+    /// </summary>
+    /// <returns>Function result</returns>
+    /// <exception cref="Exception">If delegate threw exception</exception>
+    public T Get()
+    {
+        if (!this._isCalculated)
+        {
+            try
+            {
+                this._result = this._supplier!();
+            }
+            catch (Exception e)
+            {
+                this._threwException = true;
+                this._resultException = e;
+            }
+            finally
+            {
+                this._isCalculated = true;
+                this._supplier = null;
+            }
+        }
+
+        if (_threwException)
+        {
+            throw this._resultException;
+        }
+        return this._result!;
+    }
 }
