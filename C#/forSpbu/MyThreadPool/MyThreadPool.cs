@@ -5,8 +5,84 @@ namespace MyThreadPool;
 /// <summary>
 /// Thread pool for concurrent delegate calculation
 /// </summary>
-public class MyThreadPool
+public class MyThreadPool : IDisposable
 {
+    private class MyTask<TResult> : IMyTask<TResult>
+    {
+        public MyTask(Func<TResult> func, MyThreadPool threadPool)
+        {
+            this._func = func;
+            this._threadPool = threadPool;
+        }
+    
+        public TResult Result()
+        {
+            while (!Volatile.Read(ref this._isCompleted))
+            {
+            }
+
+            if (this._threwException)
+            {
+                throw this._exception;
+            }
+
+            return this._result!;
+        }
+
+        public void Execute()
+        {
+            if (Volatile.Read(ref this._isCompleted)) return;
+            lock (this._func!)
+            {
+                if (Volatile.Read(ref this._isCompleted)) return;
+                try
+                {
+                    var result = this._func();
+                    this._threwException = false;
+                    this._result = result;
+                }
+                catch (Exception e)
+                {
+                    this._threwException = true;
+                    this._exception = new AggregateException(e);
+                }
+                finally
+                {
+                    Volatile.Write(ref this._isCompleted, true);
+                    this._func = null;
+                }
+            }
+        }
+    
+
+        public IMyTask<TNewResult> ContinueWith<TNewResult>(Func<TResult, TNewResult> nextDelegate)
+        {
+            lock (Volatile.Read(ref this.NextTasks))
+            {
+                if (Volatile.Read(ref this._isCompleted))
+                {
+                    return this._threadPool.Submit(() => nextDelegate(this._result!));
+                }
+
+                var nextTask = new MyTask<TNewResult>(() => nextDelegate(this._result!), this._threadPool);
+                Volatile.Read(ref this.NextTasks).Add(nextTask.Execute);
+            
+                return nextTask;
+            }
+        }
+        
+        private volatile Func<TResult>? _func;
+        private readonly MyThreadPool _threadPool;
+    
+        private volatile Exception _exception = new AggregateException();
+        private TResult? _result;
+        private volatile bool _threwException;
+        private bool _isCompleted;
+
+        public bool IsCompleted => this._isCompleted;
+        public ConcurrentBag<Action> NextTasks = new ();
+    }
+    
     /// <summary>
     /// Creates my thread pool with given number of threads
     /// </summary>
@@ -27,9 +103,13 @@ public class MyThreadPool
                 while (!this._isTerminated)
                 {
                     this._functions.TryDequeue(out var func);
-                    func?.Invoke();
+                    if (func != null)
+                    {
+                        func.Invoke();
+                    }
                 }
             });
+            this._threads[i].Start();
         }
     }
 
@@ -45,9 +125,9 @@ public class MyThreadPool
         this._functions.Enqueue(() =>
         {
             task.Execute();
-            lock (task.NextTasks)
+            lock (Volatile.Read(ref task.NextTasks))
             {
-                foreach (var taskDelegate in task.NextTasks)
+                foreach (var taskDelegate in Volatile.Read(ref task.NextTasks))
                 {
                     this._functions.Enqueue(taskDelegate);
                 }
@@ -57,7 +137,7 @@ public class MyThreadPool
     }
 
     /// <summary>
-    /// Softly shuts down a pool, blocks called thread until all running tasks finished
+    /// Softly shuts down the pool, blocks called thread until all running tasks finished
     /// </summary>
     public void Shutdown()
     {
@@ -67,7 +147,12 @@ public class MyThreadPool
             thread.Join();
         }
     }
-    
+
+    /// <summary>
+    /// Shuts down the pool
+    /// </summary>
+    public void Dispose() => this.Shutdown();
+
     private readonly ConcurrentQueue<Action> _functions = new ();
     private readonly Thread[] _threads;
     private volatile bool _isTerminated;
