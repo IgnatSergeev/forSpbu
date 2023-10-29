@@ -4,7 +4,7 @@ namespace MatrixMult.Benchmark;
 public class MatrixMultBenchmark
 {
     [Params(12, 24, 48, 96, 192, 384, 768, 1536)]
-    public int Size;
+    public int Size { get; set; }
     private Matrix _fst;
     private Matrix _sec;
     
