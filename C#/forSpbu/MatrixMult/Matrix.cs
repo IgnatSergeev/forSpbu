@@ -43,8 +43,7 @@ public class Matrix
 
             for (var j = 0; j < localWidth; j++)
             {
-                bool parseResult = int.TryParse(splitLines[i][j], out var parseValue);
-                if (!parseResult)
+                if (!int.TryParse(splitLines[i][j], out var parseValue))
                 {
                     throw new MatrixCreationException("Incorrect matrix element");
                 }
