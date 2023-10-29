@@ -82,6 +82,15 @@ public class MyThreadPoolTests
     }
     
     [Test]
+    public void ExceptionResultTest()
+    {
+        var tester = new PoolTester();
+        var task = _pool!.Submit<int>(() => throw new NotImplementedException());
+
+        Assert.Throws<AggregateException>(() => task.Result());
+    }
+    
+    [Test]
     public void IsCompletedTest()
     {
         var startEvent = new ManualResetEvent(false);
