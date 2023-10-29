@@ -2,58 +2,75 @@
 
 public class MyTask<TResult> : IMyTask<TResult>
 {
+    public MyTask(Func<TResult> func, MyThreadPool threadPool)
+    {
+        this._func = func;
+        this._threadPool = threadPool;
+    }
+    
     public TResult Result()
     {
-        //while (!this.IsCompleted) {} should be blocked with lock
+        this.Execute();
 
         if (this._threwException)
         {
             throw this._exception;
         }
 
-        return this._result;
+        return this._result!;
     }
 
-    public IMyTask<TNewResult> ContinueWith<TNewResult>(Func<TResult, TNewResult> nextDelegate)
+    public void Execute()
     {
-        var nextTask = new MyTask<TNewResult>();
-
-        void NextAction()
+        if (this.IsCompleted) return;
+        lock (this._func!)
         {
+            if (this.IsCompleted) return;
             try
             {
-                var nextResult = nextDelegate(this._result);
-                nextTask.FuncFinished(nextResult);
+                var result = this._func();
+                this._threwException = false;
+                this._result = result;
             }
             catch (Exception e)
             {
-                nextTask.FuncFinished(e);
+                this._threwException = true;
+                this._exception = new AggregateException(e);
+            }
+            finally
+            {
+                this.IsCompleted = true;
+                this._func = null;
             }
         }
-        this.NextActions.Add(NextAction);
-        
-        return nextTask;
-    }
-
-    public void FuncFinished(TResult result)
-    {
-        if (this.IsCompleted) return;
-        this.IsCompleted = true;
-        this._threwException = false;
-        this._result = result;
     }
     
-    public void FuncFinished(Exception exception)
+
+    public IMyTask<TNewResult> ContinueWith<TNewResult>(Func<TResult, TNewResult> nextDelegate)
     {
-        if (this.IsCompleted) return;
-        this.IsCompleted = true;
-        this._threwException = true;
-        this._exception = new AggregateException(this._exception);
+        lock (this.NextTasks)
+        {
+            if (this.IsCompleted)
+            {
+                return _threadPool.Submit(() => nextDelegate(this._result!));
+            }
+            
+            var nextTask = new MyTask<TNewResult>(() => nextDelegate(this._result!), _threadPool);
+            this.NextTasks.Add(() =>
+            {
+                nextTask.Execute();
+            });
+            
+            return nextTask;
+        }
     }
+    
+    private Func<TResult>? _func;
+    private readonly MyThreadPool _threadPool;
     
     private volatile Exception _exception = new AggregateException();
     private TResult? _result;
     private volatile bool _threwException;
     public bool IsCompleted { get; private set; }
-    public readonly List<Action> NextActions = new ();
+    public readonly List<Action> NextTasks = new ();
 }

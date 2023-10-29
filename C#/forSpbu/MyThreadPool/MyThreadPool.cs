@@ -16,7 +16,7 @@ public class MyThreadPool
         {
             this._threads[i] = new Thread(() =>
             {
-                while (true)
+                while (!this._isTerminated)
                 {
                     this._functions.TryDequeue(out var func);
                     func?.Invoke();
@@ -27,37 +27,31 @@ public class MyThreadPool
 
     public IMyTask<TResult> Submit<TResult>(Func<TResult> func)
     {
-        var finishEvent = new ManualResetEvent(false);
-        var task = new MyTask<TResult>();
-        this._functions.Enqueue((() =>
+        var task = new MyTask<TResult>(func, this);
+        this._functions.Enqueue(() =>
         {
-            lock(task)
+            task.Execute();
+            lock (task.NextTasks)
             {
-                try
+                foreach (var taskDelegate in task.NextTasks)
                 {
-                    var result = func();
-                    task.FuncFinished(result);
-                }
-                catch (Exception e)
-                {
-                    task.FuncFinished(e);
-                }
-                finally
-                {
-                    finishEvent.Set();
+                    this._functions.Enqueue(taskDelegate);
                 }
             }
-        }, finishEvent));
+        });
         return task;
     }
 
     public void Shutdown()
     {
         _isTerminated = true;
+        foreach (var thread in _threads)
+        {
+            thread.Join();
+        }
     }
     
-    private readonly ConcurrentQueue<(Action action, ManualResetEvent finishEvent)> _functions = new ();
+    private readonly ConcurrentQueue<Action> _functions = new ();
     private readonly Thread[] _threads;
-    private Semaphore stop;
-    private bool _isTerminated;
+    private volatile bool _isTerminated;
 }
