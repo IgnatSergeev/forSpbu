@@ -8,4 +8,9 @@ public class GetRequest : Request
     {
         Path = path;
     }
+    
+    public override string ToString()
+    {
+        return "2 " + Path + "\n";
+    }
 }

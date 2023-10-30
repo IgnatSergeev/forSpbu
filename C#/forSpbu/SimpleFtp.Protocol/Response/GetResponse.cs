@@ -14,5 +14,5 @@ public class GetResponse : Response
     {
     }
     
-    public override string ToString() => Size + " " + System.Text.Encoding.UTF8.GetString(_file ?? Array.Empty<byte>());
+    public override string ToString() => Size + " " + System.Text.Encoding.UTF8.GetString(_file ?? Array.Empty<byte>()) + "\n";
 }

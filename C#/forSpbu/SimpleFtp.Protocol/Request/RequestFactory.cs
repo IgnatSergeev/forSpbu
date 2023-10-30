@@ -4,8 +4,8 @@ namespace SimpleFtp.Protocol;
 
 public static partial class RequestFactory
 {
-    private const string GetPattern = "2 (?<path>[1-9a-zA-Z./]+)\n";
-    private const string ListPattern = "1 (?<path>[1-9a-zA-Z./]+)\n";
+    private const string GetPattern = "2 (?<path>[1-9a-zA-Z./\\\\]+)\n";
+    private const string ListPattern = "1 (?<path>[1-9a-zA-Z./\\\\]+)\n";
 
     public static Request Create(string request)
     {

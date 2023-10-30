@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using SimpleFtp.Protocol;
 
@@ -15,23 +16,44 @@ public class FtpServer
         while (true)
         {
             using var client = await _listener.AcceptTcpClientAsync();
-            await HandleClient(client.GetStream());
+            await HandleClient(client);
         }
     }
 
-    private static async Task HandleClient(Stream stream)
+    private static async Task HandleClient(TcpClient client)
     {
-        using var reader = new StreamReader(stream);
-        await using var writer = new StreamWriter(stream);
+        Console.WriteLine("Connected");
+        using var reader = new StreamReader(client.GetStream());
+        await using var writer = new StreamWriter(client.GetStream());
         writer.AutoFlush = true;
-        try
+        
+        
+        while (IsConnected(client))
         {
-            var response = HandleRequest(RequestFactory.Create(await reader.ReadToEndAsync()));
-            await writer.WriteAsync(response.ToString());
+            try
+            {
+                var data = await reader.ReadLineAsync();
+                if (string.IsNullOrEmpty(data))
+                {
+                    continue;
+                }
+                data += "\n";
+                Console.Write($"Request: {data}");
+                var response = HandleRequest(RequestFactory.Create(data));
+                await writer.WriteAsync(response.ToString());
+                Console.Write($"Response: {response.ToString()}");
+            }
+            catch (Exception e) when (e is ArgumentOutOfRangeException or ObjectDisposedException or InvalidOperationException or RequestParseException)
+            {
+            }
         }
-        catch (Exception e) when (e is ArgumentOutOfRangeException or ObjectDisposedException or InvalidOperationException or RequestParseException)
-        {
-        }
+        Console.WriteLine("Disconnected");
+    }
+
+    private static bool IsConnected(TcpClient client)
+    {
+        var tcpConnections = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections().Where(x => x.LocalEndPoint.Equals(client.Client.LocalEndPoint) && x.RemoteEndPoint.Equals(client.Client.RemoteEndPoint)).ToArray();
+        return tcpConnections.Length > 0 && tcpConnections.First().State == TcpState.Established;
     }
 
     private static Response HandleRequest(Request request)

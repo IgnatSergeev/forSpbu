@@ -2,4 +2,5 @@
 
 public abstract class Request
 {
+    public abstract string ToString();
 }

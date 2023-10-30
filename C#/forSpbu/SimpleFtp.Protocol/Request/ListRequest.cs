@@ -8,4 +8,9 @@ public class ListRequest : Request
     {
         Path = path;
     }
+
+    public override string ToString()
+    {
+        return "1 " + Path + "\n";
+    }
 }

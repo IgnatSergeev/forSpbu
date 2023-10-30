@@ -1,10 +1,10 @@
-﻿using System.Net;
-using System.Net.Sockets;
+﻿using SimpleFtp.Client;
+using SimpleFtp.Protocol;
 
-var client = new TcpClient();
-await client.ConnectAsync("localhost", 21);
-using var stream = client.GetStream();
-using var reader = new StreamReader(stream);
-using var writer = new StreamWriter(stream) { AutoFlush = true };
-
-await writer.WriteLineAsync("1 .\n");
+var client = await FtpClient.Connect("localhost", 21);
+var request = RequestFactory.Create("1 .\n");
+var response = client.SendRequest(request);
+Console.Write(response.ToString());
+response = client.SendRequest(request);
+Console.Write(response.ToString());
+client.Disconnect();

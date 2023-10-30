@@ -6,6 +6,8 @@ namespace SimpleFtp.Client;
 public class FtpClient
 {
     private readonly TcpClient _client = new TcpClient();
+    private StreamReader? _reader;
+    private StreamWriter? _writer;
     public string Hostname { get; private set; }
     public int Port { get; private set; }
 
@@ -19,15 +21,21 @@ public class FtpClient
     {
         var client = new FtpClient(hostname, port);
         await client._client.ConnectAsync(hostname, port);
+        client._reader = new StreamReader(client._client.GetStream());
+        client._writer = new StreamWriter(client._client.GetStream());
+        client._writer.AutoFlush = true;
         return client;
     }
     
-    public async Task<Response> SendRequest(Request request)
+    public Response SendRequest(Request request)
     {
-        using var reader = new StreamReader(_client.GetStream());
-        await using var writer = new StreamWriter(_client.GetStream());
+        _writer?.Write(request.ToString());
+        var data = _reader?.ReadLine() + "\n";
+        return ResponseFactory.Create(data);
+    }
 
-        await writer.WriteAsync(request.ToString());
-        return ResponseFactory(reader.ReadToEndAsync());
+    public void Disconnect()
+    {
+        _client.Close();
     }
 }
