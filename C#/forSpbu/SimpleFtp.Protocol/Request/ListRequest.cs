@@ -2,7 +2,7 @@
 
 public class ListRequest : Request
 {
-    public string Path { get; private set; };
+    public string Path { get; private set; }
     
     public ListRequest(string path)
     {

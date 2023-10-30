@@ -2,10 +2,16 @@
 
 public class ListResponse : Response
 {
-    public (string name, bool isDir)[] List { get; private set; };
-    
-    public ListResponse((string name, bool isDir)[] dirList)
+    public IEnumerable<(string name, bool isDir)>? List { get; private set; }
+
+    public int Size => List?.Count() ?? -1;
+
+    public ListResponse(IEnumerable<(string name, bool isDir)> dirList)
     {
         List = dirList;
+    }
+    
+    public ListResponse()
+    {
     }
 }

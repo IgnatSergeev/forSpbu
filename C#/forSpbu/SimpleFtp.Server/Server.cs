@@ -1,5 +1,7 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Net.Sockets;
+using SimpleFtp.Protocol;
 
 namespace SimpleFtp;
 public class FtpServer
@@ -13,23 +15,58 @@ public class FtpServer
         while (true)
         {
             var client = await _listener.AcceptTcpClientAsync();
-            Task.Run(() => HandleClient(client.GetStream()));
+            HandleClient(client.GetStream());
         }
     }
 
-    private static async void HandleClient(NetworkStream stream)
+    private static async Task HandleClient(NetworkStream stream)
     {
-        var reader = new StreamReader(stream);
-        var data = await reader.ReadToEndAsync();
-        var request = Protocol.RequestFactory.Create(data);
-        var response = HandleRequest(request);
+        var data = await new StreamReader(stream).ReadToEndAsync();
+        try
+        {
+            var response = HandleRequest(RequestFactory.Create(data));
+        }
+        catch (RequestParseException)
+        {
+        }
+
     }
 
-    private static Protocol.Response HandleRequest(Protocol.Request request)
+    private static Response HandleRequest(Request request)
     {
-        if (request is Protocol.GetRequest)
+        switch (request)
         {
-            request.
+            case ListRequest listRequest:
+            {
+                try
+                {
+                    var files = Directory.GetFiles(listRequest.Path);
+                    var directories = Directory.GetDirectories(listRequest.Path);
+                    return new ListResponse(files.Select((string x) => (x, false)).Concat(directories.Select((string x) => (x, true))));
+                }
+                catch (Exception e) when (e is IOException or UnauthorizedAccessException or ArgumentException)
+                {
+                }
+
+                return new ListResponse();
+            }
+
+            case GetRequest getRequest:
+            {
+                try
+                {
+                    return new GetResponse(File.ReadAllBytes(getRequest.Path));
+                }
+                catch (Exception e) when (e is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
+                {
+                }
+
+                return new GetResponse();
+            }
+            default:
+            {
+                throw new UnreachableException();
+            }
         }
     }
 }
