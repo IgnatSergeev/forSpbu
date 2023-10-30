@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "12.10", "12.10", "{7A21E6C1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFtp.Server", "SimpleFtp.Server\SimpleFtp.Server.csproj", "{EE4BF01B-FD41-47A7-B2BF-F9604CFE50B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFtpClient", "SimpleFtpClient\SimpleFtpClient.csproj", "{D5835D5B-B4F3-4AF6-8FDB-0133183D3304}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFtp.Client", "SimpleFtp.Client\SimpleFtp.Client.csproj", "{D5835D5B-B4F3-4AF6-8FDB-0133183D3304}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleFtp.Protocol", "SimpleFtp.Protocol\SimpleFtp.Protocol.csproj", "{888C5E3A-3DE2-4405-B4E3-24ABB9A473C5}"
 EndProject
