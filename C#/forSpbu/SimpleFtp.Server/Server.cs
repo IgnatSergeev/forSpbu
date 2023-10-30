@@ -14,22 +14,24 @@ public class FtpServer
         _listener.Start();
         while (true)
         {
-            var client = await _listener.AcceptTcpClientAsync();
-            HandleClient(client.GetStream());
+            using var client = await _listener.AcceptTcpClientAsync();
+            await HandleClient(client.GetStream());
         }
     }
 
-    private static async Task HandleClient(NetworkStream stream)
+    private static async Task HandleClient(Stream stream)
     {
-        var data = await new StreamReader(stream).ReadToEndAsync();
+        using var reader = new StreamReader(stream);
+        await using var writer = new StreamWriter(stream);
+        writer.AutoFlush = true;
         try
         {
-            var response = HandleRequest(RequestFactory.Create(data));
+            var response = HandleRequest(RequestFactory.Create(await reader.ReadToEndAsync()));
+            await writer.WriteAsync(response.ToString());
         }
-        catch (RequestParseException)
+        catch (Exception e) when (e is ArgumentOutOfRangeException or ObjectDisposedException or InvalidOperationException or RequestParseException)
         {
         }
-
     }
 
     private static Response HandleRequest(Request request)
@@ -50,7 +52,6 @@ public class FtpServer
 
                 return new ListResponse();
             }
-
             case GetRequest getRequest:
             {
                 try

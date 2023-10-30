@@ -2,16 +2,21 @@
 
 public class ListResponse : Response
 {
-    public IEnumerable<(string name, bool isDir)>? List { get; private set; }
+    private readonly IEnumerable<(string name, bool isDir)>? _list;
 
-    public int Size => List?.Count() ?? -1;
+    private int Size => _list?.Count() ?? -1;
 
     public ListResponse(IEnumerable<(string name, bool isDir)> dirList)
     {
-        List = dirList;
+        _list = dirList;
     }
     
     public ListResponse()
     {
     }
+
+    public override string ToString() => 
+        Size + " " + 
+            string.Join(' ', (_list ?? Array.Empty<(string name, bool isDir)>())
+                .Select<(string name, bool isDir), string>(x => x.name + " " + x.isDir)) + "\n";
 }
