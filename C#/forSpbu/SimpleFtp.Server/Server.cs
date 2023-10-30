@@ -1,7 +1,5 @@
-﻿using System.Diagnostics;
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
-using System.Text.RegularExpressions;
 
 namespace SimpleFtp;
 public class FtpServer
@@ -19,10 +17,19 @@ public class FtpServer
         }
     }
 
-    private static void HandleClient(NetworkStream stream)
+    private static async void HandleClient(NetworkStream stream)
     {
         var reader = new StreamReader(stream);
-        var data = reader.ReadToEnd();
-        Console.WriteLine($"Received {data}");
+        var data = await reader.ReadToEndAsync();
+        var request = Protocol.RequestFactory.Create(data);
+        var response = HandleRequest(request);
+    }
+
+    private static Protocol.Response HandleRequest(Protocol.Request request)
+    {
+        if (request is Protocol.GetRequest)
+        {
+            request.
+        }
     }
 }

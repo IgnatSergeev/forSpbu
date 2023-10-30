@@ -1,4 +1,4 @@
-﻿namespace SimpleFtp.Request;
+﻿namespace SimpleFtp.Protocol;
 
 public class RequestParseException : FormatException
 {
