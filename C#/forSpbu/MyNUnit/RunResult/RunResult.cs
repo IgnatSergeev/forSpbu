@@ -20,7 +20,6 @@ public abstract class RunResult
     /// <param name="class">Class name(in which method defined in)</param>
     /// <param name="name">Method name</param>
     /// <param name="exception">Exception if it was thrown</param>
-    /// <param name="ignoreDesc">Ignore description if it`s ignored</param>
     /// <returns>RunResult implementation</returns>
     public static RunResult Create(string? @class, string name, Exception? exception) => 
         exception == null 

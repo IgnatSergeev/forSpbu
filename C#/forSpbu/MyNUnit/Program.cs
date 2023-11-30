@@ -14,9 +14,26 @@ internal static class Program
         var assembly = Assembly.LoadFile(argv[0]);
 
         var runResults = Tester.TestAssembly(assembly);
-        runResults.Aggregate((result, (int ok, int errors, int ignored))) =>  =>
+        var summary = runResults.Aggregate<TestResult, (int ok, int errors, int ignored)>((0, 0, 0), (summary, result) =>
         {
+            if (result.Ignored)
+            {
+                summary.ignored++;
+            }
+            if (result.Passed)
+            {
+                summary.ok++;
+            }
+            else
+            {
+                summary.errors++;
+            }
             
+            Console.WriteLine(result.ToString());
+
+            return summary;
         });
+        
+        Console.WriteLine($"Summary: {summary.ok} ok, {summary.errors} failed, {summary.ok} ignored");
     }
 }
