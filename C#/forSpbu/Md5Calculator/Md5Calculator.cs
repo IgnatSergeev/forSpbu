@@ -50,7 +50,7 @@ public static class Md5Calculator
         
         var overallBytes = (await Task.WhenAll(tasks))
             .SelectMany(byteArray => byteArray)
-            .Concat(ComputeString(Path.GetDirectoryName(path)!))
+            .Concat(ComputeString(new DirectoryInfo(path).Name))
             .ToArray();
         return MD5.HashData(overallBytes);
     }
@@ -61,16 +61,22 @@ public static class Md5Calculator
 
         var dirBytes = Directory.GetDirectories(path).SelectMany(ComputeDir);
         
-        var overallBytes = fileBytes.Concat(dirBytes).Concat(ComputeString(Path.GetDirectoryName(path)!)).ToArray();
+        var overallBytes = fileBytes.Concat(dirBytes).Concat(ComputeString(new DirectoryInfo(path).Name)).ToArray();
         
         return MD5.HashData(overallBytes);
     }
 
-    private static async Task<byte[]> ComputeFileAsync(string path) =>
-        await MD5.HashDataAsync(new FileInfo(path).OpenRead());
-    
-    private static byte[] ComputeFile(string path) =>
-        MD5.HashData(new FileInfo(path).OpenRead());
+    private static async Task<byte[]> ComputeFileAsync(string path)
+    {
+        var byteArray = (await MD5.HashDataAsync(new FileInfo(path).OpenRead())).Concat(ComputeString(new FileInfo(path).Name)).ToArray();
+        return MD5.HashData(byteArray);
+    }
+
+    private static byte[] ComputeFile(string path)
+    {
+        var byteArray = MD5.HashData(new FileInfo(path).OpenRead()).Concat(ComputeString(new FileInfo(path).Name)).ToArray();
+        return MD5.HashData(byteArray);
+    }
     
     private static byte[] ComputeString(string @string) => 
         MD5.HashData(System.Text.Encoding.ASCII.GetBytes(@string));
