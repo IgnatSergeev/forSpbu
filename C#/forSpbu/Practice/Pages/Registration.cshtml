@@ -1,0 +1,31 @@
+@page
+@model Practice.Pages.RegistrationModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Register</title>
+    </head>
+    <body>
+        <form asp-action="Register" method="post">
+            <p>
+                <label asp-for="Participant.Name">Your name:</label>
+                <input asp-for="Participant.Name" />
+            </p>
+            <p>
+                <label asp-for="Participant.Email">Your email:</label>
+                <input asp-for="Participant.Email" />
+            </p>
+            <p>
+                <label>Are you a speaker?</label>
+                <select asp-for="Participant.IsSpeaker">
+                    <option value="">Choose an option</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+            </p>
+            <button type="submit">Register!</button>
+        </form>
+    </body>
+</html>
