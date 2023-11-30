@@ -32,17 +32,15 @@ public static class Md5Calculator
         {
             Console.WriteLine(file);
         }
-        
         var fileTasks = Directory.GetFiles(path).Select(ComputeFileAsync);
 
         var dirTasks = Directory.GetDirectories(path).Select(ComputeDirAsync);
 
-        var tasks = fileTasks.Concat(dirTasks)
-            .Append(new Task<byte[]>(() => ComputeString(Path.GetDirectoryName(path)!)))
-            .ToArray();
-        await Task.WhenAll(tasks);
+        var tasks = fileTasks
+            .Concat(dirTasks)
+            .Append(new Task<byte[]>(() => ComputeString(Path.GetDirectoryName(path)!)));
         
-        var overallBytes = tasks.SelectMany(task => task.Result).ToArray();
+        var overallBytes = (await Task.WhenAll(tasks)).SelectMany(byteArray => byteArray).ToArray();
         return MD5.HashData(overallBytes);
     }
     
@@ -59,7 +57,11 @@ public static class Md5Calculator
     
     private static async Task<byte[]> ComputeFileAsync(string path)
     {
-        return await MD5.HashDataAsync(File.Open(path, FileMode.Open));
+        return await new Task<byte[]>(() =>
+        {
+            var fileStream = File.Open(path, FileMode.Open);
+            return MD5.HashData(fileStream);
+        });
     }
     
     private static byte[] ComputeFile(string path)
