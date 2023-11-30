@@ -27,20 +27,16 @@ public static class Md5Calculator
 
     private static async Task<byte[]> ComputeDirAsync(string path)
     {
-        Console.WriteLine("Async dir");
-        foreach (var file in Directory.GetFiles(path))
-        {
-            Console.WriteLine(file);
-        }
         var fileTasks = Directory.GetFiles(path).Select(ComputeFileAsync);
 
         var dirTasks = Directory.GetDirectories(path).Select(ComputeDirAsync);
 
-        var tasks = fileTasks
-            .Concat(dirTasks)
-            .Append(new Task<byte[]>(() => ComputeString(Path.GetDirectoryName(path)!)));
+        var tasks = fileTasks.Concat(dirTasks).ToArray();
         
-        var overallBytes = (await Task.WhenAll(tasks)).SelectMany(byteArray => byteArray).ToArray();
+        var overallBytes = (await Task.WhenAll(tasks))
+            .SelectMany(byteArray => byteArray)
+            .Concat(ComputeString(Path.GetDirectoryName(path)!))
+            .ToArray();
         return MD5.HashData(overallBytes);
     }
     
@@ -54,24 +50,13 @@ public static class Md5Calculator
         
         return MD5.HashData(overallBytes);
     }
+
+    private static async Task<byte[]> ComputeFileAsync(string path) =>
+        await MD5.HashDataAsync(new FileInfo(path).OpenRead());
     
-    private static async Task<byte[]> ComputeFileAsync(string path)
-    {
-        return await new Task<byte[]>(() =>
-        {
-            var fileStream = File.Open(path, FileMode.Open);
-            return MD5.HashData(fileStream);
-        });
-    }
+    private static byte[] ComputeFile(string path) =>
+        MD5.HashData(new FileInfo(path).OpenRead());
     
-    private static byte[] ComputeFile(string path)
-    {
-        return MD5.HashData(File.Open(path, FileMode.Open));
-    }
-    
-    private static byte[] ComputeString(string @string)
-    {
-        var inputBytes = System.Text.Encoding.ASCII.GetBytes(@string);
-        return MD5.HashData(inputBytes);
-    }
+    private static byte[] ComputeString(string @string) => 
+        MD5.HashData(System.Text.Encoding.ASCII.GetBytes(@string));
 }
