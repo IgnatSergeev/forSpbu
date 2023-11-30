@@ -2,8 +2,17 @@ namespace Md5Calculator;
 
 using System.Security.Cryptography;
 
+/// <summary>
+/// Represents md5 hash calculator
+/// </summary>
 public static class Md5Calculator
 {
+    /// <summary>
+    /// Asynchronously computes md5 hash of given path
+    /// </summary>
+    /// <param name="path">Path to compute</param>
+    /// <returns>Hash as byte array</returns>
+    /// <exception cref="CalculatorException">If given does not exist</exception>
     public static async Task<byte[]> ComputeAsync(string path)
     {
         if (!Directory.Exists(path) && !File.Exists(path))
@@ -14,6 +23,12 @@ public static class Md5Calculator
         return !Directory.Exists(path) ? await ComputeFileAsync(path) : await ComputeDirAsync(path);
     }
     
+    /// <summary>
+    /// Synchronously computes md5 hash of given path
+    /// </summary>
+    /// <param name="path">Path to compute</param>
+    /// <returns>Hash as byte array</returns>
+    /// <exception cref="CalculatorException">If given does not exist</exception>
     public static byte[] Compute(string path)
     {
         if (!Directory.Exists(path) && !File.Exists(path))
