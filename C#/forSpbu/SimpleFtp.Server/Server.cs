@@ -38,9 +38,9 @@ public class FtpServer
                     continue;
                 }
                 data += "\n";
-                Console.Write($"Request: {data}");
                 var response = HandleRequest(RequestFactory.Create(data));
                 await writer.WriteAsync(response.ToString());
+                Console.Write($"Request: {data}");
                 Console.Write($"Response: {response.ToString()}");
             }
             catch (Exception e) when (e is ArgumentOutOfRangeException or ObjectDisposedException or InvalidOperationException or RequestParseException)
