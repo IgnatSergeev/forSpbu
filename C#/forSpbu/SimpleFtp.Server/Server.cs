@@ -7,16 +7,17 @@ using SimpleFtp.Protocol;
 namespace SimpleFtp;
 public class FtpServer
 {
-    private const int Port = 21;
-    private readonly TcpListener _listener = new (IPAddress.Any, Port);
+    private const int _port = 32768;
+    private readonly TcpListener _listener = new (IPAddress.Any, _port);
+    private CancellationToken token = new ();
 
     public async Task Listen()
     {
         _listener.Start();
         while (true)
         {
-            using var client = await _listener.AcceptTcpClientAsync();
-            await HandleClient(client);
+            using var client = await _listener.AcceptTcpClientAsync(token);
+            Task.Run(() => HandleClient(client));
         }
     }
 
@@ -91,5 +92,11 @@ public class FtpServer
                 throw new UnreachableException();
             }
         }
+    }
+    
+    public bool Stop()
+    {
+        var tcpConnections = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections().Where(x => x.LocalEndPoint.Equals(client.Client.LocalEndPoint) && x.RemoteEndPoint.Equals(client.Client.RemoteEndPoint)).ToArray();
+        return tcpConnections.Length > 0 && tcpConnections.First().State == TcpState.Established;
     }
 }

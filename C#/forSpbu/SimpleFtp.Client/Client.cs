@@ -8,14 +8,15 @@ public class FtpClient
     private readonly TcpClient _client = new TcpClient();
     private StreamReader? _reader;
     private StreamWriter? _writer;
-    public string Hostname { get; private set; }
-    public int Port { get; private set; }
 
     private FtpClient(string hostname, int port)
     {
         Hostname = hostname;
         Port = port;
     }
+    
+    public string Hostname { get; private set; }
+    public int Port { get; private set; }
     
     public static async Task<FtpClient> Connect(string hostname, int port)
     {
