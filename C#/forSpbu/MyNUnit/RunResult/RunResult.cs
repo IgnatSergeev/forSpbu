@@ -28,7 +28,7 @@ public abstract class RunResult
             ? new OkResult(@class, name) 
             : new ExceptionResult(@class, name, exception);
 
-    public abstract string ToString();
+    public new abstract string ToString();
 
     /// <summary>
     /// Get run method
