@@ -2,22 +2,25 @@
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Reflection.Metadata;
 using SimpleFtp.Protocol;
 
 namespace SimpleFtp;
 public class FtpServer
 {
-    private const int _port = 32768;
-    private readonly TcpListener _listener = new (IPAddress.Any, _port);
-    private CancellationToken token = new ();
+    private const int Port = 32768;
+    private readonly TcpListener _listener = new (IPAddress.Any, Port);
+    private CancellationTokenSource? _cancellation;
+    private readonly List<Task> _clients = new();
 
-    public async Task Listen()
+    public async Task Listen(CancellationTokenSource cancellation)
     {
+        _cancellation = cancellation;
         _listener.Start();
-        while (true)
+        while (!_cancellation.IsCancellationRequested)
         {
-            using var client = await _listener.AcceptTcpClientAsync(token);
-            Task.Run(() => HandleClient(client));
+            var client = await _listener.AcceptTcpClientAsync(_cancellation.Token);
+            _clients.Add(Task.Run(() => HandleClient(client)));
         }
     }
 
@@ -41,8 +44,6 @@ public class FtpServer
                 data += "\n";
                 var response = HandleRequest(RequestFactory.Create(data));
                 await writer.WriteAsync(response.ToString());
-                Console.Write($"Request: {data}");
-                Console.Write($"Response: {response.ToString()}");
             }
             catch (Exception e) when (e is ArgumentOutOfRangeException or ObjectDisposedException or InvalidOperationException or RequestParseException)
             {
@@ -94,9 +95,11 @@ public class FtpServer
         }
     }
     
-    public bool Stop()
+    private void WaitForClients()
     {
-        var tcpConnections = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections().Where(x => x.LocalEndPoint.Equals(client.Client.LocalEndPoint) && x.RemoteEndPoint.Equals(client.Client.RemoteEndPoint)).ToArray();
-        return tcpConnections.Length > 0 && tcpConnections.First().State == TcpState.Established;
+        foreach (var task in _clients)
+        {
+            task.Wait();
+        }
     }
 }
