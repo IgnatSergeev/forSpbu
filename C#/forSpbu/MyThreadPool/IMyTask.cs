@@ -12,10 +12,10 @@ public interface IMyTask<out TResult>
     public bool IsCompleted { get; }
 
     /// <summary>
-    /// Returns task result, blocks called thread
+    /// Task result, blocks called thread
     /// </summary>
     /// <returns>task result</returns>
-    public TResult Result();
+    public TResult Result { get; }
 
     /// <summary>
     /// Continues task with given function, current task result is used as a parameter for the new one

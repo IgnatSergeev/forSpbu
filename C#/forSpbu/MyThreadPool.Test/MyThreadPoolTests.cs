@@ -46,28 +46,28 @@ public class MyThreadPoolTests
     [Test]
     public void SubmitResultTest()
     {
-        Assert.That(_pool!.Submit(TestFunc).Result(), Is.EqualTo(499500));
+        Assert.That(_pool!.Submit(TestFunc).Result, Is.EqualTo(499500));
     }
     
     [Test]
     public void SubmitContinueWithResultTest()
     {
-        Assert.That(_pool!.Submit(TestFunc).ContinueWith((int result) => result + 1).Result(), Is.EqualTo(499501));
+        Assert.That(_pool!.Submit(TestFunc).ContinueWith((int result) => result + 1).Result, Is.EqualTo(499501));
     }
     
     [Test]
     public void DoubleContinueWithResultTest()
     {
-        Assert.That(_pool!.Submit(TestFunc).ContinueWith((int result) => result + 1).ContinueWith((int result) => result.ToString()).Result(), Is.EqualTo("499501"));
+        Assert.That(_pool!.Submit(TestFunc).ContinueWith((int result) => result + 1).ContinueWith((int result) => result.ToString()).Result, Is.EqualTo("499501"));
     }
     
     [Test]
     public void SubmitResultContinueWithResultTest()
     {
         var task = _pool!.Submit(TestFunc);
-        task.Result();
         
-        Assert.That(task.ContinueWith((int result) => result + 1).Result(), Is.EqualTo(499501));
+        
+        Assert.That(task.ContinueWith((int result) => result + 1).Result, Is.EqualTo(499501));
     }
     
     [Test]
@@ -76,9 +76,9 @@ public class MyThreadPoolTests
         var tester = new PoolTester();
         var task = _pool!.Submit(tester.Fst);
         
-        task.Result();
+        var res = task.Result;
         Assert.That(tester.Counter, Is.EqualTo(1));
-        task.Result();
+        res = task.Result;
         Assert.That(tester.Counter, Is.EqualTo(1));
     }
     
@@ -88,7 +88,10 @@ public class MyThreadPoolTests
         var tester = new PoolTester();
         var task = _pool!.Submit<int>(() => throw new NotImplementedException());
 
-        Assert.Throws<AggregateException>(() => task.Result());
+        Assert.Throws<AggregateException>(() =>
+        {
+            var _ = task.Result;
+        });
     }
     
     [Test]
@@ -103,9 +106,9 @@ public class MyThreadPoolTests
         
         Assert.That(task.IsCompleted, Is.False);
         startEvent.Set();
-        task.Result();
+        var res = task.Result;
         Assert.That(task.IsCompleted, Is.True);
-        task.Result();
+        res = task.Result;
         Assert.That(task.IsCompleted, Is.True);
     }
     
@@ -139,8 +142,8 @@ public class MyThreadPoolTests
         
         Assert.Multiple(() =>
         {
-            Assert.That(fstContinueTask.Result(), Is.EqualTo(499501));
-            Assert.That(secContinueTask.Result(), Is.EqualTo("499500"));
+            Assert.That(fstContinueTask.Result, Is.EqualTo(499501));
+            Assert.That(secContinueTask.Result, Is.EqualTo("499500"));
         });
     }
     

@@ -116,17 +116,9 @@ public class MyThreadPool : IDisposable
             this._threadPool = threadPool;
         }
     
-        public TResult Result()
-        {
-            this._completeEvent.WaitOne();
+        public TResult Result => 
+            this._completeEvent.WaitOne() && this._threwException ? throw this._exception : this._result!;
 
-            if (this._threwException)
-            {
-                throw this._exception;
-            }
-
-            return this._result!;
-        }
 
         public void Execute()
         {
