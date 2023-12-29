@@ -140,13 +140,11 @@ public class MyThreadPool : IDisposable
                 this.IsCompleted = true;
                 this._completeEvent.Set();
             }
-            Console.WriteLine("Completed");
             lock(this._nextTasks)
             {
                 foreach (var task in this._nextTasks)
                 {
                     this._threadPool._taskActions.Enqueue(task);
-                    Console.WriteLine("Added in execute");
                 }    
             }
         }
@@ -166,7 +164,6 @@ public class MyThreadPool : IDisposable
                     if (!this._threadPool._cancellation.IsCancellationRequested)
                     {
                         this._nextTasks.Add(nextTask.Execute);
-                        Console.WriteLine("Queued");
                     }
                 }
                     
