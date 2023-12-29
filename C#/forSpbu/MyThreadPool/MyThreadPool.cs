@@ -45,6 +45,7 @@ public class MyThreadPool : IDisposable
                     }
                 }
             });
+            this._threads[i].Start();
         }
 
         threadStart.Set();
@@ -61,7 +62,7 @@ public class MyThreadPool : IDisposable
         var task = new MyTask<TResult>(func, this);
         lock (this._cancellation)
         {
-            if (this._cancellation.IsCancellationRequested)
+            if (!this._cancellation.IsCancellationRequested)
             {
                 this._taskActions.Enqueue(task.Execute);
                 this._taskBlocker.Release();
@@ -139,12 +140,13 @@ public class MyThreadPool : IDisposable
                 this.IsCompleted = true;
                 this._completeEvent.Set();
             }
-            
+            Console.WriteLine("Completed");
             lock(this._nextTasks)
             {
                 foreach (var task in this._nextTasks)
                 {
                     this._threadPool._taskActions.Enqueue(task);
+                    Console.WriteLine("Added in execute");
                 }    
             }
         }
@@ -155,6 +157,7 @@ public class MyThreadPool : IDisposable
                 if (this.IsCompleted)
                 {
                     return this._threadPool.Submit(() => nextDelegate(this._result!));
+                    Console.WriteLine("Added after Completed");
                 }
 
                 var nextTask = new MyTask<TNewResult>(() => nextDelegate(this._result!), this._threadPool);
@@ -163,6 +166,7 @@ public class MyThreadPool : IDisposable
                     if (!this._threadPool._cancellation.IsCancellationRequested)
                     {
                         this._nextTasks.Add(nextTask.Execute);
+                        Console.WriteLine("Queued");
                     }
                 }
                     
