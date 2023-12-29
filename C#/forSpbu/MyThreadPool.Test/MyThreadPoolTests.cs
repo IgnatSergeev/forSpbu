@@ -4,6 +4,8 @@ public class MyThreadPoolTests
 {
     private class PoolTester
     {
+        public int Counter { get; private set; }
+        
         public int Fst()
         {
             Counter++;
@@ -15,8 +17,6 @@ public class MyThreadPoolTests
 
             return result;
         }
-
-        public int Counter { get; private set; }
     }
 
     private static int TestFunc()
@@ -31,15 +31,15 @@ public class MyThreadPoolTests
     }
 
     private MyThreadPool? _pool;
-    private int _procAmount;
+    private int _processThreadsAmount;
     private int _threadsAmount;
     
     [SetUp]
     public void Setup()
     {
-        this._threadsAmount = 4;
         System.Diagnostics.Process.GetCurrentProcess().Refresh();
-        this._procAmount = System.Diagnostics.Process.GetCurrentProcess().Threads.Count;
+        this._processThreadsAmount = System.Diagnostics.Process.GetCurrentProcess().Threads.Count;
+        this._threadsAmount = 4;
         this._pool = new MyThreadPool(this._threadsAmount);
     }
     
@@ -116,7 +116,7 @@ public class MyThreadPoolTests
         var secTask = _pool!.Submit(TestFunc);
         _pool!.Shutdown();
         System.Diagnostics.Process.GetCurrentProcess().Refresh();
-        Assert.That(System.Diagnostics.Process.GetCurrentProcess().Threads, Has.Count.EqualTo(_procAmount));
+        Assert.That(System.Diagnostics.Process.GetCurrentProcess().Threads, Has.Count.EqualTo(_processThreadsAmount));
         
         Assert.Multiple(() =>
         {
@@ -127,7 +127,7 @@ public class MyThreadPoolTests
         _pool!.Submit(TestFunc);
         fstTask.ContinueWith((int result) => result + 1);
         System.Diagnostics.Process.GetCurrentProcess().Refresh();
-        Assert.That(System.Diagnostics.Process.GetCurrentProcess().Threads, Has.Count.EqualTo(_procAmount));
+        Assert.That(System.Diagnostics.Process.GetCurrentProcess().Threads, Has.Count.EqualTo(_processThreadsAmount));
     }
     
     [Test]
@@ -148,6 +148,8 @@ public class MyThreadPoolTests
     public void ThreadsCountTest()
     {
         System.Diagnostics.Process.GetCurrentProcess().Refresh();
-        Assert.That(System.Diagnostics.Process.GetCurrentProcess().Threads, Has.Count.EqualTo(_procAmount + 4));
+        Assert.That(System.Diagnostics.Process.GetCurrentProcess().Threads, Has.Count.EqualTo(_processThreadsAmount + 4));
     }
+    
+    
 }

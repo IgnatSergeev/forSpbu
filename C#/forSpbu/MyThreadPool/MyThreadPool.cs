@@ -7,9 +7,10 @@ namespace MyThreadPool;
 /// </summary>
 public class MyThreadPool : IDisposable
 {
-    private readonly ConcurrentQueue<Action> _functions = new ();
+    private readonly ConcurrentQueue<Action> _taskActions = new ();
     private readonly Thread[] _threads;
-    private volatile bool _isTerminated;
+    private readonly Semaphore _taskBlocker = new (0, int.MaxValue);
+    private readonly CancellationTokenSource _cancellation = new ();
     
     /// <summary>
     /// Creates my thread pool with given number of threads
@@ -24,21 +25,29 @@ public class MyThreadPool : IDisposable
         }
         
         this._threads = new Thread[size];
+        var threadStart = new ManualResetEvent(false);
         for (int i = 0; i < size; i++)
         {
             this._threads[i] = new Thread(() =>
             {
-                while (!this._isTerminated)
+                threadStart.WaitOne();
+                while (true)
                 {
-                    this._functions.TryDequeue(out var func);
-                    if (func != null)
+                    this._taskBlocker.WaitOne();
+                    if (this._taskActions.TryDequeue(out var taskAction))
                     {
-                        func.Invoke();
+                        taskAction.Invoke();
+                    }
+
+                    if (this._cancellation.IsCancellationRequested)
+                    {
+                        break;
                     }
                 }
             });
-            this._threads[i].Start();
         }
+
+        threadStart.Set();
     }
 
     /// <summary>
@@ -50,17 +59,15 @@ public class MyThreadPool : IDisposable
     public IMyTask<TResult> Submit<TResult>(Func<TResult> func)
     {
         var task = new MyTask<TResult>(func, this);
-        this._functions.Enqueue(() =>
+        lock (this._cancellation)
         {
-            task.Execute();
-            lock (Volatile.Read(ref task.NextTasks))
+            if (this._cancellation.IsCancellationRequested)
             {
-                foreach (var taskDelegate in Volatile.Read(ref task.NextTasks))
-                {
-                    this._functions.Enqueue(taskDelegate);
-                }
+                this._taskActions.Enqueue(task.Execute);
+                this._taskBlocker.Release();
             }
-        });
+        }
+
         return task;
     }
 
@@ -69,8 +76,17 @@ public class MyThreadPool : IDisposable
     /// </summary>
     public void Shutdown()
     {
-        _isTerminated = true;
-        foreach (var thread in _threads)
+        lock (this._cancellation)
+        {
+            this._cancellation.Cancel();
+        }
+        
+        for (var i = 0; i < this._threads.Length; i++)
+        {
+            this._taskBlocker.Release();
+        }
+        
+        foreach (var thread in this._threads)
         {
             thread.Join();
         }
@@ -85,14 +101,14 @@ public class MyThreadPool : IDisposable
     {
         private volatile Func<TResult>? _func;
         private readonly MyThreadPool _threadPool;
-    
-        private volatile Exception _exception = new AggregateException();
+        
         private TResult? _result;
+        private volatile Exception _exception = new AggregateException();
         private volatile bool _threwException;
-        private bool _isCompleted;
+        private readonly ManualResetEvent _completeEvent = new (false);
+        private readonly ConcurrentBag<Action> _nextTasks = new ();
 
-        public bool IsCompleted => this._isCompleted;
-        public ConcurrentBag<Action> NextTasks = new ();
+        public bool IsCompleted { get; private set; }
         
         public MyTask(Func<TResult> func, MyThreadPool threadPool)
         {
@@ -102,9 +118,7 @@ public class MyThreadPool : IDisposable
     
         public TResult Result()
         {
-            while (!Volatile.Read(ref this._isCompleted))
-            {
-            }
+            this._completeEvent.WaitOne();
 
             if (this._threwException)
             {
@@ -116,42 +130,50 @@ public class MyThreadPool : IDisposable
 
         public void Execute()
         {
-            if (Volatile.Read(ref this._isCompleted)) return;
-            lock (this._func!)
+            try
             {
-                if (Volatile.Read(ref this._isCompleted)) return;
-                try
+                var result = this._func!();
+                this._threwException = false;
+                this._result = result;
+            }
+            catch (Exception e)
+            {
+                this._threwException = true;
+                this._exception = new AggregateException(e);
+            }
+            finally
+            {
+                this._func = null;
+                this.IsCompleted = true;
+                this._completeEvent.Set();
+            }
+            
+            lock(this._nextTasks)
+            {
+                foreach (var task in this._nextTasks)
                 {
-                    var result = this._func();
-                    this._threwException = false;
-                    this._result = result;
-                }
-                catch (Exception e)
-                {
-                    this._threwException = true;
-                    this._exception = new AggregateException(e);
-                }
-                finally
-                {
-                    Volatile.Write(ref this._isCompleted, true);
-                    this._func = null;
-                }
+                    this._threadPool._taskActions.Enqueue(task);
+                }    
             }
         }
-    
-
         public IMyTask<TNewResult> ContinueWith<TNewResult>(Func<TResult, TNewResult> nextDelegate)
         {
-            lock (Volatile.Read(ref this.NextTasks))
+            lock (this._nextTasks)
             {
-                if (Volatile.Read(ref this._isCompleted))
+                if (this.IsCompleted)
                 {
                     return this._threadPool.Submit(() => nextDelegate(this._result!));
                 }
 
                 var nextTask = new MyTask<TNewResult>(() => nextDelegate(this._result!), this._threadPool);
-                Volatile.Read(ref this.NextTasks).Add(nextTask.Execute);
-            
+                lock (this._threadPool._cancellation)
+                {
+                    if (!this._threadPool._cancellation.IsCancellationRequested)
+                    {
+                        this._nextTasks.Add(nextTask.Execute);
+                    }
+                }
+                    
                 return nextTask;
             }
         }

@@ -22,6 +22,6 @@ public interface IMyTask<out TResult>
     /// </summary>
     /// <param name="nextDelegate">New task delegate</param>
     /// <typeparam name="TNewResult">New task return type</typeparam>
-    /// <returns></returns>
+    /// <returns>Returns created task</returns>
     public IMyTask<TNewResult> ContinueWith<TNewResult>(Func<TResult, TNewResult> nextDelegate);
 }
