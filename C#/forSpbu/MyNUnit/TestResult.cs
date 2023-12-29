@@ -1,3 +1,5 @@
+using System.Reflection;
+
 namespace MyNUnit;
 
 /// <summary>
@@ -17,6 +19,10 @@ public class TestResult
     /// <param name="ignoreDesc">Description of ignore or null</param>
     public TestResult(RunResult real, RunResult expected, string? ignoreDesc)
     {
+        if (real.GetMethod() != expected.GetMethod() || real.GetClass() != expected.GetClass())
+        {
+            throw new TestResultCreationException();
+        }
         this._expected = expected;
         this._real = real;
         this._ignoreDesc = ignoreDesc;
@@ -38,4 +44,24 @@ public class TestResult
     /// Is test passed
     /// </summary>
     public bool Passed => this._real == this._expected;
+    
+    /// <summary>
+    /// Is expected result was exception
+    /// </summary>
+    public bool ExpectedException  => this._expected is ExceptionResult;
+    
+    /// <summary>
+    /// Is expected result was ok
+    /// </summary>
+    public bool ExpectedOk  => this._expected is OkResult;
+    
+    /// <summary>
+    /// Return test method name
+    /// </summary>
+    public MethodInfo GetMethod()  => this._expected.GetMethod();
+    
+    /// <summary>
+    /// Return test class name
+    /// </summary>
+    public Type? GetClass()  => this._expected.GetClass();
 }

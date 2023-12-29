@@ -1,4 +1,5 @@
 using System.Reflection;
+using MyNUnit.Attributes;
 
 namespace MyNUnit;
 
@@ -36,7 +37,7 @@ public static class Tester
 
                 afters.AsParallel().ForAll(after => after.Invoke(null, null));
 
-                var expectedResult = RunResult.Create(method.DeclaringType?.Name, method.Name, testAttr.Expected);
+                var expectedResult = RunResult.Create(method.DeclaringType, method, testAttr.Expected);
 
                 return new TestResult(result, expectedResult, testAttr.Ignore);
             });
@@ -52,13 +53,13 @@ public static class Tester
     {
         try
         {
-            method.Invoke(null, null);
+            method.Invoke(method.DeclaringType, null);
         }
-        catch (AggregateException e)
+        catch (TargetInvocationException e)
         {
-            return RunResult.Create(method.DeclaringType?.Name, method.Name, e.InnerException);
+            return RunResult.Create(method.DeclaringType, method, e.InnerException?.GetType());
         }
 
-        return RunResult.Create(method.DeclaringType?.Name, method.Name, null);
+        return RunResult.Create(method.DeclaringType, method, null);
     }
 }

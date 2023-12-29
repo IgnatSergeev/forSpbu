@@ -1,72 +1,80 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics.Metrics;
 using MyNUnit;
+using MyNUnit.Attributes;
 
 namespace TestProject;
 
 public class TestClass
 {
-    public static readonly ConcurrentQueue<string> Queue = new ();
-    int test
+    public static readonly ConcurrentDictionary<string, int> Dictionary = new ();
+    private static int _counter;
     
     [BeforeClass]
     public static void BeforeClass()
     {
-        Queue.Enqueue(nameof(BeforeClass));
+        Dictionary[nameof(BeforeClass)] = _counter++;
     }
     
     [AfterClass]
     public static void AfterClass()
     {
-        Queue.Enqueue(nameof(AfterClass));
+        Dictionary[nameof(AfterClass)] = _counter++;
     }
     
     [Before]
     public static void Before1()
     {
-        Queue.Enqueue(nameof(Before1));
+        Dictionary[nameof(Before1)] = _counter++;
     }
     
     [Before]
     public static void Before2()
     {
-        Queue.Enqueue(nameof(Before2));
+        Dictionary[nameof(Before2)] = _counter++;
     }
     
     [After]
     public static void After1()
     {
-        Queue.Enqueue(nameof(After1));
+        Dictionary[nameof(After1)] = _counter++;
     }
     
     [After]
     public static void After2()
     {
-        Queue.Enqueue(nameof(After2));
+        Dictionary[nameof(After2)] = _counter++;
     }
     
-    [Test(Expected = ArgumentNullException)]
+    [Test(Expected = typeof(ArgumentNullException))]
     public static void TestExpected()
     {
-        Queue.Enqueue(nameof(TestExpected));
+        Dictionary[nameof(TestExpected)] = _counter++;
         throw new ArgumentNullException();
     }
     
-    [Test(Expected = ArgumentNullException)]
+    [Test(Expected = typeof(ArgumentNullException))]
     public static void TestExpectedFails()
     {
-        Queue.Enqueue(nameof(TestExpectedFails));
+        Dictionary[nameof(TestExpectedFails)] = _counter++;
+    }
+    
+    [Test]
+    public static void Test()
+    {
+        Dictionary[nameof(Test)] = _counter++;
     }
     
     [Test]
     public static void TestFails()
     {
-        Queue.Enqueue(nameof(TestExpectedFails));
+        Dictionary[nameof(TestFails)] = _counter++;
         throw new ArgumentNullException();
     }
     
     [Test(Ignore = "")]
     public static void TestIgnore()
     {
-        Queue.Enqueue(nameof(TestIgnore));
+        Dictionary[nameof(TestIgnore)] = _counter++;
     }
 }
