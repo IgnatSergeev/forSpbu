@@ -9,7 +9,7 @@ public class TestResult
 {
     private readonly RunResult _expected;
     private readonly RunResult _real;
-    private readonly string? _ignoreDesc;
+    private readonly string? _ignoreDescription;
 
     /// <summary>
     /// Creates test result of real and expected
@@ -25,25 +25,25 @@ public class TestResult
         }
         this._expected = expected;
         this._real = real;
-        this._ignoreDesc = ignoreDesc;
+        this._ignoreDescription = ignoreDesc;
     }
     
     public override string ToString() =>
         this.Ignored 
-            ? $"Test ignored: {this._ignoreDesc}"
-            : this._real == this._expected
+            ? $"Test ignored: {this._ignoreDescription}"
+            : RunResult.Equals(this._real,this._expected)
                 ? $"Test passed: {this._real.ToString()}"
                 : $"Test failed: expected {this._expected.ToString()}; was {this._real.ToString()}";
 
     /// <summary>
     /// Is test ignored
     /// </summary>
-    public bool Ignored => this._ignoreDesc != null;
+    public bool Ignored => this._ignoreDescription != null;
     
     /// <summary>
     /// Is test passed
     /// </summary>
-    public bool Passed => this._real == this._expected;
+    public bool Passed => RunResult.Equals(this._real,this._expected);
     
     /// <summary>
     /// Is expected result was exception

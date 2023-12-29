@@ -7,6 +7,13 @@ namespace MyNUnit.Attributes;
 public class Test : Attribute
 {
     /// <summary>
+    /// Creates test attribute
+    /// </summary>
+    public Test()
+    {
+    }
+    
+    /// <summary>
     /// Is exception should be thown
     /// </summary>
     public Type? Expected { get; set; }

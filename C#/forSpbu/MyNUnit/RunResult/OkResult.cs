@@ -20,13 +20,14 @@ public class OkResult : RunResult
     {
         return $"{this.Class} {this.Method} succeeded";
     }
-
-    public static bool operator !=(OkResult fst, OkResult sec)
-    {
-        return !(fst == sec);
-    }
     
-    public static bool operator ==(OkResult fst, OkResult sec)
+    /// <summary>
+    /// Compares two ok run results
+    /// </summary>
+    /// <param name="fst">First ok run result</param>
+    /// <param name="sec">Second ok run result</param>
+    /// <returns>True they are equal</returns>
+    public static bool Equals(OkResult fst, OkResult sec)
     {
        
         return fst.Class == sec.Class && fst.Method == sec.Method;

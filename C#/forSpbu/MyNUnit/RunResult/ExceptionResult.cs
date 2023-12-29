@@ -25,12 +25,13 @@ public class ExceptionResult : RunResult
         return $"{this.Class} {this.Method} threw exception {this._exception?.FullName}";
     }
     
-    public static bool operator !=(ExceptionResult fst, ExceptionResult sec)
-    {
-        return !(fst == sec);
-    }
-    
-    public static bool operator ==(ExceptionResult fst, ExceptionResult sec)
+    /// <summary>
+    /// Compares two exception run results
+    /// </summary>
+    /// <param name="fst">First exception run result</param>
+    /// <param name="sec">Second exception run result</param>
+    /// <returns>True they are equal</returns>
+    public static bool Equals(ExceptionResult fst, ExceptionResult sec)
     {
         return fst.Class == sec.Class && fst.Method == sec.Method && fst._exception == sec._exception;
     }

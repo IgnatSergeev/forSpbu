@@ -42,18 +42,19 @@ public abstract class RunResult
     /// <returns>Class of run result</returns>
     public Type? GetClass() => Class;
 
-    public static bool operator ==(RunResult fst, RunResult sec)
+    /// <summary>
+    /// Compares two run results
+    /// </summary>
+    /// <param name="fst">First run result</param>
+    /// <param name="sec">Second run result</param>
+    /// <returns>True they are equal</returns>
+    public static bool Equals(RunResult fst, RunResult sec)
     {
         return fst switch
         {
-            OkResult fstOk when sec is OkResult secOk => fstOk == secOk,
-            ExceptionResult fstExc when sec is ExceptionResult secExc => fstExc == secExc,
+            OkResult fstOk when sec is OkResult secOk => OkResult.Equals(fstOk, secOk),
+            ExceptionResult fstExc when sec is ExceptionResult secExc => ExceptionResult.Equals(fstExc, secExc),
             _ => false
         };
-    }
-    
-    public static bool operator !=(RunResult fst, RunResult sec)
-    {
-        return !(fst == sec);
     }
 }

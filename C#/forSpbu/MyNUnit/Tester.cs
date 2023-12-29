@@ -20,22 +20,23 @@ public static class Tester
     {
         var methods = type.GetMethods();
         var befores = methods.Where(method => method.GetCustomAttributes<Before>().Any());
-        var afters = methods.Where(method => method.GetCustomAttributes<Before>().Any());
+        var afters = methods.Where(method => method.GetCustomAttributes<After>().Any());
         
         methods.Where(method => method.IsStatic && method.GetCustomAttributes<BeforeClass>().Any())
             .AsParallel()
             .ForAll(method => method.Invoke(null, null));
-
+        
         var results = methods.Where(method => method.GetCustomAttributes<Test>().Any())
             .AsParallel()
             .Select(method =>
             {
+                var instance = Activator.CreateInstance(type);
                 var testAttr = method.GetCustomAttributes<Test>().First();
-                befores.AsParallel().ForAll(before => before.Invoke(null, null));
+                befores.AsParallel().ForAll(before => before.Invoke(instance, null));
 
-                var result = RunTest(method);
+                var result = RunTest(method, instance);
 
-                afters.AsParallel().ForAll(after => after.Invoke(null, null));
+                afters.AsParallel().ForAll(after => after.Invoke(instance, null));
 
                 var expectedResult = RunResult.Create(method.DeclaringType, method, testAttr.Expected);
 
@@ -49,11 +50,11 @@ public static class Tester
         return results;
     }
 
-    private static RunResult RunTest(MethodInfo method)
+    private static RunResult RunTest(MethodInfo method, object? instance)
     {
         try
         {
-            method.Invoke(method.DeclaringType, null);
+            method.Invoke(instance, null);
         }
         catch (TargetInvocationException e)
         {

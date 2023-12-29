@@ -2,4 +2,7 @@
 
 public class TestResultCreationException : Exception
 {
+    public TestResultCreationException() : base()
+    {
+    }
 }
