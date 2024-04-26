@@ -1,7 +1,10 @@
 ﻿
 module Square
 
+/// <summary>
 /// Generates string with star square
+/// </summary>
+/// <param name="n">Square size</param>
 let genStarSquare n =
     let rec replicateStr str times = 
         match times with
