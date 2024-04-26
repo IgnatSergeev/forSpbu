@@ -5,6 +5,12 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "07.03", "07.03\07.03.fsproj", "{0FD34DFA-792D-44F0-BD17-CE59DD81D040}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "kr1", "kr1", "{91E3BDA2-0836-46C2-95F0-02513FD7F13F}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FibonacciSum", "FibonacciSum\FibonacciSum.fsproj", "{7937CDA8-8285-4E23-AD1A-FC0F04FEEFE6}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FibonacciSum.Test", "FibonacciSum.Test\FibonacciSum.Test.fsproj", "{D934C0A5-661D-4711-BC18-C38B76EF6D27}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +24,17 @@ Global
 		{0FD34DFA-792D-44F0-BD17-CE59DD81D040}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FD34DFA-792D-44F0-BD17-CE59DD81D040}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FD34DFA-792D-44F0-BD17-CE59DD81D040}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7937CDA8-8285-4E23-AD1A-FC0F04FEEFE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7937CDA8-8285-4E23-AD1A-FC0F04FEEFE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7937CDA8-8285-4E23-AD1A-FC0F04FEEFE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7937CDA8-8285-4E23-AD1A-FC0F04FEEFE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D934C0A5-661D-4711-BC18-C38B76EF6D27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D934C0A5-661D-4711-BC18-C38B76EF6D27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D934C0A5-661D-4711-BC18-C38B76EF6D27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D934C0A5-661D-4711-BC18-C38B76EF6D27}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7937CDA8-8285-4E23-AD1A-FC0F04FEEFE6} = {91E3BDA2-0836-46C2-95F0-02513FD7F13F}
+		{D934C0A5-661D-4711-BC18-C38B76EF6D27} = {91E3BDA2-0836-46C2-95F0-02513FD7F13F}
 	EndGlobalSection
 EndGlobal
