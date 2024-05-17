@@ -39,7 +39,9 @@ let rec reverseList list =
 /// </summary>
 /// <param name="n">First power</param>
 /// <param name="m">Number of elements</param>
+/// <returns>None if given negative arguments, list otherwise</returns>
 let rec genPowerList n m =
+    if n < 0 || m < 0 then None else
     let rec genPowerListHelper num list curPower =
         if curPower = n + m then
             num :: list
@@ -47,7 +49,7 @@ let rec genPowerList n m =
             genPowerListHelper (num * 2) list (curPower + 1)
         else
             genPowerListHelper (num * 2) (num :: list) (curPower + 1)
-    reverseList (genPowerListHelper 2 [] 1)
+    Some(reverseList (genPowerListHelper 1 [] 0))
     
 /// <summary>
 /// Search for element in the list
