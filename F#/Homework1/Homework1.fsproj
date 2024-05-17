@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <RootNamespace>Factorial</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Homework1.fs" />
+    </ItemGroup>
+
+</Project>
