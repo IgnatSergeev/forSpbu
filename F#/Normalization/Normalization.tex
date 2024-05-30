@@ -1,0 +1,22 @@
+\documentclass{article}
+\usepackage[russian]{babel}
+
+
+\title{Normalization}
+
+\begin{document}
+\maketitle
+
+Если имеется ввиду $\lambda x.x\ y$ имеется ввиду $\lambda x.(x\ y)$:
+\begin{enumerate} 
+    \item $((\lambda a.(\lambda b.b\ b)\ (\lambda b.b\ b))\ b)\ ((\lambda c.c\ b)\ (\lambda a.a)) \to_\beta$
+    \item $((\lambda b.b\ b)\ (\lambda b.b\ b))\ ((\lambda c.c\ b)\ (\lambda a.a)) \to_\beta$
+    \item $((\lambda b.b\ b)\ (\lambda b.b\ b))\ ((\lambda a.a)\ b) \to_\beta$
+    \item $((\lambda b.b\ b)\ (\lambda b.b\ b))\ b$ - не нормальная, по нормальной стратегии переходит в себя => нормальной формы нет
+\end{enumerate} 
+
+
+Если под $\lambda x.x\ y$ имеется ввиду $(\lambda x.x)\ y$:
+не корректный так как в $\lambda x.x\ x$ x и в свободных и в связанных
+
+\end{document}
