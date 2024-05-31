@@ -22,7 +22,7 @@ let alphaTest () =
 
 [<Test>]
 let betaTest () =
-    App(Abstr("a", Abstr("b", App(App(Var("a"), Var("b1")), Var("b")))), Var("b")) |> betaReduce |> should equal (Abstr("b2", App(App(Var("b"), Var("b1")), Var("b2"))))
+    App(Abstr("a", Abstr("b", App(App(Var("a"), Var("b1")), Var("b")))), Var("b")) |> betaTransform |> should equal (Abstr("b2", App(App(Var("b"), Var("b1")), Var("b2"))))
 
 [<Test>]
 let varNormalizeTest () =
