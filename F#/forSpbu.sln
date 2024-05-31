@@ -17,9 +17,11 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "PriorityQueue", "PriorityQu
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "PriorityQueue.Test", "PriorityQueue.Test\PriorityQueue.Test.fsproj", "{89A935E8-B5F3-435D-ACC3-A99DD7C66178}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "07.03", "07.03", "{5CA9053B-DE9B-4824-9F19-AEB464E3B9D8}"
-EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Homework1", "Homework1\Homework1.fsproj", "{04B15EE4-079A-42ED-ACC8-E2DCD25281C6}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Primes", "Primes\Primes.fsproj", "{08A49E6C-ED35-45C3-ABC1-F4CBCA608AD4}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Primes.Test", "Primes.Test\Primes.Test.fsproj", "{14716888-914A-477A-A0B4-654AF7483B86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,6 +60,14 @@ Global
 		{89A935E8-B5F3-435D-ACC3-A99DD7C66178}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89A935E8-B5F3-435D-ACC3-A99DD7C66178}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89A935E8-B5F3-435D-ACC3-A99DD7C66178}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08A49E6C-ED35-45C3-ABC1-F4CBCA608AD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08A49E6C-ED35-45C3-ABC1-F4CBCA608AD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08A49E6C-ED35-45C3-ABC1-F4CBCA608AD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08A49E6C-ED35-45C3-ABC1-F4CBCA608AD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14716888-914A-477A-A0B4-654AF7483B86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14716888-914A-477A-A0B4-654AF7483B86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14716888-914A-477A-A0B4-654AF7483B86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14716888-914A-477A-A0B4-654AF7483B86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7937CDA8-8285-4E23-AD1A-FC0F04FEEFE6} = {91E3BDA2-0836-46C2-95F0-02513FD7F13F}
