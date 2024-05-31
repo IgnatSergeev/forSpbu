@@ -1,5 +1,9 @@
 ﻿module Lazy.M
 
+/// <summary>
+/// Multi threaded implementation of iLazy interface
+/// </summary>
+/// <typeparam name="'a">Result type</typeparam>
 type Lazy<'a>(func)  = 
     let mutable value : Option<'a> = None
     let valueLock = obj
