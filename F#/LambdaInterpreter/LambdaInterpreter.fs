@@ -36,11 +36,11 @@ let bfsFoldTerm fold acc term =
         match queue with
         | [] -> acc
         | Var(var)::tail -> 
-            bfsFoldHelper fold acc tail |> fold (Var(var))
+            bfsFoldHelper fold (fold (Var(var)) acc) tail
         | App(lhs, rhs)::tail -> 
-            bfsFoldHelper fold acc (tail @ [ lhs; rhs ]) |> fold (App(lhs, rhs))
+            bfsFoldHelper fold (fold (App(lhs, rhs)) acc) (tail @ [ lhs; rhs ]) 
         | Abstr(param, rhs)::tail -> 
-            bfsFoldHelper fold acc (tail @ [ rhs ]) |> fold (Abstr(param, rhs))
+            bfsFoldHelper fold (fold (Abstr(param, rhs)) acc) (tail @ [ rhs ]) 
     bfsFoldHelper fold acc [ term ]
 
 /// <summary>
@@ -117,4 +117,4 @@ let betaTransform mainTerm =
 /// <returns> Transformed term </returns>
 let rec normalize term = 
     let reduced = betaTransform term
-    if term = reduced then term else betaTransform reduced
+    if term = reduced then term else normalize reduced

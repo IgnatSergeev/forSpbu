@@ -6,7 +6,8 @@ open FsUnit
 let S = Abstr("x", Abstr("y", Abstr("z", App(App(Var("x"), Var("z")), App(Var("y"), Var("z"))))))
 let K = Abstr("x", Abstr("y", Var("x")))
 let KStar = Abstr("y", Abstr("x", Var("x")))
-let I = Abstr("x", Var("x"))
+let Ix = Abstr("x", Var("x"))
+let Iz = Abstr("z", Var("z"))
 
 [<Test>]
 let getAllNamesTest () =
@@ -30,7 +31,7 @@ let varNormalizeTest () =
 
 [<Test>]
 let INormalizeTest () =
-    I |> normalize |> should equal I
+    Ix |> normalize |> should equal Ix
 
 [<Test>]
 let renameNormalizeTest () =
@@ -38,4 +39,8 @@ let renameNormalizeTest () =
 
 [<Test>]
 let KIKStarTest () =
-    App(K, I) |> normalize |> should equal KStar
+    App(K, Ix) |> normalize |> should equal KStar
+
+[<Test>]
+let SkkTest () =
+    App(App(S, K), K) |> normalize |> should equal Iz
