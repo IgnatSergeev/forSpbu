@@ -19,8 +19,9 @@ let rounding = RoundingBuilder
 /// </summary>
 type StringCalculateBuilder() = 
     member this.Bind(x: string, f) =
-        try f (x |> int) with
-        | :? System.FormatException -> None
+        let res = 0
+        let parsed = System.Int32.TryParse(x, ref res)
+        if parsed then Some(res) else None
     member this.Return(x: int) = Some(x)
 
 
